@@ -1,0 +1,40 @@
+-v
+-opensource -confirm-license
+-release -optimized-tools
+-archdatadir /usr/lib64/qt5
+-datadir /usr/share/qt5
+-docdir /usr/share/doc/qt5
+-headerdir /usr/include/qt5
+-sysconfdir /etc/xdg
+-no-separate-debug-info
+-no-use-gold-linker
+-no-strip -no-rpath -no-pch
+-nomake examples
+-accessibility
+-cups
+-dbus-linked
+-fontconfig
+-glib
+-libproxy
+-no-qml-debug
+-plugin-sql-mysql
+-plugin-sql-psql
+-plugin-sql-sqlite
+-reduce-relocations
+-sm
+-system-doubleconversion
+-system-freetype
+-system-harfbuzz
+-system-pcre
+-system-libjpeg
+-system-libpng
+-system-sqlite
+-system-xcb
+-system-xkbcommon
+-system-zlib
+-xinput2
+-xkb
+QMAKE_CFLAGS="$CFLAGS"
+QMAKE_CXXFLAGS="$CXXFLAGS"
+QMAKE_LFLAGS="$CXXFLAGS"
+MAKEFLAGS="%{?_smp_mflags}"

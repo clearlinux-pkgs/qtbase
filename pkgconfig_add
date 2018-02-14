@@ -1,0 +1,19 @@
+# This file contains additional pkgconfig build requirements that did
+# not get picked up automatically. One name per line, no whitespace.
+dbus-1
+freetype2
+glib-2.0
+gl
+icu-uc
+icu-i18n
+libinput
+libpcre2-16
+libproxy-1.0
+libudev
+sm
+xcb-icccm
+xcb-image
+xcb-keysyms
+xi
+xkbcommon
+xkbcommon-x11

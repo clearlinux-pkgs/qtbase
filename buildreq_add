@@ -1,0 +1,12 @@
+# This file contains additional build requirements that did not get
+# picked up automatically. One name per line, no whitespace.
+cups-dev
+double-conversion-dev
+fontconfig-dev
+libjpeg-turbo-dev
+libXrender-dev
+mariadb-dev
+openssl-dev
+postgresql-dev
+sqlite-autoconf-dev
+systemd-dev

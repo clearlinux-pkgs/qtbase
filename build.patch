@@ -1,0 +1,13 @@
+--- qtbase-everywhere-src-5.10.0/mkspecs/features/qt_configure.prf~	2017-06-28 09:54:29.000000000 +0000
++++ qtbase-everywhere-src-5.10.0/mkspecs/features/qt_configure.prf	2017-07-17 22:38:01.816504251 +0000
+@@ -312,8 +312,8 @@
+         }
+ 
+         isEmpty(type) {
+-            qtConfAddError("Unknown command line option '$$c'.")
+-            return()
++            qtConfAddWarning("Unknown command line option '$$c'.")
++            next()
+         }
+ 
+         call = "qtConfCommandline_$${type}"
