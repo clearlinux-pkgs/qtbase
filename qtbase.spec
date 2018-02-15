@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.10.0
-Release  : 5
+Release  : 6
 URL      : http://download.qt.io/official_releases/qt/5.10/5.10.0/submodules/qtbase-everywhere-src-5.10.0.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.10/5.10.0/submodules/qtbase-everywhere-src-5.10.0.tar.xz
 Summary  : No detailed summary available
@@ -3125,7 +3125,6 @@ popd
 /usr/lib64/qt5/mkspecs/features/testlib_defines.prf
 /usr/lib64/qt5/mkspecs/features/toolchain.prf
 /usr/lib64/qt5/mkspecs/features/uic.prf
-/usr/lib64/qt5/mkspecs/features/uikit/__pycache__/devices.cpython-36.pyc
 /usr/lib64/qt5/mkspecs/features/uikit/bitcode.prf
 /usr/lib64/qt5/mkspecs/features/uikit/default_post.prf
 /usr/lib64/qt5/mkspecs/features/uikit/default_pre.prf
