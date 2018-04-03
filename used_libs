@@ -19,8 +19,8 @@ libgbm.so.1
 libgcc_s.so.1
 libglib-2.0.so.0
 libharfbuzz.so.0
-libicui18n.so.55
-libicuuc.so.55
+libicui18n.so.61
+libicuuc.so.61
 libinput.so.10
 libjpeg.so.62
 libm.so.6
