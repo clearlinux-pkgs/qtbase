@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.10.1
-Release  : 9
+Release  : 10
 URL      : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qtbase-everywhere-src-5.10.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qtbase-everywhere-src-5.10.1.tar.xz
 Summary  : No detailed summary available
@@ -77,6 +77,14 @@ Group: Documentation
 doc components for the qtbase package.
 
 
+%package extras
+Summary: extras components for the qtbase package.
+Group: Default
+
+%description extras
+extras components for the qtbase package.
+
+
 %package lib
 Summary: lib components for the qtbase package.
 Group: Libraries
@@ -98,7 +106,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1522790088
+export SOURCE_DATE_EPOCH=1525476412
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -188,7 +196,7 @@ MAKEFLAGS="%{?_smp_mflags}"   --libdir=/usr/lib64/haswell --bindir=/usr/bin/hasw
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1522790088
+export SOURCE_DATE_EPOCH=1525476412
 rm -rf %{buildroot}
 pushd ../buildavx2/
 %make_install
@@ -297,26 +305,26 @@ popd
 
 %files bin
 %defattr(-,root,root,-)
-/usr/bin/fixqt4headers.pl
-/usr/bin/haswell/fixqt4headers.pl
-/usr/bin/haswell/moc
-/usr/bin/haswell/qdbuscpp2xml
-/usr/bin/haswell/qdbusxml2cpp
-/usr/bin/haswell/qlalr
-/usr/bin/haswell/qmake
-/usr/bin/haswell/qvkgen
-/usr/bin/haswell/rcc
-/usr/bin/haswell/syncqt.pl
-/usr/bin/haswell/uic
-/usr/bin/moc
-/usr/bin/qdbuscpp2xml
-/usr/bin/qdbusxml2cpp
-/usr/bin/qlalr
-/usr/bin/qmake
-/usr/bin/qvkgen
-/usr/bin/rcc
-/usr/bin/syncqt.pl
-/usr/bin/uic
+%exclude /usr/bin/fixqt4headers.pl
+%exclude /usr/bin/haswell/fixqt4headers.pl
+%exclude /usr/bin/haswell/moc
+%exclude /usr/bin/haswell/qdbuscpp2xml
+%exclude /usr/bin/haswell/qdbusxml2cpp
+%exclude /usr/bin/haswell/qlalr
+%exclude /usr/bin/haswell/qmake
+%exclude /usr/bin/haswell/qvkgen
+%exclude /usr/bin/haswell/rcc
+%exclude /usr/bin/haswell/syncqt.pl
+%exclude /usr/bin/haswell/uic
+%exclude /usr/bin/moc
+%exclude /usr/bin/qdbuscpp2xml
+%exclude /usr/bin/qdbusxml2cpp
+%exclude /usr/bin/qlalr
+%exclude /usr/bin/qmake
+%exclude /usr/bin/qvkgen
+%exclude /usr/bin/rcc
+%exclude /usr/bin/syncqt.pl
+%exclude /usr/bin/uic
 
 %files dev
 %defattr(-,root,root,-)
@@ -2786,16 +2794,13 @@ popd
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfig.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake
 /usr/lib64/haswell/*.a
-/usr/lib64/haswell/libQt5Concurrent.so
 /usr/lib64/haswell/libQt5Core.so
 /usr/lib64/haswell/libQt5DBus.so
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so
 /usr/lib64/haswell/libQt5Gui.so
 /usr/lib64/haswell/libQt5Network.so
 /usr/lib64/haswell/libQt5OpenGL.so
 /usr/lib64/haswell/libQt5PrintSupport.so
-/usr/lib64/haswell/libQt5Sql.so
 /usr/lib64/haswell/libQt5Test.so
 /usr/lib64/haswell/libQt5Widgets.so
 /usr/lib64/haswell/libQt5XcbQpa.so
@@ -3116,6 +3121,7 @@ popd
 /usr/lib64/qt5/mkspecs/features/testlib_defines.prf
 /usr/lib64/qt5/mkspecs/features/toolchain.prf
 /usr/lib64/qt5/mkspecs/features/uic.prf
+/usr/lib64/qt5/mkspecs/features/uikit/__pycache__/devices.cpython-36.pyc
 /usr/lib64/qt5/mkspecs/features/uikit/bitcode.prf
 /usr/lib64/qt5/mkspecs/features/uikit/default_post.prf
 /usr/lib64/qt5/mkspecs/features/uikit/default_pre.prf
@@ -3436,11 +3442,31 @@ popd
 /usr/share/doc/qt5/global/template/style/online.css
 /usr/share/doc/qt5/global/template/style/theqtcompany.png
 
+%files extras
+%defattr(-,root,root,-)
+/usr/bin/fixqt4headers.pl
+/usr/bin/haswell/fixqt4headers.pl
+/usr/bin/haswell/moc
+/usr/bin/haswell/qdbuscpp2xml
+/usr/bin/haswell/qdbusxml2cpp
+/usr/bin/haswell/qlalr
+/usr/bin/haswell/qmake
+/usr/bin/haswell/qvkgen
+/usr/bin/haswell/rcc
+/usr/bin/haswell/syncqt.pl
+/usr/bin/haswell/uic
+/usr/bin/moc
+/usr/bin/qdbuscpp2xml
+/usr/bin/qdbusxml2cpp
+/usr/bin/qlalr
+/usr/bin/qmake
+/usr/bin/qvkgen
+/usr/bin/rcc
+/usr/bin/syncqt.pl
+/usr/bin/uic
+
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libQt5Concurrent.so.5
-/usr/lib64/haswell/libQt5Concurrent.so.5.10
-/usr/lib64/haswell/libQt5Concurrent.so.5.10.1
 /usr/lib64/haswell/libQt5Core.so.5
 /usr/lib64/haswell/libQt5Core.so.5.10
 /usr/lib64/haswell/libQt5Core.so.5.10.1
@@ -3450,9 +3476,6 @@ popd
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.10
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.10.1
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.10
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.10.1
 /usr/lib64/haswell/libQt5Gui.so.5
 /usr/lib64/haswell/libQt5Gui.so.5.10
 /usr/lib64/haswell/libQt5Gui.so.5.10.1
@@ -3465,9 +3488,6 @@ popd
 /usr/lib64/haswell/libQt5PrintSupport.so.5
 /usr/lib64/haswell/libQt5PrintSupport.so.5.10
 /usr/lib64/haswell/libQt5PrintSupport.so.5.10.1
-/usr/lib64/haswell/libQt5Sql.so.5
-/usr/lib64/haswell/libQt5Sql.so.5.10
-/usr/lib64/haswell/libQt5Sql.so.5.10.1
 /usr/lib64/haswell/libQt5Test.so.5
 /usr/lib64/haswell/libQt5Test.so.5.10
 /usr/lib64/haswell/libQt5Test.so.5.10.1
