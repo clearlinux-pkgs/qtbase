@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.10.1
-Release  : 11
+Release  : 12
 URL      : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qtbase-everywhere-src-5.10.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qtbase-everywhere-src-5.10.1.tar.xz
 Summary  : No detailed summary available
@@ -106,7 +106,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1525476412
+export SOURCE_DATE_EPOCH=1526052437
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -149,6 +149,7 @@ QMAKE_LFLAGS="$CXXFLAGS" \
 MAKEFLAGS="%{?_smp_mflags}"
 make  %{?_smp_mflags}
 
+unset PKG_CONFIG_PATH
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
@@ -192,11 +193,11 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 QMAKE_CFLAGS="$CFLAGS" \
 QMAKE_CXXFLAGS="$CXXFLAGS" \
 QMAKE_LFLAGS="$CXXFLAGS" \
-MAKEFLAGS="%{?_smp_mflags}"   --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+MAKEFLAGS="%{?_smp_mflags}"   --libdir=/usr/lib64/haswell
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1525476412
+export SOURCE_DATE_EPOCH=1526052437
 rm -rf %{buildroot}
 pushd ../buildavx2/
 %make_install
@@ -273,31 +274,46 @@ popd
 /usr/lib64/haswell/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake
 /usr/lib64/haswell/cmake/Qt5Xml/Qt5XmlConfig.cmake
 /usr/lib64/haswell/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake
+/usr/lib64/haswell/libQt5AccessibilitySupport.a
 /usr/lib64/haswell/libQt5AccessibilitySupport.prl
+/usr/lib64/haswell/libQt5Bootstrap.a
 /usr/lib64/haswell/libQt5Bootstrap.prl
 /usr/lib64/haswell/libQt5Concurrent.prl
 /usr/lib64/haswell/libQt5Core.prl
 /usr/lib64/haswell/libQt5DBus.prl
+/usr/lib64/haswell/libQt5DeviceDiscoverySupport.a
 /usr/lib64/haswell/libQt5DeviceDiscoverySupport.prl
+/usr/lib64/haswell/libQt5EdidSupport.a
 /usr/lib64/haswell/libQt5EdidSupport.prl
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.prl
 /usr/lib64/haswell/libQt5EglFsKmsSupport.prl
+/usr/lib64/haswell/libQt5EglSupport.a
 /usr/lib64/haswell/libQt5EglSupport.prl
+/usr/lib64/haswell/libQt5EventDispatcherSupport.a
 /usr/lib64/haswell/libQt5EventDispatcherSupport.prl
+/usr/lib64/haswell/libQt5FbSupport.a
 /usr/lib64/haswell/libQt5FbSupport.prl
+/usr/lib64/haswell/libQt5FontDatabaseSupport.a
 /usr/lib64/haswell/libQt5FontDatabaseSupport.prl
+/usr/lib64/haswell/libQt5GlxSupport.a
 /usr/lib64/haswell/libQt5GlxSupport.prl
 /usr/lib64/haswell/libQt5Gui.prl
+/usr/lib64/haswell/libQt5InputSupport.a
 /usr/lib64/haswell/libQt5InputSupport.prl
+/usr/lib64/haswell/libQt5KmsSupport.a
 /usr/lib64/haswell/libQt5KmsSupport.prl
 /usr/lib64/haswell/libQt5Network.prl
 /usr/lib64/haswell/libQt5OpenGL.prl
+/usr/lib64/haswell/libQt5OpenGLExtensions.a
 /usr/lib64/haswell/libQt5OpenGLExtensions.prl
+/usr/lib64/haswell/libQt5PlatformCompositorSupport.a
 /usr/lib64/haswell/libQt5PlatformCompositorSupport.prl
 /usr/lib64/haswell/libQt5PrintSupport.prl
+/usr/lib64/haswell/libQt5ServiceSupport.a
 /usr/lib64/haswell/libQt5ServiceSupport.prl
 /usr/lib64/haswell/libQt5Sql.prl
 /usr/lib64/haswell/libQt5Test.prl
+/usr/lib64/haswell/libQt5ThemeSupport.a
 /usr/lib64/haswell/libQt5ThemeSupport.prl
 /usr/lib64/haswell/libQt5Widgets.prl
 /usr/lib64/haswell/libQt5XcbQpa.prl
@@ -306,16 +322,6 @@ popd
 %files bin
 %defattr(-,root,root,-)
 %exclude /usr/bin/fixqt4headers.pl
-%exclude /usr/bin/haswell/fixqt4headers.pl
-%exclude /usr/bin/haswell/moc
-%exclude /usr/bin/haswell/qdbuscpp2xml
-%exclude /usr/bin/haswell/qdbusxml2cpp
-%exclude /usr/bin/haswell/qlalr
-%exclude /usr/bin/haswell/qmake
-%exclude /usr/bin/haswell/qvkgen
-%exclude /usr/bin/haswell/rcc
-%exclude /usr/bin/haswell/syncqt.pl
-%exclude /usr/bin/haswell/uic
 %exclude /usr/bin/moc
 %exclude /usr/bin/qdbuscpp2xml
 %exclude /usr/bin/qdbusxml2cpp
@@ -2793,7 +2799,6 @@ popd
 /usr/lib64/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfig.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake
-/usr/lib64/haswell/*.a
 /usr/lib64/haswell/libQt5Core.so
 /usr/lib64/haswell/libQt5DBus.so
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so
@@ -3445,16 +3450,6 @@ popd
 %files extras
 %defattr(-,root,root,-)
 /usr/bin/fixqt4headers.pl
-/usr/bin/haswell/fixqt4headers.pl
-/usr/bin/haswell/moc
-/usr/bin/haswell/qdbuscpp2xml
-/usr/bin/haswell/qdbusxml2cpp
-/usr/bin/haswell/qlalr
-/usr/bin/haswell/qmake
-/usr/bin/haswell/qvkgen
-/usr/bin/haswell/rcc
-/usr/bin/haswell/syncqt.pl
-/usr/bin/haswell/uic
 /usr/bin/moc
 /usr/bin/qdbuscpp2xml
 /usr/bin/qdbusxml2cpp
