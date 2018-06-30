@@ -1,0 +1,94 @@
+From 5219c37f7c98f37f078fee00fe8ca35d83ff4f5d Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 20 Jun 2018 15:20:32 -0700
+Subject: [PATCH 2/2] QLibrary: find AVX2 (Haswell) optimized plugins and
+ libraries
+
+Libraries are placed in a subdir "haswell/" of the main library dir,
+whereas plugins are simply named with ".avx2" appended to the plugin
+name (plugin.so.avx2). The "haswell/" library directory suffix is a
+convention found in glibc since version 2.26, whereas the ".avx2" and
+".avx512" suffixes are a convention found in the Clear Linux OS for
+Intel Architecture.
+
+This patch implements this for all Unix OSes, except for Darwin, where
+the fat file format already has a sub-architecture for Haswell
+(x86_64h).
+
+We could also implement the "sse2/" subdir search for libraries, but I
+don't think it's worth the cost in 2018.
+
+Change-Id: Iff4151c519c144d580c4fffd1539fe5ee9a4d7b1
+(cherry-picked from 5219c37f7c98f37f078fee00fe8ca35d83ff4f5d)
+---
+ src/corelib/plugin/qfactoryloader.cpp |  5 +++++
+ src/corelib/plugin/qlibrary_unix.cpp  | 23 +++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/src/corelib/plugin/qfactoryloader.cpp b/src/corelib/plugin/qfactoryloader.cpp
+index a4be18a67f..2116e5d525 100644
+--- a/src/corelib/plugin/qfactoryloader.cpp
++++ b/src/corelib/plugin/qfactoryloader.cpp
+@@ -140,6 +140,11 @@ void QFactoryLoader::update()
+                    continue;    // Skip debug plugin in release mode
+ #endif
+             }
++#elif defined(Q_PROCESSOR_X86)
++            if (fileName.endsWith(QLatin1String(".avx2")) || fileName.endsWith(QLatin1String(".avx512"))) {
++                // ignore AVX2-optimized file, we'll do a bait-and-switch to it later
++                continue;
++            }
+ #endif
+             if (qt_debug_component()) {
+                 qDebug() << "QFactoryLoader::QFactoryLoader() looking at" << fileName;
+diff --git a/src/corelib/plugin/qlibrary_unix.cpp b/src/corelib/plugin/qlibrary_unix.cpp
+index 23b9ad6434..2cd8d54274 100644
+--- a/src/corelib/plugin/qlibrary_unix.cpp
++++ b/src/corelib/plugin/qlibrary_unix.cpp
+@@ -1,6 +1,7 @@
+ /****************************************************************************
+ **
+ ** Copyright (C) 2016 The Qt Company Ltd.
++** Copyright (C) 2018 Intel Corporation
+ ** Contact: https://www.qt.io/licensing/
+ **
+ ** This file is part of the QtCore module of the Qt Toolkit.
+@@ -43,6 +44,7 @@
+ #include "qlibrary_p.h"
+ #include <qcoreapplication.h>
+ #include <private/qfilesystementry_p.h>
++#include <private/qsimd_p.h>
+ 
+ #include <dlfcn.h>
+ 
+@@ -178,6 +180,27 @@ bool QLibraryPrivate::load_sys()
+         prefixes.append(QString());
+     }
+ 
++#if defined(Q_PROCESSOR_X86) && !defined(Q_OS_DARWIN)
++    if (qCpuHasFeature(AVX2)) { // if (qCpuHasFeature(ArchHaswell) {
++        auto transform = [](QStringList &list, QString (*f)(QString)) {
++            QStringList tmp;
++            qSwap(tmp, list);
++            list.reserve(tmp.size() * 2);
++            for (const QString &s : qAsConst(tmp)) {
++                list.append(f(s));
++                list.append(s);
++            }
++        };
++        if (pluginState == IsAPlugin) {
++            // add ".avx2" to each suffix in the list
++            transform(suffixes, [](QString s) { return s.append(QLatin1String(".avx2")); });
++        } else {
++            // prepend "haswell/" to each prefix in the list
++            transform(prefixes, [](QString s) { return s.prepend(QLatin1String("haswell/")); });
++        }
++    }
++#endif
++
+     bool retry = true;
+     for(int prefix = 0; retry && !pHnd && prefix < prefixes.size(); prefix++) {
+         for(int suffix = 0; retry && !pHnd && suffix < suffixes.size(); suffix++) {
+-- 
+2.17.1
+

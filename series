@@ -1,2 +1,3 @@
 build.patch
 0001-configure-take-MAKEFLAGS-from-the-command-line.patch
+0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
