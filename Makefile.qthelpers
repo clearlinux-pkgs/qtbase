@@ -1,0 +1,114 @@
+all:
+
+qtbase :
+MODULES += qtbase
+
+qtnetworkauth : qtbase 
+MODULES += qtnetworkauth
+
+qtx11extras : qtbase 
+MODULES += qtx11extras
+
+qtserialport : qtbase 
+MODULES += qtserialport
+
+qtimageformats : qtbase 
+MODULES += qtimageformats
+
+qtxmlpatterns : qtbase 
+MODULES += qtxmlpatterns
+
+qtsvg : qtbase 
+MODULES += qtsvg
+
+qtserialbus : qtserialport 
+MODULES += qtserialbus
+
+qtdeclarative : qtbase qtsvg qtxmlpatterns
+MODULES += qtdeclarative
+
+qtremoteobjects : qtbase qtdeclarative
+MODULES += qtremoteobjects
+
+qtscxml : qtbase qtdeclarative 
+MODULES += qtscxml
+
+qtcanvas3d : qtdeclarative 
+MODULES += qtcanvas3d
+
+qtwebsockets : qtbase qtdeclarative
+MODULES += qtwebsockets
+
+qtgamepad : qtbase qtdeclarative
+MODULES += qtgamepad
+
+qtwayland : qtbase qtdeclarative
+MODULES += qtwayland
+
+qtconnectivity : qtbase qtdeclarative
+MODULES += qtconnectivity
+
+qtsensors : qtbase qtdeclarative
+MODULES += qtsensors
+
+qtgraphicaleffects : qtdeclarative 
+MODULES += qtgraphicaleffects
+
+qtmultimedia : qtbase qtdeclarative
+MODULES += qtmultimedia
+
+qttools : qtbase qtdeclarative
+MODULES += qttools
+
+qtwebglplugin : qtbase qtwebsockets qtdeclarative
+MODULES += qtwebglplugin
+
+qtwebchannel : qtbase qtdeclarative qtwebsockets
+MODULES += qtwebchannel
+
+qt3d : qtbase qtdeclarative qtimageformats qtgamepad
+MODULES += qt3d
+
+qtquickcontrols2 : qtgraphicaleffects qtimageformats
+MODULES += qtquickcontrols2
+
+qtquickcontrols : qtdeclarative qtgraphicaleffects
+MODULES += qtquickcontrols
+
+qtvirtualkeyboard : qtbase qtdeclarative qtsvg qtmultimedia qtquickcontrols
+MODULES += qtvirtualkeyboard
+
+qtspeech : qtbase qtdeclarative qtmultimedia
+MODULES += qtspeech
+
+qtdatavis3d : qtbase qtdeclarative qtmultimedia
+MODULES += qtdatavis3d
+
+qtcharts : qtbase qtdeclarative qtmultimedia
+MODULES += qtcharts
+
+qtscript : qtbase qttools
+MODULES += qtscript
+
+qttranslations : qttools 
+MODULES += qttranslations
+
+qtlocation : qtbase qtdeclarative qtquickcontrols qtquickcontrols2 qtserialport
+MODULES += qtlocation
+
+qtwebengine : qtquickcontrols qtwebchannel qtlocation qttools
+MODULES += qtwebengine
+
+qtwebview : qtdeclarative qtwebengine
+MODULES += qtwebview
+
+all: $(MODULES)
+list:
+	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) CMD=@echo T= | sed s/-echo//
+$(MODULES):
+	$(CMD) $@ $(T)
+
+CMD = +$(MAKE) -C
+
+.PHONY: all list $(MODULES)
+.SUFFIXES:
