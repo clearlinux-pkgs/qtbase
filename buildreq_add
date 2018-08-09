@@ -10,3 +10,4 @@ openssl-dev
 postgresql-dev
 sqlite-autoconf-dev
 systemd-dev
+vulkan-sdk-dev

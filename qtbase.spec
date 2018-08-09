@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.11.1
-Release  : 17
+Release  : 18
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qtbase-everywhere-src-5.11.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qtbase-everywhere-src-5.11.1.tar.xz
 Summary  : No detailed summary available
@@ -14,7 +14,8 @@ License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL
 Requires: qtbase-bin
 Requires: qtbase-lib
 Requires: qtbase-license
-BuildRequires : cmake
+BuildRequires : buildreq-cmake
+BuildRequires : buildreq-qmake
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
@@ -36,15 +37,19 @@ BuildRequires : pkgconfig(sm)
 BuildRequires : pkgconfig(xcb-icccm)
 BuildRequires : pkgconfig(xcb-image)
 BuildRequires : pkgconfig(xcb-keysyms)
+BuildRequires : pkgconfig(xcb-renderutil)
 BuildRequires : pkgconfig(xi)
 BuildRequires : pkgconfig(xkbcommon)
 BuildRequires : pkgconfig(xkbcommon-x11)
 BuildRequires : postgresql-dev
+BuildRequires : qtbase-dev qtbase-extras mesa-dev
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
-Patch1: build.patch
-Patch2: 0001-configure-take-MAKEFLAGS-from-the-command-line.patch
-Patch3: 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
+BuildRequires : vulkan-sdk-dev
+Patch1: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
+Patch2: 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
+Patch3: 0003-Fix-qmake-build-with-glibc-2.28.patch
+Patch4: 0004-QSysInfo-fall-back-to-usr-lib-os-release-if-the-etc-.patch
 
 %description
 Qt modules need to drop a qmake file here to become part of the current
@@ -109,16 +114,20 @@ license components for the qtbase package.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.11.1 buildavx2
 popd
 
 %build
+## build_prepend content
+export MAKEFLAGS="%{?_smp_mflags}"
+## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1530942155
+export SOURCE_DATE_EPOCH=1533938492
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -161,12 +170,14 @@ export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semanti
 -xkb \
 QMAKE_CFLAGS="$CFLAGS" \
 QMAKE_CXXFLAGS="$CXXFLAGS" \
-QMAKE_LFLAGS="$CXXFLAGS" \
-MAKEFLAGS="%{?_smp_mflags}"
+QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 
 unset PKG_CONFIG_PATH
 pushd ../buildavx2/
+## build_prepend content
+export MAKEFLAGS="%{?_smp_mflags}"
+## build_prepend end
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
@@ -208,50 +219,49 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 -xkb \
 QMAKE_CFLAGS="$CFLAGS" \
 QMAKE_CXXFLAGS="$CXXFLAGS" \
-QMAKE_LFLAGS="$CXXFLAGS" \
-MAKEFLAGS="%{?_smp_mflags}"
+QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1530942155
+export SOURCE_DATE_EPOCH=1533938492
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/qtbase
-cp LICENSE.LGPLv3 %{buildroot}/usr/share/doc/qtbase/LICENSE.LGPLv3
+cp LICENSE.FDL %{buildroot}/usr/share/doc/qtbase/LICENSE.FDL
+cp LICENSE.GPL2 %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL2
 cp LICENSE.GPL3 %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL3
 cp LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL3-EXCEPT
-cp LICENSE.GPL2 %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL2
-cp LICENSE.FDL %{buildroot}/usr/share/doc/qtbase/LICENSE.FDL
 cp LICENSE.LGPL3 %{buildroot}/usr/share/doc/qtbase/LICENSE.LGPL3
+cp LICENSE.LGPLv3 %{buildroot}/usr/share/doc/qtbase/LICENSE.LGPLv3
 cp examples/widgets/dialogs/licensewizard/licensewizard.cpp %{buildroot}/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
 cp examples/widgets/dialogs/licensewizard/licensewizard.h %{buildroot}/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
-cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/doc/qtbase/src_tools_moc_util_licenseheader.txt
-cp src/3rdparty/xkbcommon/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xkbcommon_COPYING
+cp src/3rdparty/android/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_android_LICENSE
+cp src/3rdparty/angle/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_LICENSE
+cp src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
+cp src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
+cp src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
+cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_double-conversion_LICENSE
+cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_easing_LICENSE
+cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_forkfd_LICENSE
+cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freebsd_LICENSE
 cp src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_LICENSE.txt
 cp src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
 cp src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
-cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xcb_LICENSE
-cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_double-conversion_LICENSE
-cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_zlib_LICENSE
-cp src/3rdparty/android/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_android_LICENSE
-cp src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz-ng_COPYING
-cp src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_icc_LICENSE.txt
-cp src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_rfc6234_LICENSE
-cp src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
-cp src/3rdparty/angle/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_LICENSE
-cp src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
-cp src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
-cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_easing_LICENSE
-cp src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz_COPYING
-cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freebsd_LICENSE
-cp src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_libpng_LICENSE
 cp src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
-cp src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pcre2_LICENCE
+cp src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz-ng_COPYING
+cp src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz_COPYING
 cp src/3rdparty/iaccessible2/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_iaccessible2_LICENSE
-cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_forkfd_LICENSE
-cp src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pixman_LICENSE
+cp src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_icc_LICENSE.txt
 cp src/3rdparty/libjpeg/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_libjpeg_LICENSE
+cp src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_libpng_LICENSE
+cp src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pcre2_LICENCE
+cp src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pixman_LICENSE
+cp src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_rfc6234_LICENSE
 cp src/3rdparty/sha3/BRG_ENDIAN_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
 cp src/3rdparty/sha3/CC0_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_sha3_CC0_LICENSE
+cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xcb_LICENSE
+cp src/3rdparty/xkbcommon/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xkbcommon_COPYING
+cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_zlib_LICENSE
+cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/doc/qtbase/src_tools_moc_util_licenseheader.txt
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -2172,6 +2182,11 @@ popd
 /usr/include/qt5/QtThemeSupport/QtThemeSupportDepends
 /usr/include/qt5/QtThemeSupport/QtThemeSupportVersion
 /usr/include/qt5/QtThemeSupport/qtthemesupportversion.h
+/usr/include/qt5/QtVulkanSupport/5.11.1/QtVulkanSupport/private/qbasicvulkanplatforminstance_p.h
+/usr/include/qt5/QtVulkanSupport/QtVulkanSupport
+/usr/include/qt5/QtVulkanSupport/QtVulkanSupportDepends
+/usr/include/qt5/QtVulkanSupport/QtVulkanSupportVersion
+/usr/include/qt5/QtVulkanSupport/qtvulkansupportversion.h
 /usr/include/qt5/QtWidgets/5.11.1/QtWidgets/private/complexwidgets_p.h
 /usr/include/qt5/QtWidgets/5.11.1/QtWidgets/private/itemviews_p.h
 /usr/include/qt5/QtWidgets/5.11.1/QtWidgets/private/qabstractbutton_p.h
@@ -2807,6 +2822,7 @@ popd
 /usr/lib64/libQt5Test.prl
 /usr/lib64/libQt5Test.so
 /usr/lib64/libQt5ThemeSupport.prl
+/usr/lib64/libQt5VulkanSupport.prl
 /usr/lib64/libQt5Widgets.prl
 /usr/lib64/libQt5Widgets.so
 /usr/lib64/libQt5XcbQpa.prl
@@ -3059,7 +3075,6 @@ popd
 /usr/lib64/qt5/mkspecs/features/qt_common.prf
 /usr/lib64/qt5/mkspecs/features/qt_config.prf
 /usr/lib64/qt5/mkspecs/features/qt_configure.prf
-/usr/lib64/qt5/mkspecs/features/qt_configure.prf.orig
 /usr/lib64/qt5/mkspecs/features/qt_docs.prf
 /usr/lib64/qt5/mkspecs/features/qt_docs_targets.prf
 /usr/lib64/qt5/mkspecs/features/qt_example_installs.prf
@@ -3257,6 +3272,7 @@ popd
 /usr/lib64/qt5/mkspecs/modules/qt_lib_testlib.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_testlib_private.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_theme_support_private.pri
+/usr/lib64/qt5/mkspecs/modules/qt_lib_vulkan_support_private.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_widgets.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_widgets_private.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri

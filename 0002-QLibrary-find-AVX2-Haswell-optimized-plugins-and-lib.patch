@@ -1,8 +1,7 @@
-From 5219c37f7c98f37f078fee00fe8ca35d83ff4f5d Mon Sep 17 00:00:00 2001
+From 916981767c15fd4a5720fc3b3a9692bd55bb18b6 Mon Sep 17 00:00:00 2001
 From: Thiago Macieira <thiago.macieira@intel.com>
 Date: Wed, 20 Jun 2018 15:20:32 -0700
-Subject: [PATCH 2/2] QLibrary: find AVX2 (Haswell) optimized plugins and
- libraries
+Subject: [PATCH] QLibrary: find AVX2 (Haswell) optimized plugins and libraries
 
 Libraries are placed in a subdir "haswell/" of the main library dir,
 whereas plugins are simply named with ".avx2" appended to the plugin
@@ -19,6 +18,8 @@ We could also implement the "sse2/" subdir search for libraries, but I
 don't think it's worth the cost in 2018.
 
 Change-Id: Iff4151c519c144d580c4fffd1539fe5ee9a4d7b1
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
 (cherry-picked from 5219c37f7c98f37f078fee00fe8ca35d83ff4f5d)
 ---
  src/corelib/plugin/qfactoryloader.cpp |  5 +++++

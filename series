@@ -1,3 +1,4 @@
-build.patch
-0001-configure-take-MAKEFLAGS-from-the-command-line.patch
+0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
+0003-Fix-qmake-build-with-glibc-2.28.patch
+0004-QSysInfo-fall-back-to-usr-lib-os-release-if-the-etc-.patch
