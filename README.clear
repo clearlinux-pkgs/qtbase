@@ -1,0 +1,2 @@
+For a version bump, the 'extras' file needs a manual update, since the package
+version is part of some of the listed files.
