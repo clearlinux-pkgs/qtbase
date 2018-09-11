@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.11.1
-Release  : 19
+Release  : 20
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qtbase-everywhere-src-5.11.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qtbase-everywhere-src-5.11.1.tar.xz
 Summary  : No detailed summary available
@@ -15,7 +15,6 @@ Requires: qtbase-lib
 Requires: qtbase-license
 Requires: qtbase-extras
 BuildRequires : buildreq-cmake
-BuildRequires : buildreq-qmake
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
@@ -58,8 +57,8 @@ http://wiki.qt.io/Creating_a_new_module_or_tool_for_Qt#The_qt_.3Cmodule.3E.pri_f
 %package dev
 Summary: dev components for the qtbase package.
 Group: Development
-Requires: qtbase-lib
-Provides: qtbase-devel
+Requires: qtbase-lib = %{version}-%{release}
+Provides: qtbase-devel = %{version}-%{release}
 
 %description dev
 dev components for the qtbase package.
@@ -84,7 +83,7 @@ extras components for the qtbase package.
 %package lib
 Summary: lib components for the qtbase package.
 Group: Libraries
-Requires: qtbase-license
+Requires: qtbase-license = %{version}-%{release}
 
 %description lib
 lib components for the qtbase package.
@@ -116,7 +115,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1534486483
+export SOURCE_DATE_EPOCH=1536704486
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -212,7 +211,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1534486483
+export SOURCE_DATE_EPOCH=1536704486
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/qtbase
 cp LICENSE.FDL %{buildroot}/usr/share/doc/qtbase/LICENSE.FDL
@@ -2690,7 +2689,6 @@ popd
 /usr/include/qt5/QtXml/qtxmlglobal.h
 /usr/include/qt5/QtXml/qtxmlversion.h
 /usr/include/qt5/QtXml/qxml.h
-/usr/lib64/*.a
 /usr/lib64/cmake/Qt5/Qt5Config.cmake
 /usr/lib64/cmake/Qt5/Qt5ConfigVersion.cmake
 /usr/lib64/cmake/Qt5/Qt5ModuleLocation.cmake
@@ -2771,7 +2769,9 @@ popd
 /usr/lib64/haswell/libQt5Widgets.so
 /usr/lib64/haswell/libQt5XcbQpa.so
 /usr/lib64/haswell/libQt5Xml.so
+/usr/lib64/libQt5AccessibilitySupport.a
 /usr/lib64/libQt5AccessibilitySupport.prl
+/usr/lib64/libQt5Bootstrap.a
 /usr/lib64/libQt5Bootstrap.prl
 /usr/lib64/libQt5Concurrent.prl
 /usr/lib64/libQt5Concurrent.so
@@ -2779,35 +2779,49 @@ popd
 /usr/lib64/libQt5Core.so
 /usr/lib64/libQt5DBus.prl
 /usr/lib64/libQt5DBus.so
+/usr/lib64/libQt5DeviceDiscoverySupport.a
 /usr/lib64/libQt5DeviceDiscoverySupport.prl
+/usr/lib64/libQt5EdidSupport.a
 /usr/lib64/libQt5EdidSupport.prl
 /usr/lib64/libQt5EglFSDeviceIntegration.prl
 /usr/lib64/libQt5EglFSDeviceIntegration.so
 /usr/lib64/libQt5EglFsKmsSupport.prl
 /usr/lib64/libQt5EglFsKmsSupport.so
+/usr/lib64/libQt5EglSupport.a
 /usr/lib64/libQt5EglSupport.prl
+/usr/lib64/libQt5EventDispatcherSupport.a
 /usr/lib64/libQt5EventDispatcherSupport.prl
+/usr/lib64/libQt5FbSupport.a
 /usr/lib64/libQt5FbSupport.prl
+/usr/lib64/libQt5FontDatabaseSupport.a
 /usr/lib64/libQt5FontDatabaseSupport.prl
+/usr/lib64/libQt5GlxSupport.a
 /usr/lib64/libQt5GlxSupport.prl
 /usr/lib64/libQt5Gui.prl
 /usr/lib64/libQt5Gui.so
+/usr/lib64/libQt5InputSupport.a
 /usr/lib64/libQt5InputSupport.prl
+/usr/lib64/libQt5KmsSupport.a
 /usr/lib64/libQt5KmsSupport.prl
 /usr/lib64/libQt5Network.prl
 /usr/lib64/libQt5Network.so
 /usr/lib64/libQt5OpenGL.prl
 /usr/lib64/libQt5OpenGL.so
+/usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5OpenGLExtensions.prl
+/usr/lib64/libQt5PlatformCompositorSupport.a
 /usr/lib64/libQt5PlatformCompositorSupport.prl
 /usr/lib64/libQt5PrintSupport.prl
 /usr/lib64/libQt5PrintSupport.so
+/usr/lib64/libQt5ServiceSupport.a
 /usr/lib64/libQt5ServiceSupport.prl
 /usr/lib64/libQt5Sql.prl
 /usr/lib64/libQt5Sql.so
 /usr/lib64/libQt5Test.prl
 /usr/lib64/libQt5Test.so
+/usr/lib64/libQt5ThemeSupport.a
 /usr/lib64/libQt5ThemeSupport.prl
+/usr/lib64/libQt5VulkanSupport.a
 /usr/lib64/libQt5VulkanSupport.prl
 /usr/lib64/libQt5Widgets.prl
 /usr/lib64/libQt5Widgets.so
@@ -3336,7 +3350,7 @@ popd
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc /usr/share/doc/qtbase/*
+%doc /usr/share/doc/qtbase/src_3rdparty_pcre2_LICENCE
 /usr/share/doc/qt5/global/compat.qdocconf
 /usr/share/doc/qt5/global/config.qdocconf
 /usr/share/doc/qt5/global/externalsites.qdocconf
@@ -3509,6 +3523,7 @@ popd
 /usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqlibinputplugin.so
+/usr/lib64/qt5/plugins/generic/libqlibinputplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqtuiotouchplugin.so
 /usr/lib64/qt5/plugins/generic/libqtuiotouchplugin.so.avx2
 /usr/lib64/qt5/plugins/imageformats/libqgif.so
