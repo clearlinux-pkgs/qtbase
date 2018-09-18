@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.11.2
-Release  : 21
+Release  : 22
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Summary  : No detailed summary available
@@ -42,7 +42,6 @@ BuildRequires : pkgconfig(xi)
 BuildRequires : pkgconfig(xkbcommon)
 BuildRequires : pkgconfig(xkbcommon-x11)
 BuildRequires : postgresql-dev
-BuildRequires : qtbase-dev qtbase-extras mesa-dev
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
 BuildRequires : vulkan-sdk-dev
@@ -57,7 +56,7 @@ http://wiki.qt.io/Creating_a_new_module_or_tool_for_Qt#The_qt_.3Cmodule.3E.pri_f
 %package bin
 Summary: bin components for the qtbase package.
 Group: Binaries
-Requires: qtbase-license
+Requires: qtbase-license = %{version}-%{release}
 
 %description bin
 bin components for the qtbase package.
@@ -66,9 +65,9 @@ bin components for the qtbase package.
 %package dev
 Summary: dev components for the qtbase package.
 Group: Development
-Requires: qtbase-lib
-Requires: qtbase-bin
-Provides: qtbase-devel
+Requires: qtbase-lib = %{version}-%{release}
+Requires: qtbase-bin = %{version}-%{release}
+Provides: qtbase-devel = %{version}-%{release}
 
 %description dev
 dev components for the qtbase package.
@@ -93,7 +92,7 @@ extras components for the qtbase package.
 %package lib
 Summary: lib components for the qtbase package.
 Group: Libraries
-Requires: qtbase-license
+Requires: qtbase-license = %{version}-%{release}
 
 %description lib
 lib components for the qtbase package.
@@ -123,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1537302839
+export SOURCE_DATE_EPOCH=1537303637
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -171,6 +170,9 @@ make  %{?_smp_mflags}
 
 unset PKG_CONFIG_PATH
 pushd ../buildavx2/
+## build_prepend content
+export MAKEFLAGS="%{?_smp_mflags}"
+## build_prepend end
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
@@ -216,7 +218,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1537302839
+export SOURCE_DATE_EPOCH=1537303637
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/qtbase
 cp LICENSE.FDL %{buildroot}/usr/share/doc/qtbase/LICENSE.FDL
@@ -265,6 +267,27 @@ popd
 
 %files bin
 %defattr(-,root,root,-)
+%exclude /usr/bin/fixqt4headers.pl
+%exclude /usr/bin/haswell/moc
+%exclude /usr/bin/haswell/qdbuscpp2xml
+%exclude /usr/bin/haswell/qdbusxml2cpp
+%exclude /usr/bin/haswell/qlalr
+%exclude /usr/bin/haswell/qmake
+%exclude /usr/bin/haswell/qvkgen
+%exclude /usr/bin/haswell/rcc
+%exclude /usr/bin/haswell/uic
+%exclude /usr/bin/moc
+%exclude /usr/bin/qdbuscpp2xml
+%exclude /usr/bin/qdbusxml2cpp
+%exclude /usr/bin/qlalr
+%exclude /usr/bin/qmake
+%exclude /usr/bin/qvkgen
+%exclude /usr/bin/rcc
+%exclude /usr/bin/syncqt.pl
+%exclude /usr/bin/uic
+
+%files dev
+%defattr(-,root,root,-)
 /usr/bin/fixqt4headers.pl
 /usr/bin/haswell/moc
 /usr/bin/haswell/qdbuscpp2xml
@@ -283,9 +306,6 @@ popd
 /usr/bin/rcc
 /usr/bin/syncqt.pl
 /usr/bin/uic
-
-%files dev
-%defattr(-,root,root,-)
 /usr/include/qt5/QtAccessibilitySupport/5.11.2/QtAccessibilitySupport/private/qaccessiblebridgeutils_p.h
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupport
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupportDepends
@@ -3426,52 +3446,67 @@ popd
 %defattr(-,root,root,-)
 /usr/lib64/haswell/libQt5Core.so.5
 /usr/lib64/haswell/libQt5Core.so.5.11
+/usr/lib64/haswell/libQt5Core.so.5.11.2
 /usr/lib64/haswell/libQt5DBus.so.5
 /usr/lib64/haswell/libQt5DBus.so.5.11
+/usr/lib64/haswell/libQt5DBus.so.5.11.2
 /usr/lib64/haswell/libQt5Network.so.5
 /usr/lib64/haswell/libQt5Network.so.5.11
+/usr/lib64/haswell/libQt5Network.so.5.11.2
 /usr/lib64/haswell/libQt5Xml.so.5
 /usr/lib64/haswell/libQt5Xml.so.5.11
+/usr/lib64/haswell/libQt5Xml.so.5.11.2
 /usr/lib64/libQt5Core.so.5
 /usr/lib64/libQt5Core.so.5.11
+/usr/lib64/libQt5Core.so.5.11.2
 /usr/lib64/libQt5DBus.so.5
 /usr/lib64/libQt5DBus.so.5.11
+/usr/lib64/libQt5DBus.so.5.11.2
 /usr/lib64/libQt5Network.so.5
 /usr/lib64/libQt5Network.so.5.11
+/usr/lib64/libQt5Network.so.5.11.2
 /usr/lib64/libQt5Sql.so.5
 /usr/lib64/libQt5Sql.so.5.11
+/usr/lib64/libQt5Sql.so.5.11.2
 /usr/lib64/libQt5Xml.so.5
 /usr/lib64/libQt5Xml.so.5.11
+/usr/lib64/libQt5Xml.so.5.11.2
 
 %files lib
 %defattr(-,root,root,-)
 %exclude /usr/lib64/haswell/libQt5Core.so.5
 %exclude /usr/lib64/haswell/libQt5Core.so.5.11
+%exclude /usr/lib64/haswell/libQt5Core.so.5.11.2
 %exclude /usr/lib64/haswell/libQt5DBus.so.5
 %exclude /usr/lib64/haswell/libQt5DBus.so.5.11
+%exclude /usr/lib64/haswell/libQt5DBus.so.5.11.2
 %exclude /usr/lib64/haswell/libQt5Network.so.5
 %exclude /usr/lib64/haswell/libQt5Network.so.5.11
+%exclude /usr/lib64/haswell/libQt5Network.so.5.11.2
 %exclude /usr/lib64/haswell/libQt5Xml.so.5
 %exclude /usr/lib64/haswell/libQt5Xml.so.5.11
+%exclude /usr/lib64/haswell/libQt5Xml.so.5.11.2
 %exclude /usr/lib64/libQt5Core.so.5
 %exclude /usr/lib64/libQt5Core.so.5.11
+%exclude /usr/lib64/libQt5Core.so.5.11.2
 %exclude /usr/lib64/libQt5DBus.so.5
 %exclude /usr/lib64/libQt5DBus.so.5.11
+%exclude /usr/lib64/libQt5DBus.so.5.11.2
 %exclude /usr/lib64/libQt5Network.so.5
 %exclude /usr/lib64/libQt5Network.so.5.11
+%exclude /usr/lib64/libQt5Network.so.5.11.2
 %exclude /usr/lib64/libQt5Sql.so.5
 %exclude /usr/lib64/libQt5Sql.so.5.11
+%exclude /usr/lib64/libQt5Sql.so.5.11.2
 %exclude /usr/lib64/libQt5Xml.so.5
 %exclude /usr/lib64/libQt5Xml.so.5.11
-/usr/lib64/haswell/libQt5Core.so.5.11.2
-/usr/lib64/haswell/libQt5DBus.so.5.11.2
+%exclude /usr/lib64/libQt5Xml.so.5.11.2
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.11
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.11.2
 /usr/lib64/haswell/libQt5Gui.so.5
 /usr/lib64/haswell/libQt5Gui.so.5.11
 /usr/lib64/haswell/libQt5Gui.so.5.11.2
-/usr/lib64/haswell/libQt5Network.so.5.11.2
 /usr/lib64/haswell/libQt5OpenGL.so.5
 /usr/lib64/haswell/libQt5OpenGL.so.5.11
 /usr/lib64/haswell/libQt5OpenGL.so.5.11.2
@@ -3487,12 +3522,9 @@ popd
 /usr/lib64/haswell/libQt5XcbQpa.so.5
 /usr/lib64/haswell/libQt5XcbQpa.so.5.11
 /usr/lib64/haswell/libQt5XcbQpa.so.5.11.2
-/usr/lib64/haswell/libQt5Xml.so.5.11.2
 /usr/lib64/libQt5Concurrent.so.5
 /usr/lib64/libQt5Concurrent.so.5.11
 /usr/lib64/libQt5Concurrent.so.5.11.2
-/usr/lib64/libQt5Core.so.5.11.2
-/usr/lib64/libQt5DBus.so.5.11.2
 /usr/lib64/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/libQt5EglFSDeviceIntegration.so.5.11
 /usr/lib64/libQt5EglFSDeviceIntegration.so.5.11.2
@@ -3502,14 +3534,12 @@ popd
 /usr/lib64/libQt5Gui.so.5
 /usr/lib64/libQt5Gui.so.5.11
 /usr/lib64/libQt5Gui.so.5.11.2
-/usr/lib64/libQt5Network.so.5.11.2
 /usr/lib64/libQt5OpenGL.so.5
 /usr/lib64/libQt5OpenGL.so.5.11
 /usr/lib64/libQt5OpenGL.so.5.11.2
 /usr/lib64/libQt5PrintSupport.so.5
 /usr/lib64/libQt5PrintSupport.so.5.11
 /usr/lib64/libQt5PrintSupport.so.5.11.2
-/usr/lib64/libQt5Sql.so.5.11.2
 /usr/lib64/libQt5Test.so.5
 /usr/lib64/libQt5Test.so.5.11
 /usr/lib64/libQt5Test.so.5.11.2
@@ -3519,7 +3549,6 @@ popd
 /usr/lib64/libQt5XcbQpa.so.5
 /usr/lib64/libQt5XcbQpa.so.5.11
 /usr/lib64/libQt5XcbQpa.so.5.11.2
-/usr/lib64/libQt5Xml.so.5.11.2
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so.avx2
 /usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
