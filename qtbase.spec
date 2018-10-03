@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.11.2
-Release  : 22
+Release  : 23
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Summary  : No detailed summary available
@@ -44,7 +44,9 @@ BuildRequires : pkgconfig(xkbcommon-x11)
 BuildRequires : postgresql-dev
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
-BuildRequires : vulkan-sdk-dev
+BuildRequires : Vulkan-Headers-dev
+BuildRequires : Vulkan-Loader-dev
+BuildRequires : Vulkan-Tools
 Patch1: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 Patch2: 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
 
