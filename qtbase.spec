@@ -5,16 +5,19 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.11.2
-Release  : 23
+Release  : 24
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 IJG ISC LGPL-3.0 Libpng MIT MIT-feh Zlib
-Requires: qtbase-bin
-Requires: qtbase-lib
-Requires: qtbase-license
+Requires: qtbase-bin = %{version}-%{release}
+Requires: qtbase-lib = %{version}-%{release}
+Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
+BuildRequires : Vulkan-Headers-dev
+BuildRequires : Vulkan-Loader-dev
+BuildRequires : Vulkan-Tools
 BuildRequires : buildreq-cmake
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
@@ -44,9 +47,6 @@ BuildRequires : pkgconfig(xkbcommon-x11)
 BuildRequires : postgresql-dev
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
-BuildRequires : Vulkan-Headers-dev
-BuildRequires : Vulkan-Loader-dev
-BuildRequires : Vulkan-Tools
 Patch1: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 Patch2: 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
 
@@ -54,6 +54,14 @@ Patch2: 0002-QLibrary-find-AVX2-Haswell-optimized-plugins-and-lib.patch
 Qt modules need to drop a qmake file here to become part of the current
 Qt configuration. The file format is documented in
 http://wiki.qt.io/Creating_a_new_module_or_tool_for_Qt#The_qt_.3Cmodule.3E.pri_files
+
+%package abi
+Summary: abi components for the qtbase package.
+Group: Default
+
+%description abi
+abi components for the qtbase package.
+
 
 %package bin
 Summary: bin components for the qtbase package.
@@ -124,7 +132,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1537303637
+export SOURCE_DATE_EPOCH=1541631264
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -220,45 +228,45 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1537303637
+export SOURCE_DATE_EPOCH=1541631264
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/qtbase
-cp LICENSE.FDL %{buildroot}/usr/share/doc/qtbase/LICENSE.FDL
-cp LICENSE.GPL2 %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL2
-cp LICENSE.GPL3 %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL3
-cp LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/doc/qtbase/LICENSE.GPL3-EXCEPT
-cp LICENSE.LGPL3 %{buildroot}/usr/share/doc/qtbase/LICENSE.LGPL3
-cp LICENSE.LGPLv3 %{buildroot}/usr/share/doc/qtbase/LICENSE.LGPLv3
-cp examples/widgets/dialogs/licensewizard/licensewizard.cpp %{buildroot}/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
-cp examples/widgets/dialogs/licensewizard/licensewizard.h %{buildroot}/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
-cp src/3rdparty/android/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_android_LICENSE
-cp src/3rdparty/angle/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_LICENSE
-cp src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
-cp src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
-cp src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
-cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_double-conversion_LICENSE
-cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_easing_LICENSE
-cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_forkfd_LICENSE
-cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freebsd_LICENSE
-cp src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_LICENSE.txt
-cp src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
-cp src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/doc/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
-cp src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
-cp src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz-ng_COPYING
-cp src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_harfbuzz_COPYING
-cp src/3rdparty/iaccessible2/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_iaccessible2_LICENSE
-cp src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/doc/qtbase/src_3rdparty_icc_LICENSE.txt
-cp src/3rdparty/libjpeg/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_libjpeg_LICENSE
-cp src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_libpng_LICENSE
-cp src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pcre2_LICENCE
-cp src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_pixman_LICENSE
-cp src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_rfc6234_LICENSE
-cp src/3rdparty/sha3/BRG_ENDIAN_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
-cp src/3rdparty/sha3/CC0_LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_sha3_CC0_LICENSE
-cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xcb_LICENSE
-cp src/3rdparty/xkbcommon/COPYING %{buildroot}/usr/share/doc/qtbase/src_3rdparty_xkbcommon_COPYING
-cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/doc/qtbase/src_3rdparty_zlib_LICENSE
-cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/doc/qtbase/src_tools_moc_util_licenseheader.txt
+mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
+cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.FDL
+cp LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL2
+cp LICENSE.GPL3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL3
+cp LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL3-EXCEPT
+cp LICENSE.LGPL3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.LGPL3
+cp LICENSE.LGPLv3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.LGPLv3
+cp examples/widgets/dialogs/licensewizard/licensewizard.cpp %{buildroot}/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
+cp examples/widgets/dialogs/licensewizard/licensewizard.h %{buildroot}/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
+cp src/3rdparty/android/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_android_LICENSE
+cp src/3rdparty/angle/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_LICENSE
+cp src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
+cp src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
+cp src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
+cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_double-conversion_LICENSE
+cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
+cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
+cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
+cp src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
+cp src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
+cp src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
+cp src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
+cp src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz-ng_COPYING
+cp src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz_COPYING
+cp src/3rdparty/iaccessible2/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_iaccessible2_LICENSE
+cp src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_icc_LICENSE.txt
+cp src/3rdparty/libjpeg/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_libjpeg_LICENSE
+cp src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_libpng_LICENSE
+cp src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE
+cp src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_pixman_LICENSE
+cp src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_rfc6234_LICENSE
+cp src/3rdparty/sha3/BRG_ENDIAN_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
+cp src/3rdparty/sha3/CC0_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_sha3_CC0_LICENSE
+cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
+cp src/3rdparty/xkbcommon/COPYING %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_xkbcommon_COPYING
+cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
+cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -266,6 +274,23 @@ popd
 
 %files
 %defattr(-,root,root,-)
+
+%files abi
+%defattr(-,root,root,-)
+/usr/share/abi/libQt5Concurrent.so.5.11.2.abi
+/usr/share/abi/libQt5Core.so.5.11.2.abi
+/usr/share/abi/libQt5DBus.so.5.11.2.abi
+/usr/share/abi/libQt5EglFSDeviceIntegration.so.5.11.2.abi
+/usr/share/abi/libQt5EglFsKmsSupport.so.5.11.2.abi
+/usr/share/abi/libQt5Gui.so.5.11.2.abi
+/usr/share/abi/libQt5Network.so.5.11.2.abi
+/usr/share/abi/libQt5OpenGL.so.5.11.2.abi
+/usr/share/abi/libQt5PrintSupport.so.5.11.2.abi
+/usr/share/abi/libQt5Sql.so.5.11.2.abi
+/usr/share/abi/libQt5Test.so.5.11.2.abi
+/usr/share/abi/libQt5Widgets.so.5.11.2.abi
+/usr/share/abi/libQt5XcbQpa.so.5.11.2.abi
+/usr/share/abi/libQt5Xml.so.5.11.2.abi
 
 %files bin
 %defattr(-,root,root,-)
@@ -3366,7 +3391,6 @@ popd
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc /usr/share/doc/qtbase/*
 /usr/share/doc/qt5/global/compat.qdocconf
 /usr/share/doc/qt5/global/config.qdocconf
 /usr/share/doc/qt5/global/externalsites.qdocconf
@@ -3599,39 +3623,40 @@ popd
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/qtbase/LICENSE.FDL
-/usr/share/doc/qtbase/LICENSE.GPL2
-/usr/share/doc/qtbase/LICENSE.GPL3
-/usr/share/doc/qtbase/LICENSE.GPL3-EXCEPT
-/usr/share/doc/qtbase/LICENSE.LGPL3
-/usr/share/doc/qtbase/LICENSE.LGPLv3
-/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
-/usr/share/doc/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
-/usr/share/doc/qtbase/src_3rdparty_android_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_angle_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_double-conversion_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_easing_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_forkfd_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_freebsd_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_freetype_LICENSE.txt
-/usr/share/doc/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
-/usr/share/doc/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
-/usr/share/doc/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
-/usr/share/doc/qtbase/src_3rdparty_harfbuzz-ng_COPYING
-/usr/share/doc/qtbase/src_3rdparty_harfbuzz_COPYING
-/usr/share/doc/qtbase/src_3rdparty_iaccessible2_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_icc_LICENSE.txt
-/usr/share/doc/qtbase/src_3rdparty_libjpeg_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_libpng_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_pixman_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_rfc6234_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_sha3_CC0_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_xcb_LICENSE
-/usr/share/doc/qtbase/src_3rdparty_xkbcommon_COPYING
-/usr/share/doc/qtbase/src_3rdparty_zlib_LICENSE
-/usr/share/doc/qtbase/src_tools_moc_util_licenseheader.txt
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/qtbase/LICENSE.FDL
+/usr/share/package-licenses/qtbase/LICENSE.GPL2
+/usr/share/package-licenses/qtbase/LICENSE.GPL3
+/usr/share/package-licenses/qtbase/LICENSE.GPL3-EXCEPT
+/usr/share/package-licenses/qtbase/LICENSE.LGPL3
+/usr/share/package-licenses/qtbase/LICENSE.LGPLv3
+/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
+/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
+/usr/share/package-licenses/qtbase/src_3rdparty_android_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_angle_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_double-conversion_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
+/usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
+/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz-ng_COPYING
+/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz_COPYING
+/usr/share/package-licenses/qtbase/src_3rdparty_iaccessible2_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_icc_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_3rdparty_libjpeg_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_libpng_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE
+/usr/share/package-licenses/qtbase/src_3rdparty_pixman_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_rfc6234_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_sha3_CC0_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_xkbcommon_COPYING
+/usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
+/usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
