@@ -96,7 +96,7 @@ MODULES += qttranslations
 qtlocation : qtbase qtdeclarative qtquickcontrols qtquickcontrols2 qtserialport
 MODULES += qtlocation
 
-qtwebengine : qtquickcontrols qtwebchannel qtlocation qttools
+qtwebengine : qtdeclarative qtquickcontrols qtquickcontrols2 qtlocation qtwebchannel
 MODULES += qtwebengine
 
 qtwebview : qtdeclarative qtwebengine

@@ -5,7 +5,6 @@ libICE.so.6
 libSM.so.6
 libX11-xcb.so.1
 libX11.so.6
-libXi.so.6
 libXrender.so.1
 libc.so.6
 libcups.so.2
@@ -19,8 +18,8 @@ libgbm.so.1
 libgcc_s.so.1
 libglib-2.0.so.0
 libharfbuzz.so.0
-libicui18n.so.61
-libicuuc.so.61
+libicui18n.so.63
+libicuuc.so.63
 libinput.so.10
 libjpeg.so.62
 libm.so.6
@@ -45,6 +44,7 @@ libxcb-shm.so.0
 libxcb-sync.so.1
 libxcb-xfixes.so.0
 libxcb-xinerama.so.0
+libxcb-xinput.so.0
 libxcb-xkb.so.1
 libxcb.so.1
 libxkbcommon-x11.so.0
