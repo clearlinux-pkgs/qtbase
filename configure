@@ -30,7 +30,6 @@
 -system-libpng
 -system-sqlite
 -system-xcb
--system-xkbcommon
 -system-zlib
 -xinput2
 -xkb
