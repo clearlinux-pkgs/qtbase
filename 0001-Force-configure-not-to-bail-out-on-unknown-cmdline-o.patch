@@ -1,26 +1,29 @@
-From 90d069b1a762435e368f50a48cffadfa8d94e388 Mon Sep 17 00:00:00 2001
+From a887613e6575d13f56549c29275f0f5bf0cdf30c Mon Sep 17 00:00:00 2001
 From: Thiago Macieira <thiago.macieira@intel.com>
 Date: Thu, 14 Apr 2016 03:44:11 +0000
 Subject: [PATCH] Force configure not to bail out on unknown cmdline options
+
 ---
- mkspecs/features/qt_configure.prf | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mkspecs/features/qt_configure.prf | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/mkspecs/features/qt_configure.prf b/mkspecs/features/qt_configure.prf
-index 1211129283..6de17b0784 100644
+index 7ca65c92b3..b0c9877fca 100644
 --- a/mkspecs/features/qt_configure.prf
 +++ b/mkspecs/features/qt_configure.prf
-@@ -324,8 +324,8 @@ defineTest(qtConfParseCommandLine) {
+@@ -343,11 +343,7 @@ defineTest(qtConfParseCommandLine) {
          }
  
          isEmpty(type) {
 -            qtConfAddError("Unknown command line option '$$c'.")
--            return()
-+            qtConfAddWarning("Unknown command line option '$$c'.")
+-            equals(config.input.continue, yes): \
+-                next()
+-            else: \
+-                return()
 +            next()
          }
  
          call = "qtConfCommandline_$${type}"
 -- 
-2.18.0
+2.20.1
 

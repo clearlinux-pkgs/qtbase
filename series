@@ -1,1 +1,3 @@
+tell-the-truth-about-private-api.patch
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
+0002-qfloat16-suppress-the-tables-if-FP16-is-supported-by.patch

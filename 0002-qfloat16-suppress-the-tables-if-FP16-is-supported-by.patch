@@ -1,0 +1,38 @@
+From da67c1e5c7f54e743f7b18a5a6d3c9bb6ad0dc81 Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 13 Mar 2019 20:22:52 -0700
+Subject: [PATCH] qfloat16: suppress the tables if FP16 is supported by the CPU
+
+If QtCore is being compiled to a system with FP16 support, then all
+applications are too and, therefore, we don't need the tables. Saves 12k
+of read-only data.
+
+Change-Id: I46363e5b8944459e8c48fffd158bb53d906df297
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+---
+ src/tools/qfloat16-tables/gen_qfloat16_tables.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/tools/qfloat16-tables/gen_qfloat16_tables.cpp b/src/tools/qfloat16-tables/gen_qfloat16_tables.cpp
+index f5051e25fc..745f19012e 100644
+--- a/src/tools/qfloat16-tables/gen_qfloat16_tables.cpp
++++ b/src/tools/qfloat16-tables/gen_qfloat16_tables.cpp
+@@ -79,6 +79,7 @@ qint32 main(qint32 argc, char **argv)
+     fid.write("#include <QtCore/qfloat16.h>\n\n");
+ 
+     fid.write("QT_BEGIN_NAMESPACE\n\n");
++    fid.write("#if !defined(__F16C__) && !defined(__ARM_FP16_FORMAT_IEEE)\n\n");
+ 
+     fid.write("const quint32 qfloat16::mantissatable[2048] = {\n");
+     fid.write("0,\n");
+@@ -155,6 +156,7 @@ qint32 main(qint32 argc, char **argv)
+ 
+     fid.write("};\n\n");
+ 
++    fid.write("#endif // !__F16C__ && !__ARM_FP16_FORMAT_IEEE\n\n");
+     fid.write("QT_END_NAMESPACE\n");
+     fid.close();
+     return 0;
+-- 
+2.20.1
+
