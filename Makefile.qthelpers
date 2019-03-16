@@ -102,6 +102,9 @@ MODULES += qtwebengine
 qtwebview : qtdeclarative qtwebengine
 MODULES += qtwebview
 
+qtmqtt : qtwebsockets
+MODULES += qtmqtt
+
 all: $(MODULES)
 list:
 	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) CMD=@echo T= | sed s/-echo//
