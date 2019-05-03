@@ -1,3 +1,4 @@
+export MAKEFLAGS=%{?_smp_mflags}
 if ! grep -wq avx2 /proc/cpuinfo; then
     echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
     exit 1
