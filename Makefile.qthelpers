@@ -15,17 +15,17 @@ MODULES += qtserialport
 qtimageformats : qtbase 
 MODULES += qtimageformats
 
-qtxmlpatterns : qtbase 
-MODULES += qtxmlpatterns
-
 qtsvg : qtbase 
 MODULES += qtsvg
 
+qtdeclarative : qtbase qtsvg 
+MODULES += qtdeclarative
+
+qtxmlpatterns : qtdeclarative 
+MODULES += qtxmlpatterns
+
 qtserialbus : qtserialport 
 MODULES += qtserialbus
-
-qtdeclarative : qtbase qtsvg qtxmlpatterns
-MODULES += qtdeclarative
 
 qtremoteobjects : qtbase qtdeclarative
 MODULES += qtremoteobjects
@@ -96,7 +96,7 @@ MODULES += qttranslations
 qtlocation : qtbase qtdeclarative qtquickcontrols qtquickcontrols2 qtserialport
 MODULES += qtlocation
 
-qtwebengine : qtdeclarative qtquickcontrols qtquickcontrols2 qtlocation qtwebchannel
+qtwebengine : qtdeclarative qtquickcontrols qtquickcontrols2 qtlocation qtwebchannel qttools
 MODULES += qtwebengine
 
 qtwebview : qtdeclarative qtwebengine
