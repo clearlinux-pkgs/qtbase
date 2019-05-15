@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.12.3
-Release  : 32
+Release  : 33
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Summary  : No detailed summary available
@@ -15,6 +15,7 @@ Requires: qtbase-bin = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
+Requires: shared-mime-info
 BuildRequires : Vulkan-Headers-dev
 BuildRequires : Vulkan-Loader-dev
 BuildRequires : Vulkan-Tools
@@ -50,6 +51,7 @@ BuildRequires : systemd-dev
 Patch1: tell-the-truth-about-private-api.patch
 Patch2: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 Patch3: 0002-qfloat16-suppress-the-tables-if-FP16-is-supported-by.patch
+Patch4: 0003-QMimeDatabase-allow-building-without-our-internal-co.patch
 
 %description
 Qt modules need to drop a qmake file here to become part of the current
@@ -124,6 +126,7 @@ staticdev components for the qtbase package.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.12.3 buildavx2
 popd
@@ -135,12 +138,14 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
+CFLAGS="$CFLAGS -fno-lto"
+CXXFLAGS="$CXXFLAGS -fno-lto"
 ## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1556913188
+export SOURCE_DATE_EPOCH=1557941615
 export LDFLAGS="${LDFLAGS} -fno-lto"
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -164,6 +169,7 @@ export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semanti
 -fontconfig \
 -glib \
 -libproxy \
+-no-mimetype-database \
 -no-qml-debug \
 -plugin-sql-mysql \
 -plugin-sql-psql \
@@ -194,6 +200,8 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
+CFLAGS="$CFLAGS -fno-lto"
+CXXFLAGS="$CXXFLAGS -fno-lto"
 ## build_prepend end
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
@@ -216,6 +224,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 -fontconfig \
 -glib \
 -libproxy \
+-no-mimetype-database \
 -no-qml-debug \
 -plugin-sql-mysql \
 -plugin-sql-psql \
@@ -239,7 +248,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1556913188
+export SOURCE_DATE_EPOCH=1557941615
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
 cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.FDL

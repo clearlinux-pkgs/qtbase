@@ -16,6 +16,7 @@
 -fontconfig
 -glib
 -libproxy
+-no-mimetype-database
 -no-qml-debug
 -plugin-sql-mysql
 -plugin-sql-psql
