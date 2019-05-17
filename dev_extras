@@ -1,5 +1,4 @@
 /usr/bin/fixqt4headers.pl
-/usr/bin/haswell/fixqt4headers.pl
 /usr/bin/haswell/moc
 /usr/bin/haswell/qdbuscpp2xml
 /usr/bin/haswell/qdbusxml2cpp
@@ -18,3 +17,4 @@
 /usr/bin/rcc
 /usr/bin/syncqt.pl
 /usr/bin/uic
+/usr/lib64/libQt5OpenGLExtensions.a

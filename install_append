@@ -1,0 +1,1 @@
+rm -f %{buildroot}/usr/bin/haswell/*.pl

@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.12.3
-Release  : 33
+Release  : 34
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Summary  : No detailed summary available
@@ -145,7 +145,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1557941615
+export SOURCE_DATE_EPOCH=1558126400
 export LDFLAGS="${LDFLAGS} -fno-lto"
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
@@ -248,7 +248,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1557941615
+export SOURCE_DATE_EPOCH=1558126400
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
 cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.FDL
@@ -295,6 +295,9 @@ pushd ../buildavx2/
 %make_install_avx2
 popd
 %make_install
+## install_append content
+rm -f %{buildroot}/usr/bin/haswell/*.pl
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -2903,6 +2906,7 @@ popd
 /usr/lib64/libQt5Network.so
 /usr/lib64/libQt5OpenGL.prl
 /usr/lib64/libQt5OpenGL.so
+/usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5OpenGLExtensions.prl
 /usr/lib64/libQt5PlatformCompositorSupport.prl
 /usr/lib64/libQt5PrintSupport.prl
@@ -3752,6 +3756,7 @@ popd
 
 %files staticdev
 %defattr(-,root,root,-)
+%exclude /usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5AccessibilitySupport.a
 /usr/lib64/libQt5Bootstrap.a
 /usr/lib64/libQt5DeviceDiscoverySupport.a
@@ -3763,7 +3768,6 @@ popd
 /usr/lib64/libQt5GlxSupport.a
 /usr/lib64/libQt5InputSupport.a
 /usr/lib64/libQt5KmsSupport.a
-/usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5PlatformCompositorSupport.a
 /usr/lib64/libQt5ServiceSupport.a
 /usr/lib64/libQt5ThemeSupport.a
