@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.12.3
-Release  : 34
+Release  : 35
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.tar.xz
 Summary  : No detailed summary available
@@ -46,12 +46,15 @@ BuildRequires : pkgconfig(xi)
 BuildRequires : pkgconfig(xkbcommon)
 BuildRequires : pkgconfig(xkbcommon-x11)
 BuildRequires : postgresql-dev
+BuildRequires : shared-mime-info
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
 Patch1: tell-the-truth-about-private-api.patch
 Patch2: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 Patch3: 0002-qfloat16-suppress-the-tables-if-FP16-is-supported-by.patch
 Patch4: 0003-QMimeDatabase-allow-building-without-our-internal-co.patch
+Patch5: 0004-Append-LTCG-arguments-properly.patch
+Patch6: 0005-Add-qmake-config-fat-static-lto.patch
 
 %description
 Qt modules need to drop a qmake file here to become part of the current
@@ -127,6 +130,8 @@ staticdev components for the qtbase package.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
+%patch6 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.12.3 buildavx2
 popd
@@ -138,19 +143,20 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
-CFLAGS="$CFLAGS -fno-lto"
-CXXFLAGS="$CXXFLAGS -fno-lto"
 ## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1558126400
-export LDFLAGS="${LDFLAGS} -fno-lto"
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export SOURCE_DATE_EPOCH=1560491366
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -190,6 +196,9 @@ export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semanti
 QMAKE_CFLAGS="$CFLAGS" \
 QMAKE_CXXFLAGS="$CXXFLAGS" \
 QMAKE_LFLAGS="$CXXFLAGS"
+## make_prepend content
+(cd src && ../bin/qmake -config ltcg -config fat-static-lto)
+## make_prepend end
 make  %{?_smp_mflags}
 
 unset PKG_CONFIG_PATH
@@ -200,8 +209,6 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
-CFLAGS="$CFLAGS -fno-lto"
-CXXFLAGS="$CXXFLAGS -fno-lto"
 ## build_prepend end
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
@@ -245,11 +252,26 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 QMAKE_CFLAGS="$CFLAGS" \
 QMAKE_CXXFLAGS="$CXXFLAGS" \
 QMAKE_LFLAGS="$CXXFLAGS"
+## make_prepend content
+(cd src && ../bin/qmake -config ltcg -config fat-static-lto)
+## make_prepend end
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1558126400
+export SOURCE_DATE_EPOCH=1560491366
 rm -rf %{buildroot}
+## install_prepend content
+pushd src/openglextensions
+make clean
+../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
+make
+popd
+pushd ../buildavx2/src/openglextensions
+make clean
+../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
+make
+popd
+## install_prepend end
 mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
 cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.FDL
 cp LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL2
@@ -3669,9 +3691,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/bearer/libqnmbearer.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so
-/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so
-/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
 /usr/lib64/qt5/plugins/generic/libqevdevkeyboardplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so
