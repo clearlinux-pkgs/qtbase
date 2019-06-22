@@ -4,7 +4,7 @@ libQt5Concurrent.so.5:Qt_5.1
 libQt5Concurrent.so.5:Qt_5.10
 libQt5Concurrent.so.5:Qt_5.11
 libQt5Concurrent.so.5:Qt_5.12
-libQt5Concurrent.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Concurrent.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Concurrent.so.5:Qt_5.2
 libQt5Concurrent.so.5:Qt_5.3
 libQt5Concurrent.so.5:Qt_5.4
@@ -49,7 +49,7 @@ libQt5Core.so.5:Qt_5.1
 libQt5Core.so.5:Qt_5.10
 libQt5Core.so.5:Qt_5.11
 libQt5Core.so.5:Qt_5.12
-libQt5Core.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Core.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Core.so.5:Qt_5.2
 libQt5Core.so.5:Qt_5.3
 libQt5Core.so.5:Qt_5.4
@@ -5449,6 +5449,7 @@ libQt5Core.so.5:_ZltRK10QStringRefS1_
 libQt5Core.so.5:_ZltRK13QElapsedTimerS1_
 libQt5Core.so.5:_ZltRK7QStringS1_
 libQt5Core.so.5:_ZorRK9QBitArrayS1_
+libQt5Core.so.5:_Zpl14QDeadlineTimerx
 libQt5Core.so.5:_ZrsR11QDataStreamR10QByteArray
 libQt5Core.so.5:_ZrsR11QDataStreamR12QEasingCurve
 libQt5Core.so.5:_ZrsR11QDataStreamR14QVersionNumber
@@ -5486,7 +5487,7 @@ libQt5DBus.so.5:Qt_5.1
 libQt5DBus.so.5:Qt_5.10
 libQt5DBus.so.5:Qt_5.11
 libQt5DBus.so.5:Qt_5.12
-libQt5DBus.so.5:Qt_5.12.3_PRIVATE_API
+libQt5DBus.so.5:Qt_5.12.4_PRIVATE_API
 libQt5DBus.so.5:Qt_5.2
 libQt5DBus.so.5:Qt_5.3
 libQt5DBus.so.5:Qt_5.4
@@ -5888,7 +5889,7 @@ libQt5DBus.so.5:_ZrsRK13QDBusArgumentR6QSizeF
 libQt5DBus.so.5:_ZrsRK13QDBusArgumentR7QPointF
 libQt5DBus.so.5:_ZrsRK13QDBusArgumentR8QVariant
 libQt5DBus.so.5:_ZrsRK13QDBusArgumentR9QDateTime
-libQt5EglFSDeviceIntegration.so.5:Qt_5.12.3_PRIVATE_API
+libQt5EglFSDeviceIntegration.so.5:Qt_5.12.4_PRIVATE_API
 libQt5EglFSDeviceIntegration.so.5:_Z25qt_egl_device_integrationv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacallEN11QMetaObject4CallEiPPv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacastEPKc
@@ -6045,7 +6046,7 @@ libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration24nativeResourceFor
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration28nativeResourceForIntegrationERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration32nativeResourceFunctionForContextERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_NK17QEglFSIntegration16platformFunctionERK10QByteArray
-libQt5EglFsKmsSupport.so.5:Qt_5.12.3_PRIVATE_API
+libQt5EglFsKmsSupport.so.5:Qt_5.12.4_PRIVATE_API
 libQt5EglFsKmsSupport.so.5:_Z16qLcEglfsKmsDebugv
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDevice14registerScreenEP15QPlatformScreenbRK6QPointRK5QListIS1_E
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDeviceC1EP16QKmsScreenConfigRK7QString
@@ -6100,7 +6101,7 @@ libQt5Gui.so.5:Qt_5.1
 libQt5Gui.so.5:Qt_5.10
 libQt5Gui.so.5:Qt_5.11
 libQt5Gui.so.5:Qt_5.12
-libQt5Gui.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Gui.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Gui.so.5:Qt_5.2
 libQt5Gui.so.5:Qt_5.3
 libQt5Gui.so.5:Qt_5.4
@@ -7384,6 +7385,7 @@ libQt5Gui.so.5:_ZN13QRasterWindowD1Ev
 libQt5Gui.so.5:_ZN13QRasterWindowD2Ev
 libQt5Gui.so.5:_ZN13QShaderFormat10setVersionERK14QVersionNumber
 libQt5Gui.so.5:_ZN13QShaderFormat13setExtensionsERK11QStringList
+libQt5Gui.so.5:_ZN13QShaderFormat13setShaderTypeENS_10ShaderTypeE
 libQt5Gui.so.5:_ZN13QShaderFormat6setApiENS_3ApiE
 libQt5Gui.so.5:_ZN13QShaderFormat9setVendorERK7QString
 libQt5Gui.so.5:_ZN13QShaderFormatC1Ev
@@ -7740,7 +7742,6 @@ libQt5Gui.so.5:_ZN14QWindowPrivate14effectiveStateE6QFlagsIN2Qt11WindowStateEE
 libQt5Gui.so.5:_ZN14QWindowPrivate15connectToScreenEP7QScreen
 libQt5Gui.so.5:_ZN14QWindowPrivate16clearFocusObjectEv
 libQt5Gui.so.5:_ZN14QWindowPrivate16updateVisibilityEv
-libQt5Gui.so.5:_ZN14QWindowPrivate17screenForGeometryERK5QRect
 libQt5Gui.so.5:_ZN14QWindowPrivate17setTopLevelScreenEP7QScreenb
 libQt5Gui.so.5:_ZN14QWindowPrivate21updateSiblingPositionENS_15SiblingPositionE
 libQt5Gui.so.5:_ZN14QWindowPrivate26emitScreenChangedRecursionEP7QScreen
@@ -7851,14 +7852,17 @@ libQt5Gui.so.5:_ZN15QHighDpiScaling15screenSubfactorEPK15QPlatformScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling15setGlobalFactorEd
 libQt5Gui.so.5:_ZN15QHighDpiScaling15setScreenFactorEP7QScreend
 libQt5Gui.so.5:_ZN15QHighDpiScaling18initHighDpiScalingEv
+libQt5Gui.so.5:_ZN15QHighDpiScaling19mapPositionToGlobalERK6QPointS2_PK7QWindow
 libQt5Gui.so.5:_ZN15QHighDpiScaling19mapPositionToNativeERK6QPointPK15QPlatformScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling20updateHighDpiScalingEv
+libQt5Gui.so.5:_ZN15QHighDpiScaling21mapPositionFromGlobalERK6QPointS2_PK7QWindow
 libQt5Gui.so.5:_ZN15QHighDpiScaling21mapPositionFromNativeERK6QPointPK15QPlatformScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling6factorEPK15QPlatformScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling6factorEPK7QScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling6factorEPK7QWindow
 libQt5Gui.so.5:_ZN15QHighDpiScaling6originEPK15QPlatformScreen
 libQt5Gui.so.5:_ZN15QHighDpiScaling6originEPK7QScreen
+libQt5Gui.so.5:_ZN15QHighDpiScaling6originEPK7QWindow
 libQt5Gui.so.5:_ZN15QImageIOHandler11jumpToImageEi
 libQt5Gui.so.5:_ZN15QImageIOHandler15jumpToNextImageEv
 libQt5Gui.so.5:_ZN15QImageIOHandler5writeERK6QImage
@@ -11794,6 +11798,7 @@ libQt5Gui.so.5:_ZNK13QRasterWindow10metaObjectEv
 libQt5Gui.so.5:_ZNK13QRasterWindow10redirectedEP6QPoint
 libQt5Gui.so.5:_ZNK13QRasterWindow6metricEN12QPaintDevice17PaintDeviceMetricE
 libQt5Gui.so.5:_ZNK13QShaderFormat10extensionsEv
+libQt5Gui.so.5:_ZNK13QShaderFormat10shaderTypeEv
 libQt5Gui.so.5:_ZNK13QShaderFormat3apiEv
 libQt5Gui.so.5:_ZNK13QShaderFormat6vendorEv
 libQt5Gui.so.5:_ZNK13QShaderFormat7isValidEv
@@ -12028,6 +12033,7 @@ libQt5Gui.so.5:_ZNK14QTextTableCell7rowSpanEv
 libQt5Gui.so.5:_ZNK14QWindowPrivate12shareContextEv
 libQt5Gui.so.5:_ZNK14QWindowPrivate14globalPositionEv
 libQt5Gui.so.5:_ZNK14QWindowPrivate14topLevelWindowEN7QWindow12AncestorModeE
+libQt5Gui.so.5:_ZNK14QWindowPrivate17screenForGeometryERK5QRect
 libQt5Gui.so.5:_ZNK14QWindowPrivate25closestAcceptableGeometryERK6QRectF
 libQt5Gui.so.5:_ZNK15QFontEngineQPF210glyphIndexEj
 libQt5Gui.so.5:_ZNK15QFontEngineQPF212maxCharWidthEv
@@ -13451,7 +13457,7 @@ libQt5Network.so.5:Qt_5.1
 libQt5Network.so.5:Qt_5.10
 libQt5Network.so.5:Qt_5.11
 libQt5Network.so.5:Qt_5.12
-libQt5Network.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Network.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Network.so.5:Qt_5.2
 libQt5Network.so.5:Qt_5.3
 libQt5Network.so.5:Qt_5.4
@@ -14834,7 +14840,7 @@ libQt5OpenGL.so.5:Qt_5.1
 libQt5OpenGL.so.5:Qt_5.10
 libQt5OpenGL.so.5:Qt_5.11
 libQt5OpenGL.so.5:Qt_5.12
-libQt5OpenGL.so.5:Qt_5.12.3_PRIVATE_API
+libQt5OpenGL.so.5:Qt_5.12.4_PRIVATE_API
 libQt5OpenGL.so.5:Qt_5.2
 libQt5OpenGL.so.5:Qt_5.3
 libQt5OpenGL.so.5:Qt_5.4
@@ -15461,7 +15467,7 @@ libQt5PrintSupport.so.5:Qt_5.1
 libQt5PrintSupport.so.5:Qt_5.10
 libQt5PrintSupport.so.5:Qt_5.11
 libQt5PrintSupport.so.5:Qt_5.12
-libQt5PrintSupport.so.5:Qt_5.12.3_PRIVATE_API
+libQt5PrintSupport.so.5:Qt_5.12.4_PRIVATE_API
 libQt5PrintSupport.so.5:Qt_5.2
 libQt5PrintSupport.so.5:Qt_5.3
 libQt5PrintSupport.so.5:Qt_5.4
@@ -15899,7 +15905,7 @@ libQt5Sql.so.5:Qt_5.1
 libQt5Sql.so.5:Qt_5.10
 libQt5Sql.so.5:Qt_5.11
 libQt5Sql.so.5:Qt_5.12
-libQt5Sql.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Sql.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Sql.so.5:Qt_5.2
 libQt5Sql.so.5:Qt_5.3
 libQt5Sql.so.5:Qt_5.4
@@ -16371,7 +16377,7 @@ libQt5Test.so.5:Qt_5.1
 libQt5Test.so.5:Qt_5.10
 libQt5Test.so.5:Qt_5.11
 libQt5Test.so.5:Qt_5.12
-libQt5Test.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Test.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Test.so.5:Qt_5.2
 libQt5Test.so.5:Qt_5.3
 libQt5Test.so.5:Qt_5.4
@@ -16574,7 +16580,7 @@ libQt5Widgets.so.5:Qt_5.1
 libQt5Widgets.so.5:Qt_5.10
 libQt5Widgets.so.5:Qt_5.11
 libQt5Widgets.so.5:Qt_5.12
-libQt5Widgets.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Widgets.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Widgets.so.5:Qt_5.2
 libQt5Widgets.so.5:Qt_5.3
 libQt5Widgets.so.5:Qt_5.4
@@ -24555,7 +24561,7 @@ libQt5Widgets.so.5:_ZrsR11QDataStreamR15QListWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR15QTreeWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR16QTableWidgetItem
 libQt5Widgets.so.5:_ZrsR11QTextStreamR9QSplitter
-libQt5XcbQpa.so.5:Qt_5.12.3_PRIVATE_API
+libQt5XcbQpa.so.5:Qt_5.12.4_PRIVATE_API
 libQt5XcbQpa.so.5:_Z16qt_x11_drawImageRK5QRectRK6QPointRK6QImagemP4_XGCP9_XDisplayP6Visuali
 libQt5XcbQpa.so.5:_Z7lcQpaGlv
 libQt5XcbQpa.so.5:_ZN10QXcbScreen11windowShownEP10QXcbWindow
@@ -24924,7 +24930,7 @@ libQt5Xml.so.5:Qt_5.1
 libQt5Xml.so.5:Qt_5.10
 libQt5Xml.so.5:Qt_5.11
 libQt5Xml.so.5:Qt_5.12
-libQt5Xml.so.5:Qt_5.12.3_PRIVATE_API
+libQt5Xml.so.5:Qt_5.12.4_PRIVATE_API
 libQt5Xml.so.5:Qt_5.2
 libQt5Xml.so.5:Qt_5.3
 libQt5Xml.so.5:Qt_5.4
