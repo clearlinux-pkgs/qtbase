@@ -5,13 +5,12 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.12.4
-Release  : 36
+Release  : 37
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qtbase-everywhere-src-5.12.4.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qtbase-everywhere-src-5.12.4.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 IJG ISC LGPL-3.0 Libpng MIT MIT-feh OFL-1.0 Zlib
-Requires: qtbase-bin = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
@@ -51,30 +50,19 @@ BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
 Patch1: tell-the-truth-about-private-api.patch
 Patch2: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
-Patch3: 0002-qfloat16-suppress-the-tables-if-FP16-is-supported-by.patch
-Patch4: 0003-QMimeDatabase-allow-building-without-our-internal-co.patch
-Patch5: 0004-Append-LTCG-arguments-properly.patch
-Patch6: 0005-Add-qmake-config-fat-static-lto.patch
+Patch3: 0003-QMimeDatabase-allow-building-without-our-internal-co.patch
+Patch4: 0004-Append-LTCG-arguments-properly.patch
+Patch5: 0005-Add-qmake-config-fat-static-lto.patch
 
 %description
 Qt modules need to drop a qmake file here to become part of the current
 Qt configuration. The file format is documented in
 http://wiki.qt.io/Creating_a_new_module_or_tool_for_Qt#The_qt_.3Cmodule.3E.pri_files
 
-%package bin
-Summary: bin components for the qtbase package.
-Group: Binaries
-Requires: qtbase-license = %{version}-%{release}
-
-%description bin
-bin components for the qtbase package.
-
-
 %package dev
 Summary: dev components for the qtbase package.
 Group: Development
 Requires: qtbase-lib = %{version}-%{release}
-Requires: qtbase-bin = %{version}-%{release}
 Provides: qtbase-devel = %{version}-%{release}
 Requires: qtbase = %{version}-%{release}
 
@@ -131,7 +119,6 @@ staticdev components for the qtbase package.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.12.4 buildavx2
 popd
@@ -147,8 +134,8 @@ fi
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1561176564
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1565801513
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -258,7 +245,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1561176564
+export SOURCE_DATE_EPOCH=1565801513
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -317,33 +304,14 @@ pushd ../buildavx2/
 %make_install_avx2
 popd
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/lib64/libQt5OpenGLExtensions.a
 ## install_append content
 rm -f %{buildroot}/usr/bin/haswell/*.pl
 ## install_append end
 
 %files
 %defattr(-,root,root,-)
-
-%files bin
-%defattr(-,root,root,-)
-%exclude /usr/bin/fixqt4headers.pl
-%exclude /usr/bin/haswell/moc
-%exclude /usr/bin/haswell/qdbuscpp2xml
-%exclude /usr/bin/haswell/qdbusxml2cpp
-%exclude /usr/bin/haswell/qlalr
-%exclude /usr/bin/haswell/qmake
-%exclude /usr/bin/haswell/qvkgen
-%exclude /usr/bin/haswell/rcc
-%exclude /usr/bin/haswell/uic
-%exclude /usr/bin/moc
-%exclude /usr/bin/qdbuscpp2xml
-%exclude /usr/bin/qdbusxml2cpp
-%exclude /usr/bin/qlalr
-%exclude /usr/bin/qmake
-%exclude /usr/bin/qvkgen
-%exclude /usr/bin/rcc
-%exclude /usr/bin/syncqt.pl
-%exclude /usr/bin/uic
 
 %files dev
 %defattr(-,root,root,-)
@@ -2928,7 +2896,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/libQt5Network.so
 /usr/lib64/libQt5OpenGL.prl
 /usr/lib64/libQt5OpenGL.so
-/usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5OpenGLExtensions.prl
 /usr/lib64/libQt5PlatformCompositorSupport.prl
 /usr/lib64/libQt5PrintSupport.prl
@@ -3604,34 +3571,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files lib
 %defattr(-,root,root,-)
-%exclude /usr/lib64/haswell/libQt5Core.so.5
-%exclude /usr/lib64/haswell/libQt5Core.so.5.12
-%exclude /usr/lib64/haswell/libQt5Core.so.5.12.4
-%exclude /usr/lib64/haswell/libQt5DBus.so.5
-%exclude /usr/lib64/haswell/libQt5DBus.so.5.12
-%exclude /usr/lib64/haswell/libQt5DBus.so.5.12.4
-%exclude /usr/lib64/haswell/libQt5Network.so.5
-%exclude /usr/lib64/haswell/libQt5Network.so.5.12
-%exclude /usr/lib64/haswell/libQt5Network.so.5.12.4
-%exclude /usr/lib64/haswell/libQt5Xml.so.5
-%exclude /usr/lib64/haswell/libQt5Xml.so.5.12
-%exclude /usr/lib64/haswell/libQt5Xml.so.5.12.4
-%exclude /usr/lib64/libQt5Core.so.5
-%exclude /usr/lib64/libQt5Core.so.5.12
-%exclude /usr/lib64/libQt5Core.so.5.12.4
-%exclude /usr/lib64/libQt5DBus.so.5
-%exclude /usr/lib64/libQt5DBus.so.5.12
-%exclude /usr/lib64/libQt5DBus.so.5.12.4
-%exclude /usr/lib64/libQt5Network.so.5
-%exclude /usr/lib64/libQt5Network.so.5.12
-%exclude /usr/lib64/libQt5Network.so.5.12.4
-%exclude /usr/lib64/libQt5Sql.so.5
-%exclude /usr/lib64/libQt5Sql.so.5.12
-%exclude /usr/lib64/libQt5Sql.so.5.12.4
-%exclude /usr/lib64/libQt5Xml.so.5
-%exclude /usr/lib64/libQt5Xml.so.5.12
-%exclude /usr/lib64/libQt5Xml.so.5.12.4
-%exclude /usr/lib64/qt5/plugins/sqldrivers/libqsqlite.so
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.12
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.12.4
@@ -3778,7 +3717,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files staticdev
 %defattr(-,root,root,-)
-%exclude /usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5AccessibilitySupport.a
 /usr/lib64/libQt5Bootstrap.a
 /usr/lib64/libQt5DeviceDiscoverySupport.a
