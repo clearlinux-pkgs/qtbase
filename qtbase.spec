@@ -5,12 +5,12 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.12.4
-Release  : 37
+Release  : 38
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qtbase-everywhere-src-5.12.4.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qtbase-everywhere-src-5.12.4.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 IJG ISC LGPL-3.0 Libpng MIT MIT-feh OFL-1.0 Zlib
+License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 ICU IJG ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 W3C-19980720 Zlib bzip2-1.0.6
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
@@ -19,9 +19,11 @@ BuildRequires : Vulkan-Headers-dev
 BuildRequires : Vulkan-Loader-dev
 BuildRequires : Vulkan-Tools
 BuildRequires : buildreq-cmake
+BuildRequires : buildreq-mvn
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
+BuildRequires : gradle
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : mariadb-dev
@@ -135,7 +137,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1565801513
+export SOURCE_DATE_EPOCH=1568875209
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -245,7 +247,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1565801513
+export SOURCE_DATE_EPOCH=1568875209
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -279,7 +281,10 @@ cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/package-license
 cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
 cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
 cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
+cp src/3rdparty/freetype/BDF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_BDF-LICENSE.txt
 cp src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
+cp src/3rdparty/freetype/PCF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_PCF-LICENSE.txt
+cp src/3rdparty/freetype/ZLIB-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_ZLIB-LICENSE.txt
 cp src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
 cp src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
 cp src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
@@ -299,13 +304,31 @@ cp src/3rdparty/tinycbor/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/
 cp src/3rdparty/wasm/DEJAVU-LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_wasm_DEJAVU-LICENSE
 cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
 cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
+cp src/corelib/codecs/QBIG5CODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QBIG5CODEC_LICENSE.txt
+cp src/corelib/codecs/QBKCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QBKCODEC_LICENSE.txt
+cp src/corelib/codecs/QEUCJPCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCJPCODEC_LICENSE.txt
+cp src/corelib/codecs/QEUCKRCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCKRCODEC_LICENSE.txt
+cp src/corelib/codecs/QJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QJISCODEC_LICENSE.txt
+cp src/corelib/codecs/QSJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QSJISCODEC_LICENSE.txt
+cp src/corelib/codecs/QTSCIICODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QTSCIICODEC_LICENSE.txt
+cp src/corelib/io/PSL-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_io_PSL-LICENSE.txt
+cp src/corelib/kernel/QEVENTDISPATCHER_CF_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_kernel_QEVENTDISPATCHER_CF_LICENSE.txt
+cp src/corelib/tools/UNICODE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_tools_UNICODE_LICENSE.txt
+cp src/dbus/LIBDBUS-1-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_dbus_LIBDBUS-1-LICENSE.txt
+cp src/gui/opengl/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_opengl_KHRONOS_LICENSE.txt
+cp src/gui/painting/QIMAGETRANSFORM_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_painting_QIMAGETRANSFORM_LICENSE.txt
+cp src/gui/painting/WEBGRADIENTS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_painting_WEBGRADIENTS_LICENSE.txt
+cp src/gui/vulkan/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_vulkan_KHRONOS_LICENSE.txt
+cp src/plugins/platforms/cocoa/COCOA_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_plugins_platforms_cocoa_COCOA_LICENSE.txt
+cp src/testlib/3rdparty/CYCLE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_CYCLE_LICENSE.txt
+cp src/testlib/3rdparty/LINUX_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_LINUX_LICENSE.txt
+cp src/testlib/3rdparty/VALGRIND_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_VALGRIND_LICENSE.txt
 cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
+cp tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/tests_auto_corelib_serialization_qxmlstream_XML-Test-Suite-LICENSE.txt
 pushd ../buildavx2/
 %make_install_avx2
 popd
 %make_install
-## Remove excluded files
-rm -f %{buildroot}/usr/lib64/libQt5OpenGLExtensions.a
 ## install_append content
 rm -f %{buildroot}/usr/bin/haswell/*.pl
 ## install_append end
@@ -3693,7 +3716,10 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
 /usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
 /usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_BDF-LICENSE.txt
 /usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_PCF-LICENSE.txt
+/usr/share/package-licenses/qtbase/src_3rdparty_freetype_ZLIB-LICENSE.txt
 /usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
 /usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
 /usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
@@ -3713,7 +3739,27 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/share/package-licenses/qtbase/src_3rdparty_wasm_DEJAVU-LICENSE
 /usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
 /usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QBIG5CODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QBKCODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCJPCODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCKRCODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QJISCODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QSJISCODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_codecs_QTSCIICODEC_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_io_PSL-LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_kernel_QEVENTDISPATCHER_CF_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_corelib_tools_UNICODE_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_dbus_LIBDBUS-1-LICENSE.txt
+/usr/share/package-licenses/qtbase/src_gui_opengl_KHRONOS_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_gui_painting_QIMAGETRANSFORM_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_gui_painting_WEBGRADIENTS_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_gui_vulkan_KHRONOS_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_plugins_platforms_cocoa_COCOA_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_testlib_3rdparty_CYCLE_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_testlib_3rdparty_LINUX_LICENSE.txt
+/usr/share/package-licenses/qtbase/src_testlib_3rdparty_VALGRIND_LICENSE.txt
 /usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
+/usr/share/package-licenses/qtbase/tests_auto_corelib_serialization_qxmlstream_XML-Test-Suite-LICENSE.txt
 
 %files staticdev
 %defattr(-,root,root,-)
@@ -3728,6 +3774,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/libQt5GlxSupport.a
 /usr/lib64/libQt5InputSupport.a
 /usr/lib64/libQt5KmsSupport.a
+/usr/lib64/libQt5OpenGLExtensions.a
 /usr/lib64/libQt5PlatformCompositorSupport.a
 /usr/lib64/libQt5ServiceSupport.a
 /usr/lib64/libQt5ThemeSupport.a
