@@ -1,5 +1,4 @@
-tell-the-truth-about-private-api.patch
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
-0003-QMimeDatabase-allow-building-without-our-internal-co.patch
-0004-Append-LTCG-arguments-properly.patch
-0005-Add-qmake-config-fat-static-lto.patch
+0002-Partially-revert-qfloat16-suppress-the-tables-if-FP1.patch
+tell-the-truth-about-private-api.patch
+0003-Fix-CMake-config-files-for-libdir-different-from-lib.patch

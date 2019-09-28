@@ -1,3 +1,4 @@
+# -*- makefile -*-
 all:
 
 qtbase :
@@ -108,10 +109,14 @@ MODULES += qtmqtt
 all: $(MODULES)
 list:
 	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) CMD=@echo T= | sed s/-echo//
+autospec:
+	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) -j1 CMD='set -x; f() { (cd $$$$1; if ! git diff --quiet; then git reset @{u} && git checkout @ release options.conf *.spec && $(MAKE) -j1 autospec repoadd; fi; ) }; f'
+koji:
+	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) -j40 CMD='f() { $(MAKE) -C $$$$1 -j1 koji koji-wait-pkg; sleep 3m; }; f'
 $(MODULES):
 	$(CMD) $@ $(T)
 
 CMD = +$(MAKE) -C
 
-.PHONY: all list $(MODULES)
+.PHONY: all list koji $(MODULES)
 .SUFFIXES:
