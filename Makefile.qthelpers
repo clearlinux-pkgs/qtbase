@@ -62,7 +62,7 @@ qttools : qtbase qtdeclarative
 MODULES += qttools
 
 qtwebglplugin : qtbase qtwebsockets qtdeclarative
-MODULES += qtwebglplugin
+#MODULES += qtwebglplugin
 
 qtwebchannel : qtbase qtdeclarative qtwebsockets
 MODULES += qtwebchannel
@@ -101,7 +101,7 @@ qtwebengine : qtdeclarative qtquickcontrols qtquickcontrols2 qtlocation qtwebcha
 MODULES += qtwebengine
 
 qtwebview : qtdeclarative qtwebengine
-MODULES += qtwebview
+#MODULES += qtwebview
 
 qtmqtt : qtwebsockets
 MODULES += qtmqtt
@@ -112,7 +112,7 @@ list:
 autospec:
 	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) -j1 CMD='set -x; f() { (cd $$$$1; if ! git diff --quiet; then git reset @{u} && git checkout @ release options.conf *.spec && $(MAKE) -j1 autospec repoadd; fi; ) }; f'
 koji:
-	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) -j40 CMD='f() { $(MAKE) -C $$$$1 -j1 koji koji-wait-pkg; sleep 3m; }; f'
+	@$(MAKE) -sf $(firstword $(MAKEFILE_LIST)) -j40 CMD='f() { $(MAKE) -C $$$$1 koji && $(MAKE) -C $$$$1 koji-wait-pkg; sleep 3m; }; f'
 $(MODULES):
 	$(CMD) $@ $(T)
 
