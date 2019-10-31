@@ -1,4 +1,2 @@
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
-0002-Partially-revert-qfloat16-suppress-the-tables-if-FP1.patch
 tell-the-truth-about-private-api.patch
-0003-Fix-CMake-config-files-for-libdir-different-from-lib.patch

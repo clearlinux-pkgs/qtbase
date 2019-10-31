@@ -4,13 +4,14 @@
 #
 %define keepstatic 1
 Name     : qtbase
-Version  : 5.13.1
-Release  : 38
-URL      : https://download.qt.io/official_releases/qt/5.13/5.13.1/submodules/qtbase-everywhere-src-5.13.1.tar.xz
-Source0  : https://download.qt.io/official_releases/qt/5.13/5.13.1/submodules/qtbase-everywhere-src-5.13.1.tar.xz
+Version  : 5.13.2
+Release  : 39
+URL      : https://download.qt.io/official_releases/qt/5.13/5.13.2/submodules/qtbase-everywhere-src-5.13.2.tar.xz
+Source0  : https://download.qt.io/official_releases/qt/5.13/5.13.2/submodules/qtbase-everywhere-src-5.13.2.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 ICU IJG ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 W3C-19980720 Zlib bzip2-1.0.6
+Requires: qtbase-bin = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
@@ -51,19 +52,25 @@ BuildRequires : shared-mime-info
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
 Patch1: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
-Patch2: 0002-Partially-revert-qfloat16-suppress-the-tables-if-FP1.patch
-Patch3: tell-the-truth-about-private-api.patch
-Patch4: 0003-Fix-CMake-config-files-for-libdir-different-from-lib.patch
+Patch2: tell-the-truth-about-private-api.patch
 
 %description
-Qt modules need to drop a qmake file here to become part of the current
-Qt configuration. The file format is documented in
-http://wiki.qt.io/Creating_a_new_module_or_tool_for_Qt#The_qt_.3Cmodule.3E.pri_files
+If this directory is empty, you probably forgot to compile the Qt library.
+
+%package bin
+Summary: bin components for the qtbase package.
+Group: Binaries
+Requires: qtbase-license = %{version}-%{release}
+
+%description bin
+bin components for the qtbase package.
+
 
 %package dev
 Summary: dev components for the qtbase package.
 Group: Development
 Requires: qtbase-lib = %{version}-%{release}
+Requires: qtbase-bin = %{version}-%{release}
 Provides: qtbase-devel = %{version}-%{release}
 Requires: qtbase = %{version}-%{release}
 
@@ -114,13 +121,12 @@ staticdev components for the qtbase package.
 
 
 %prep
-%setup -q -n qtbase-everywhere-src-5.13.1
+%setup -q -n qtbase-everywhere-src-5.13.2
+cd %{_builddir}/qtbase-everywhere-src-5.13.2
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 pushd ..
-cp -a qtbase-everywhere-src-5.13.1 buildavx2
+cp -a qtbase-everywhere-src-5.13.2 buildavx2
 popd
 
 %build
@@ -135,7 +141,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1569694826
+export SOURCE_DATE_EPOCH=1572500162
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -245,7 +251,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1569694826
+export SOURCE_DATE_EPOCH=1572500162
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -260,69 +266,70 @@ make
 popd
 ## install_prepend end
 mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
-cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.FDL
-cp LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL2
-cp LICENSE.GPL3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL3
-cp LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.GPL3-EXCEPT
-cp LICENSE.LGPL3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.LGPL3
-cp LICENSE.LGPLv3 %{buildroot}/usr/share/package-licenses/qtbase/LICENSE.LGPLv3
-cp examples/widgets/dialogs/licensewizard/licensewizard.cpp %{buildroot}/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
-cp examples/widgets/dialogs/licensewizard/licensewizard.h %{buildroot}/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
-cp src/3rdparty/android/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_android_LICENSE
-cp src/3rdparty/angle/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_LICENSE
-cp src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
-cp src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
-cp src/3rdparty/angle/src/common/third_party/smhasher/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_common_third_party_smhasher_LICENSE
-cp src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
-cp src/3rdparty/angle/src/third_party/libXNVCtrl/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_libXNVCtrl_LICENSE
-cp src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_double-conversion_LICENSE
-cp src/3rdparty/easing/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
-cp src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
-cp src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
-cp src/3rdparty/freetype/BDF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_BDF-LICENSE.txt
-cp src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
-cp src/3rdparty/freetype/PCF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_PCF-LICENSE.txt
-cp src/3rdparty/freetype/ZLIB-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_ZLIB-LICENSE.txt
-cp src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
-cp src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
-cp src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
-cp src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz-ng_COPYING
-cp src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz_COPYING
-cp src/3rdparty/iaccessible2/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_iaccessible2_LICENSE
-cp src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_icc_LICENSE.txt
-cp src/3rdparty/libjpeg/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_libjpeg_LICENSE
-cp src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_libpng_LICENSE
-cp src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE
-cp src/3rdparty/pcre2/LICENCE-SLJIT %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE-SLJIT
-cp src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_pixman_LICENSE
-cp src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_rfc6234_LICENSE
-cp src/3rdparty/sha3/BRG_ENDIAN_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
-cp src/3rdparty/sha3/CC0_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_sha3_CC0_LICENSE
-cp src/3rdparty/tinycbor/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_tinycbor_LICENSE
-cp src/3rdparty/wasm/DEJAVU-LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_wasm_DEJAVU-LICENSE
-cp src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
-cp src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
-cp src/corelib/codecs/QBIG5CODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QBIG5CODEC_LICENSE.txt
-cp src/corelib/codecs/QBKCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QBKCODEC_LICENSE.txt
-cp src/corelib/codecs/QEUCJPCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCJPCODEC_LICENSE.txt
-cp src/corelib/codecs/QEUCKRCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCKRCODEC_LICENSE.txt
-cp src/corelib/codecs/QJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QJISCODEC_LICENSE.txt
-cp src/corelib/codecs/QSJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QSJISCODEC_LICENSE.txt
-cp src/corelib/codecs/QTSCIICODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_codecs_QTSCIICODEC_LICENSE.txt
-cp src/corelib/io/PSL-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_io_PSL-LICENSE.txt
-cp src/corelib/kernel/QEVENTDISPATCHER_CF_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_kernel_QEVENTDISPATCHER_CF_LICENSE.txt
-cp src/corelib/tools/UNICODE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_corelib_tools_UNICODE_LICENSE.txt
-cp src/dbus/LIBDBUS-1-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_dbus_LIBDBUS-1-LICENSE.txt
-cp src/gui/opengl/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_opengl_KHRONOS_LICENSE.txt
-cp src/gui/painting/QIMAGETRANSFORM_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_painting_QIMAGETRANSFORM_LICENSE.txt
-cp src/gui/painting/WEBGRADIENTS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_painting_WEBGRADIENTS_LICENSE.txt
-cp src/gui/vulkan/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_gui_vulkan_KHRONOS_LICENSE.txt
-cp src/plugins/platforms/cocoa/COCOA_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_plugins_platforms_cocoa_COCOA_LICENSE.txt
-cp src/testlib/3rdparty/CYCLE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_CYCLE_LICENSE.txt
-cp src/testlib/3rdparty/LINUX_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_LINUX_LICENSE.txt
-cp src/testlib/3rdparty/VALGRIND_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/src_testlib_3rdparty_VALGRIND_LICENSE.txt
-cp src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
-cp tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/tests_auto_corelib_serialization_qxmlstream_XML-Test-Suite-LICENSE.txt
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/61907422fefcd2313a9b570c31d203a6dbebd333
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qtbase/4cc77b90af91e615a64ae04893fdffa7939db84c
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.GPL3 %{buildroot}/usr/share/package-licenses/qtbase/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/package-licenses/qtbase/e93757aefa405f2c9a8a55e780ae9c39542dfc3a
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.LGPL3 %{buildroot}/usr/share/package-licenses/qtbase/f45ee1c765646813b442ca58de72e20a64a7ddba
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/LICENSE.LGPLv3 %{buildroot}/usr/share/package-licenses/qtbase/21c9a9f31dd8a6784a5ac2836db33acb977532af
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/examples/widgets/dialogs/licensewizard/licensewizard.cpp %{buildroot}/usr/share/package-licenses/qtbase/75b9a0f53529223aae7dd2214b028ef22e179e76
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/examples/widgets/dialogs/licensewizard/licensewizard.h %{buildroot}/usr/share/package-licenses/qtbase/c64fcff8000491a2263f9e33894819c687e9706f
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/android/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/b622f8ec37b3b644621a5f5f672c41ab286ca5d9
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/dc421334344c2641f0a20caf1ecf4abb9c846c1e
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/SYSTEMINFO_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/e92dbdd87a40618fea1cfb376f4456d0b2ee8836
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/TRACEEVENT_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/0ea65384e282e2244c42de4fb6957386e27b0db5
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/src/common/third_party/smhasher/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/819e6935c5ac3ae7bcb7470cb81c07cc383e80eb
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/src/third_party/compiler/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/dbb4b3a7c493484294639613ed59f1f5e7f94ada
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/angle/src/third_party/libXNVCtrl/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/665f7371da2b70dc3908c7c1e8b43bbbada8e4c3
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/double-conversion/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/8d434c9c1704b544a8b0652efbc323380b67f9bc
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/easing/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/adcc167d614e95a64b755f09d48b61ba85d6e104
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/forkfd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/8fa90a82c684d365e3ee08e257ddfeb11a34daab
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freebsd/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/322ce1982143941e7bb72f3f61c7087c46ca3c27
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/BDF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/1ff1aac950759024e9a9f72d47d394e7b4452c6a
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/cd290e37e15d49aabe6dcfa048f4e0165b9f0c07
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/PCF-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/6b644a7011be79d1a8ee1cbafa513ce7c533ecf0
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/ZLIB-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/c3cd964db231b42526c782d5ad7f8d564269b6d5
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/docs/GPLv2.TXT %{buildroot}/usr/share/package-licenses/qtbase/dac7127c82749e3107b53530289e1cd548860868
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/freetype/docs/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qtbase/64b7f213ddd72695d94866a1a9532ee5b3a472a8
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/gradle/LICENSE-GRADLEW.txt %{buildroot}/usr/share/package-licenses/qtbase/a52be3a58ec2d18904191c16274cec7d58893d6f
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/harfbuzz-ng/COPYING %{buildroot}/usr/share/package-licenses/qtbase/e911adf5641a09f13fdd5d59962ad37da043df79
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/harfbuzz/COPYING %{buildroot}/usr/share/package-licenses/qtbase/7925382f0cd147aad205ce1a1c6b8f2017ef7d63
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/iaccessible2/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/ba3bd36a0ef297a2572863c14637ff032a55d29b
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/icc/LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/af6b93eb335e20dd1fd54208f939dd06042c53d2
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/libjpeg/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/a5f4d6f407de11b9ce0fef27e335ddcaeded9f2d
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/libpng/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/fc3951ba26fe1914759f605696a1d23e3b41766f
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/pcre2/LICENCE %{buildroot}/usr/share/package-licenses/qtbase/a90d46253481cf09cf3baf17c6487f6dd81ef1e2
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/pcre2/LICENCE-SLJIT %{buildroot}/usr/share/package-licenses/qtbase/e9cb7b4dfa8168c3e4041aa6dc2c48a619f3b76b
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/pixman/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/16da0e0dcdc8ca9463ff2b8cb37072ee522b0924
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/rfc6234/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/f62f428fcb4bca5ae06b01409d5a5923163ce4dc
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/sha3/BRG_ENDIAN_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/0446b384f361f9601238bc2f2e7bd7a833b99288
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/sha3/CC0_LICENSE %{buildroot}/usr/share/package-licenses/qtbase/60f8838aed230fff6697f59ea3a732f18c723c3d
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/tinycbor/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/744aeb214e5bd02d894c0390cb505be56847b6be
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/wasm/DEJAVU-LICENSE %{buildroot}/usr/share/package-licenses/qtbase/2cba132501cc69b943061ac075153ad475c7e72a
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/xcb/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/e35a38f4b6d9b8fa47bdc313b42ea1930b94a72f
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/3rdparty/zlib/LICENSE %{buildroot}/usr/share/package-licenses/qtbase/dc3faa3029d99c3532e8262c2452afd5e11e4918
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QBIG5CODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/5f1f3a3317504f51b562784738656be8593c7ffa
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QBKCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/472d1249930e41755894c5336b785c2753d704a2
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QEUCJPCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/70fabf2a986af11354277144546150a1c9783cac
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QEUCKRCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/1118a9b7fdff2e9a736acfe764d3d993715e85bb
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/70fabf2a986af11354277144546150a1c9783cac
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QSJISCODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/70fabf2a986af11354277144546150a1c9783cac
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/codecs/QTSCIICODEC_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/866627e250d50de077ffe78efa8f585f87238180
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/io/PSL-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/d7e3ed5ac149ac1e2d2e0f4daff081c1dafef1c0
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/kernel/QEVENTDISPATCHER_CF_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/fee647168efa75e63122586106fb721b55ee7651
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/corelib/tools/UNICODE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/2fa43cbb19d1b1e8c642649405461142f260f2ba
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/dbus/LIBDBUS-1-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/5afaf3263848300e6daf9a5cc3761eddb9969946
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/gui/opengl/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/6c978ae82e85830764c8683ee4df810c4360c547
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/gui/painting/QIMAGETRANSFORM_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/c7e2ab75c7671491b36e306057bf0f14aa62845c
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/gui/painting/WEBGRADIENTS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/69e3487e6a838e7c9357d55578f64d5995f7e711
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/gui/text/AGLFN_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/e87d28b43a11605664d10cc7190e454e256684f7
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/gui/vulkan/KHRONOS_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/889f531eb3d7093dee85d5c3afc1340055740678
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/plugins/platforms/cocoa/COCOA_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/fee647168efa75e63122586106fb721b55ee7651
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/testlib/3rdparty/CYCLE_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/c0955b5351b1dcafdd0b9bb2d7e84fe0e3d731ca
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/testlib/3rdparty/LINUX_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/99fccba07bdc277439b88e03af273819d29764c7
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/testlib/3rdparty/VALGRIND_LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/c7ace52554ee70719c6b493bf87781cdabb6549a
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/b4be9db792cd4bb77ab866ab90d06c4b24a6bcbe
+cp %{_builddir}/qtbase-everywhere-src-5.13.2/tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/d134e46110f1cb9253ba4542a2d8770179429da4
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -333,6 +340,11 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/haswell/tracegen
+/usr/bin/tracegen
 
 %files dev
 %defattr(-,root,root,-)
@@ -354,7 +366,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/bin/rcc
 /usr/bin/syncqt.pl
 /usr/bin/uic
-/usr/include/qt5/QtAccessibilitySupport/5.13.1/QtAccessibilitySupport/private/qaccessiblebridgeutils_p.h
+/usr/include/qt5/QtAccessibilitySupport/5.13.2/QtAccessibilitySupport/private/qaccessiblebridgeutils_p.h
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupport
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupportDepends
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupportVersion
@@ -381,184 +393,184 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtConcurrent/qtconcurrentstoredfunctioncall.h
 /usr/include/qt5/QtConcurrent/qtconcurrentthreadengine.h
 /usr/include/qt5/QtConcurrent/qtconcurrentversion.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/cp949codetbl_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/minimum-linux_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstractanimation_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstracteventdispatcher_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstractfileengine_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstractitemmodel_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstractproxymodel_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstractstate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qabstracttransition_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qanimationgroup_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qbig5codec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qbytearray_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qbytedata_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcborvalue_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcfsocketnotifier_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcollator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qconfig_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcore_mac_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcore_unix_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcoreapplication_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcorecmdlineargs_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qcoreglobaldata_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdatastream_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdataurl_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdatetime_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdatetimeparser_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdeadlinetimer_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdebug_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdir_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qdoublescanprint_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qelfparser_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qendian_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeucjpcodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeuckrcodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventdispatcher_cf_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventdispatcher_glib_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventdispatcher_unix_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventdispatcher_win_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventdispatcher_winrt_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventloop_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qeventtransition_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfactoryloader_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfile_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfiledevice_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfileinfo_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfileselector_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemengine_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystementry_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemiterator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemmetadata_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_fsevents_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_inotify_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_kqueue_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_polling_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfilesystemwatcher_win_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfinalstate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfloat16_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfreelist_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfsfileengine_iterator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfsfileengine_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfunctions_fake_env_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfunctions_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfutex_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfutureinterface_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qfuturewatcher_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qgb18030codec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qglobal_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qharfbuzz_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qhistorystate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qhooks_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qiconvcodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qicucodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qiodevice_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qipaddress_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qisciicodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qitemselectionmodel_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjiscodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjni_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjnihelpers_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjpunicode_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjson_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjsonparser_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qjsonwriter_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlatincodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlibrary_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlocale_data_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlocale_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlocale_tools_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlockfile_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qlogging_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qloggingregistry_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmachparser_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmakearray_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmetaobject_moc_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmetaobject_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmetaobjectbuilder_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmetatype_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmetatypeswitcher_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimedatabase_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimeglobpattern_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimemagicrule_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimemagicrulematcher_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimeprovider_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimetype_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmimetypeparser_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmutex_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qmutexpool_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qnoncontiguousbytedevice_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qnumeric_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qobject_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qoffsetstringarray_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qoperatingsystemversion_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qoperatingsystemversion_win_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qorderedmutexlocker_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qparallelanimationgroup_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qplugin_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qpoll_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qppsattribute_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qppsattributeprivate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qppsobject_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qppsobjectprivate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qprocess_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qpropertyanimation_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qrandom_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qreadwritelock_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qresource_iterator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qresource_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qringbuffer_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsavefile_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qscopedpointer_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsequentialanimationgroup_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsettings_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsharedmemory_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsignaleventgenerator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsignaltransition_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsimd_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsimd_x86_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsimplecodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsjiscodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstatemachine_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstdweb_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstorageinfo_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstringalgorithms_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qstringiterator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsystemerror_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsystemlibrary_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qsystemsemaphore_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qt_pch.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtcore-config_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtemporaryfile_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtextcodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtextstream_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qthread_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qthreadpool_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtimerinfo_unix_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtimezoneprivate_data_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtimezoneprivate_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtldurl_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtools_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtrace_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtranslator_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtransposeproxymodel_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qtsciicodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qunicodetables_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qunicodetools_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qurl_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qurltlds_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qutfcodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qvariant_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qvariantanimation_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qwindowscodec_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qwindowspipereader_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qwindowspipewriter_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qwineventnotifier_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qxmlstream_p.h
-/usr/include/qt5/QtCore/5.13.1/QtCore/private/qxmlutils_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/cp949codetbl_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/minimum-linux_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstractanimation_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstracteventdispatcher_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstractfileengine_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstractitemmodel_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstractproxymodel_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstractstate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qabstracttransition_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qanimationgroup_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qbig5codec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qbytearray_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qbytedata_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcborvalue_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcfsocketnotifier_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcollator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qconfig_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcore_mac_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcore_unix_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcoreapplication_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcorecmdlineargs_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qcoreglobaldata_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdatastream_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdataurl_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdatetime_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdatetimeparser_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdeadlinetimer_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdebug_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdir_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qdoublescanprint_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qelfparser_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qendian_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeucjpcodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeuckrcodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventdispatcher_cf_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventdispatcher_glib_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventdispatcher_unix_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventdispatcher_win_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventdispatcher_winrt_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventloop_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qeventtransition_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfactoryloader_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfile_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfiledevice_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfileinfo_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfileselector_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemengine_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystementry_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemiterator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemmetadata_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_fsevents_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_inotify_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_kqueue_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_polling_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfilesystemwatcher_win_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfinalstate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfloat16_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfreelist_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfsfileengine_iterator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfsfileengine_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfunctions_fake_env_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfunctions_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfutex_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfutureinterface_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qfuturewatcher_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qgb18030codec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qglobal_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qharfbuzz_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qhistorystate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qhooks_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qiconvcodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qicucodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qiodevice_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qipaddress_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qisciicodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qitemselectionmodel_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjiscodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjni_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjnihelpers_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjpunicode_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjson_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjsonparser_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qjsonwriter_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlatincodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlibrary_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlocale_data_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlocale_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlocale_tools_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlockfile_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qlogging_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qloggingregistry_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmachparser_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmakearray_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmetaobject_moc_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmetaobject_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmetaobjectbuilder_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmetatype_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmetatypeswitcher_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimedatabase_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimeglobpattern_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimemagicrule_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimemagicrulematcher_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimeprovider_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimetype_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmimetypeparser_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmutex_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qmutexpool_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qnoncontiguousbytedevice_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qnumeric_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qobject_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qoffsetstringarray_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qoperatingsystemversion_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qoperatingsystemversion_win_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qorderedmutexlocker_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qparallelanimationgroup_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qplugin_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qpoll_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qppsattribute_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qppsattributeprivate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qppsobject_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qppsobjectprivate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qprocess_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qpropertyanimation_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qrandom_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qreadwritelock_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qresource_iterator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qresource_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qringbuffer_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsavefile_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qscopedpointer_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsequentialanimationgroup_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsettings_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsharedmemory_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsignaleventgenerator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsignaltransition_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsimd_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsimd_x86_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsimplecodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsjiscodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstatemachine_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstdweb_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstorageinfo_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstringalgorithms_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qstringiterator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsystemerror_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsystemlibrary_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qsystemsemaphore_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qt_pch.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtcore-config_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtemporaryfile_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtextcodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtextstream_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qthread_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qthreadpool_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtimerinfo_unix_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtimezoneprivate_data_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtimezoneprivate_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtldurl_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtools_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtrace_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtranslator_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtransposeproxymodel_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qtsciicodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qunicodetables_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qunicodetools_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qurl_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qurltlds_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qutfcodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qvariant_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qvariantanimation_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qwindowscodec_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qwindowspipereader_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qwindowspipewriter_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qwineventnotifier_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qxmlstream_p.h
+/usr/include/qt5/QtCore/5.13.2/QtCore/private/qxmlutils_p.h
 /usr/include/qt5/QtCore/QAbstractAnimation
 /usr/include/qt5/QtCore/QAbstractEventDispatcher
 /usr/include/qt5/QtCore/QAbstractItemModel
@@ -1093,25 +1105,25 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtCore/qwaitcondition.h
 /usr/include/qt5/QtCore/qwineventnotifier.h
 /usr/include/qt5/QtCore/qxmlstream.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/dbus_minimal_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbus_symbols_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusabstractadaptor_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusabstractinterface_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusargument_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusconnection_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusconnectionmanager_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbuscontext_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusintegrator_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusinterface_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusintrospection_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusmessage_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusmetaobject_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusmetatype_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbuspendingcall_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusthreaddebug_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusutil_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qdbusxmlparser_p.h
-/usr/include/qt5/QtDBus/5.13.1/QtDBus/private/qtdbusglobal_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/dbus_minimal_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbus_symbols_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusabstractadaptor_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusabstractinterface_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusargument_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusconnection_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusconnectionmanager_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbuscontext_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusintegrator_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusinterface_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusintrospection_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusmessage_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusmetaobject_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusmetatype_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbuspendingcall_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusthreaddebug_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusutil_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qdbusxmlparser_p.h
+/usr/include/qt5/QtDBus/5.13.2/QtDBus/private/qtdbusglobal_p.h
 /usr/include/qt5/QtDBus/QDBusAbstractAdaptor
 /usr/include/qt5/QtDBus/QDBusAbstractInterface
 /usr/include/qt5/QtDBus/QDBusAbstractInterfaceBase
@@ -1159,270 +1171,270 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtDBus/qdbusvirtualobject.h
 /usr/include/qt5/QtDBus/qtdbusglobal.h
 /usr/include/qt5/QtDBus/qtdbusversion.h
-/usr/include/qt5/QtDeviceDiscoverySupport/5.13.1/QtDeviceDiscoverySupport/private/qdevicediscovery_dummy_p.h
-/usr/include/qt5/QtDeviceDiscoverySupport/5.13.1/QtDeviceDiscoverySupport/private/qdevicediscovery_p.h
-/usr/include/qt5/QtDeviceDiscoverySupport/5.13.1/QtDeviceDiscoverySupport/private/qdevicediscovery_static_p.h
-/usr/include/qt5/QtDeviceDiscoverySupport/5.13.1/QtDeviceDiscoverySupport/private/qdevicediscovery_udev_p.h
+/usr/include/qt5/QtDeviceDiscoverySupport/5.13.2/QtDeviceDiscoverySupport/private/qdevicediscovery_dummy_p.h
+/usr/include/qt5/QtDeviceDiscoverySupport/5.13.2/QtDeviceDiscoverySupport/private/qdevicediscovery_p.h
+/usr/include/qt5/QtDeviceDiscoverySupport/5.13.2/QtDeviceDiscoverySupport/private/qdevicediscovery_static_p.h
+/usr/include/qt5/QtDeviceDiscoverySupport/5.13.2/QtDeviceDiscoverySupport/private/qdevicediscovery_udev_p.h
 /usr/include/qt5/QtDeviceDiscoverySupport/QtDeviceDiscoverySupport
 /usr/include/qt5/QtDeviceDiscoverySupport/QtDeviceDiscoverySupportDepends
 /usr/include/qt5/QtDeviceDiscoverySupport/QtDeviceDiscoverySupportVersion
 /usr/include/qt5/QtDeviceDiscoverySupport/qtdevicediscoverysupportversion.h
-/usr/include/qt5/QtEdidSupport/5.13.1/QtEdidSupport/private/qedidparser_p.h
-/usr/include/qt5/QtEdidSupport/5.13.1/QtEdidSupport/private/qedidvendortable_p.h
+/usr/include/qt5/QtEdidSupport/5.13.2/QtEdidSupport/private/qedidparser_p.h
+/usr/include/qt5/QtEdidSupport/5.13.2/QtEdidSupport/private/qedidvendortable_p.h
 /usr/include/qt5/QtEdidSupport/QtEdidSupport
 /usr/include/qt5/QtEdidSupport/QtEdidSupportDepends
 /usr/include/qt5/QtEdidSupport/QtEdidSupportVersion
 /usr/include/qt5/QtEdidSupport/qtedidsupportversion.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfscontext_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfscursor_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfsdeviceintegration_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfsglobal_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfshooks_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfsintegration_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfsoffscreenwindow_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfsscreen_p.h
-/usr/include/qt5/QtEglFSDeviceIntegration/5.13.1/QtEglFSDeviceIntegration/private/qeglfswindow_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfscontext_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfscursor_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfsdeviceintegration_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfsglobal_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfshooks_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfsintegration_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfsoffscreenwindow_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfsscreen_p.h
+/usr/include/qt5/QtEglFSDeviceIntegration/5.13.2/QtEglFSDeviceIntegration/private/qeglfswindow_p.h
 /usr/include/qt5/QtEglFSDeviceIntegration/QtEglFSDeviceIntegration
 /usr/include/qt5/QtEglFSDeviceIntegration/QtEglFSDeviceIntegrationDepends
 /usr/include/qt5/QtEglFSDeviceIntegration/QtEglFSDeviceIntegrationVersion
 /usr/include/qt5/QtEglFSDeviceIntegration/qteglfsdeviceintegrationversion.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qeglconvenience_p.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qeglpbuffer_p.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qeglplatformcontext_p.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qeglstreamconvenience_p.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qt_egl_p.h
-/usr/include/qt5/QtEglSupport/5.13.1/QtEglSupport/private/qxlibeglintegration_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qeglconvenience_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qeglpbuffer_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qeglplatformcontext_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qeglstreamconvenience_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qt_egl_p.h
+/usr/include/qt5/QtEglSupport/5.13.2/QtEglSupport/private/qxlibeglintegration_p.h
 /usr/include/qt5/QtEglSupport/QtEglSupport
 /usr/include/qt5/QtEglSupport/QtEglSupportDepends
 /usr/include/qt5/QtEglSupport/QtEglSupportVersion
 /usr/include/qt5/QtEglSupport/qteglsupportversion.h
-/usr/include/qt5/QtEventDispatcherSupport/5.13.1/QtEventDispatcherSupport/private/qeventdispatcher_glib_p.h
-/usr/include/qt5/QtEventDispatcherSupport/5.13.1/QtEventDispatcherSupport/private/qgenericunixeventdispatcher_p.h
-/usr/include/qt5/QtEventDispatcherSupport/5.13.1/QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h
-/usr/include/qt5/QtEventDispatcherSupport/5.13.1/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h
+/usr/include/qt5/QtEventDispatcherSupport/5.13.2/QtEventDispatcherSupport/private/qeventdispatcher_glib_p.h
+/usr/include/qt5/QtEventDispatcherSupport/5.13.2/QtEventDispatcherSupport/private/qgenericunixeventdispatcher_p.h
+/usr/include/qt5/QtEventDispatcherSupport/5.13.2/QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h
+/usr/include/qt5/QtEventDispatcherSupport/5.13.2/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h
 /usr/include/qt5/QtEventDispatcherSupport/QtEventDispatcherSupport
 /usr/include/qt5/QtEventDispatcherSupport/QtEventDispatcherSupportDepends
 /usr/include/qt5/QtEventDispatcherSupport/QtEventDispatcherSupportVersion
 /usr/include/qt5/QtEventDispatcherSupport/qteventdispatchersupportversion.h
-/usr/include/qt5/QtFbSupport/5.13.1/QtFbSupport/private/qfbbackingstore_p.h
-/usr/include/qt5/QtFbSupport/5.13.1/QtFbSupport/private/qfbcursor_p.h
-/usr/include/qt5/QtFbSupport/5.13.1/QtFbSupport/private/qfbscreen_p.h
-/usr/include/qt5/QtFbSupport/5.13.1/QtFbSupport/private/qfbvthandler_p.h
-/usr/include/qt5/QtFbSupport/5.13.1/QtFbSupport/private/qfbwindow_p.h
+/usr/include/qt5/QtFbSupport/5.13.2/QtFbSupport/private/qfbbackingstore_p.h
+/usr/include/qt5/QtFbSupport/5.13.2/QtFbSupport/private/qfbcursor_p.h
+/usr/include/qt5/QtFbSupport/5.13.2/QtFbSupport/private/qfbscreen_p.h
+/usr/include/qt5/QtFbSupport/5.13.2/QtFbSupport/private/qfbvthandler_p.h
+/usr/include/qt5/QtFbSupport/5.13.2/QtFbSupport/private/qfbwindow_p.h
 /usr/include/qt5/QtFbSupport/QtFbSupport
 /usr/include/qt5/QtFbSupport/QtFbSupportDepends
 /usr/include/qt5/QtFbSupport/QtFbSupportVersion
 /usr/include/qt5/QtFbSupport/qtfbsupportversion.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qcoretextfontdatabase_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qfontconfigdatabase_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qfontengine_coretext_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qfontengine_ft_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qfontenginemultifontconfig_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwindowsfontdatabase_ft_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwindowsfontdatabase_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwindowsfontengine_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwindowsfontenginedirectwrite_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwindowsnativeimage_p.h
-/usr/include/qt5/QtFontDatabaseSupport/5.13.1/QtFontDatabaseSupport/private/qwinrtfontdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qcoretextfontdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qfontconfigdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qfontengine_coretext_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qfontengine_ft_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qfontenginemultifontconfig_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwindowsfontdatabase_ft_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwindowsfontdatabase_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwindowsfontengine_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwindowsfontenginedirectwrite_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwindowsnativeimage_p.h
+/usr/include/qt5/QtFontDatabaseSupport/5.13.2/QtFontDatabaseSupport/private/qwinrtfontdatabase_p.h
 /usr/include/qt5/QtFontDatabaseSupport/QtFontDatabaseSupport
 /usr/include/qt5/QtFontDatabaseSupport/QtFontDatabaseSupportDepends
 /usr/include/qt5/QtFontDatabaseSupport/QtFontDatabaseSupportVersion
 /usr/include/qt5/QtFontDatabaseSupport/qtfontdatabasesupportversion.h
-/usr/include/qt5/QtGlxSupport/5.13.1/QtGlxSupport/private/qglxconvenience_p.h
+/usr/include/qt5/QtGlxSupport/5.13.2/QtGlxSupport/private/qglxconvenience_p.h
 /usr/include/qt5/QtGlxSupport/QtGlxSupport
 /usr/include/qt5/QtGlxSupport/QtGlxSupportDepends
 /usr/include/qt5/QtGlxSupport/QtGlxSupportVersion
 /usr/include/qt5/QtGlxSupport/qtglxsupportversion.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qabstractlayoutstyleinfo_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qabstracttextdocumentlayout_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qaccessiblecache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qastchandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qbezier_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qblendfunctions_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qblittable_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qbmphandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcolor_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcolorprofile_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcoregraphics_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcosmeticstroker_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcssparser_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcssutil_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qcursor_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdatabuffer_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdistancefield_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdnd_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdrawhelper_mips_dsp_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdrawhelper_neon_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdrawhelper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdrawhelper_x86_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qdrawingprimitive_sse2_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qemulationpaintengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qevent_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfixed_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfont_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfontengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfontengine_qpf2_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfontengineglyphcache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfontsubset_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qfragmentmap_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qglyphrun_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qgrayraster_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qgridlayoutengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qguiapplication_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qharfbuzzng_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qhexstring_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qhighdpiscaling_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qicon_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qiconloader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qimage_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qimagepixmapcleanuphooks_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qimagereaderwriterhelpers_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qimagescale_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qinputcontrol_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qinputdevicemanager_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qinputdevicemanager_p_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qinputmethod_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qinternalmimedata_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qkeymapper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qkeysequence_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qktxhandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qlayoutpolicy_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qmath_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qmemrotate_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengl2pexvertexarray_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengl_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglcontext_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglcustomshaderstage_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglengineshadermanager_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglengineshadersource_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglextensions_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglframebufferobject_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglgradientcache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglpaintdevice_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglpaintengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglprogrambinarycache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglqueryhelper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglshadercache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengltexture_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengltexturecache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengltextureglyphcache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengltexturehelper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopengltextureuploader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglversionfunctionsfactory_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qopenglvertexarrayobject_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qoutlinemapper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpagedpaintdevice_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintdevicewindow_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintengine_blitter_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintengine_pic_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintengine_raster_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpaintengineex_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpainter_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpainterpath_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpathclipper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpathsimplifier_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpdf_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpen_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpicture_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpixmap_blitter_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpixmap_raster_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpixmapcache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpkmhandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpnghandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qpolygonclipper_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qppmhandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qrasterdefs_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qrasterizer_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qrawfont_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qrbtree_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qrgba64_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qscreen_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qsessionmanager_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshaderformat_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadergenerator_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadergraph_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadergraphloader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshaderlanguage_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadernode_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadernodeport_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshadernodesloader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshapedpixmapdndwindow_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qshortcutmap_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qsimpledrag_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qstandarditemmodel_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qstatictext_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qstroker_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qt_gui_pch.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qt_mips_asm_dsp_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextcursor_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextdocument_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextdocumentfragment_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextdocumentlayout_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextengine_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextformat_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtexthtmlparser_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextimagehandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextobject_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextodfwriter_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtexttable_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtexturefiledata_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtexturefilehandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtexturefilereader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtextureglyphcache_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtgui-config_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtguiglobal_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtouchdevice_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtriangulatingstroker_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qtriangulator_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qvectorpath_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qvulkanfunctions_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qvulkanwindow_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qwasmlocalfileaccess_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qwindow_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qxbmhandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qxpmhandler_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qzipreader_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/private/qzipwriter_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformaccessibility.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformbackingstore.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformclipboard.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformcursor.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformdialoghelper.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformdrag.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformfontdatabase.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformgraphicsbuffer.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformgraphicsbufferhelper.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatforminputcontext.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatforminputcontext_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatforminputcontextfactory_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatforminputcontextplugin_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformintegration.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformintegrationfactory_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformintegrationplugin.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformmenu.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformnativeinterface.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformoffscreensurface.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformopenglcontext.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformpixmap.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformscreen.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformscreen_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformservices.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformsessionmanager.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformsharedgraphicscache.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformsurface.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformsystemtrayicon.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformtheme.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformtheme_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformthemefactory_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformthemeplugin.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformvulkaninstance.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformwindow.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qplatformwindow_p.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qwindowsysteminterface.h
-/usr/include/qt5/QtGui/5.13.1/QtGui/qpa/qwindowsysteminterface_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qabstractlayoutstyleinfo_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qabstracttextdocumentlayout_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qaccessiblecache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qastchandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qbezier_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qblendfunctions_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qblittable_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qbmphandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcolor_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcolorprofile_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcoregraphics_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcosmeticstroker_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcssparser_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcssutil_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qcursor_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdatabuffer_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdistancefield_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdnd_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdrawhelper_mips_dsp_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdrawhelper_neon_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdrawhelper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdrawhelper_x86_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qdrawingprimitive_sse2_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qemulationpaintengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qevent_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfixed_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfont_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfontengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfontengine_qpf2_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfontengineglyphcache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfontsubset_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qfragmentmap_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qglyphrun_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qgrayraster_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qgridlayoutengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qguiapplication_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qharfbuzzng_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qhexstring_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qhighdpiscaling_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qicon_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qiconloader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qimage_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qimagepixmapcleanuphooks_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qimagereaderwriterhelpers_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qimagescale_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qinputcontrol_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qinputdevicemanager_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qinputdevicemanager_p_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qinputmethod_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qinternalmimedata_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qkeymapper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qkeysequence_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qktxhandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qlayoutpolicy_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qmath_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qmemrotate_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengl2pexvertexarray_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengl_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglcontext_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglcustomshaderstage_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglengineshadermanager_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglengineshadersource_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglextensions_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglframebufferobject_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglgradientcache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglpaintdevice_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglpaintengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglprogrambinarycache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglqueryhelper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglshadercache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengltexture_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengltexturecache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengltextureglyphcache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengltexturehelper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopengltextureuploader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglversionfunctionsfactory_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qopenglvertexarrayobject_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qoutlinemapper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpagedpaintdevice_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintdevicewindow_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintengine_blitter_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintengine_pic_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintengine_raster_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpaintengineex_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpainter_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpainterpath_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpathclipper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpathsimplifier_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpdf_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpen_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpicture_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpixmap_blitter_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpixmap_raster_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpixmapcache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpkmhandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpnghandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qpolygonclipper_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qppmhandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qrasterdefs_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qrasterizer_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qrawfont_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qrbtree_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qrgba64_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qscreen_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qsessionmanager_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshaderformat_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadergenerator_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadergraph_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadergraphloader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshaderlanguage_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadernode_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadernodeport_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshadernodesloader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshapedpixmapdndwindow_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qshortcutmap_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qsimpledrag_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qstandarditemmodel_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qstatictext_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qstroker_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qt_gui_pch.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qt_mips_asm_dsp_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextcursor_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextdocument_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextdocumentfragment_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextdocumentlayout_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextengine_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextformat_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtexthtmlparser_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextimagehandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextobject_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextodfwriter_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtexttable_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtexturefiledata_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtexturefilehandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtexturefilereader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtextureglyphcache_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtgui-config_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtguiglobal_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtouchdevice_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtriangulatingstroker_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qtriangulator_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qvectorpath_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qvulkanfunctions_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qvulkanwindow_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qwasmlocalfileaccess_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qwindow_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qxbmhandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qxpmhandler_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qzipreader_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/private/qzipwriter_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformaccessibility.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformbackingstore.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformclipboard.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformcursor.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformdialoghelper.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformdrag.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformfontdatabase.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformgraphicsbuffer.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformgraphicsbufferhelper.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatforminputcontext.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatforminputcontext_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatforminputcontextfactory_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatforminputcontextplugin_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformintegration.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformintegrationfactory_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformintegrationplugin.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformmenu.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformnativeinterface.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformoffscreensurface.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformopenglcontext.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformpixmap.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformscreen.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformscreen_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformservices.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformsessionmanager.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformsharedgraphicscache.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformsurface.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformsystemtrayicon.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformtheme.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformtheme_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformthemefactory_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformthemeplugin.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformvulkaninstance.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformwindow.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qplatformwindow_p.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qwindowsysteminterface.h
+/usr/include/qt5/QtGui/5.13.2/QtGui/qpa/qwindowsysteminterface_p.h
 /usr/include/qt5/QtGui/QAbstractTextDocumentLayout
 /usr/include/qt5/QtGui/QAbstractUndoItem
 /usr/include/qt5/QtGui/QAccessible
@@ -1818,128 +1830,128 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtGui/qwindow.h
 /usr/include/qt5/QtGui/qwindowdefs.h
 /usr/include/qt5/QtGui/qwindowdefs_win.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevkeyboard_defaultmap_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevkeyboardhandler_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevkeyboardmanager_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevmousehandler_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevmousemanager_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevtablethandler_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevtabletmanager_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevtouchfilter_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevtouchhandler_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qevdevtouchmanager_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qlibinputhandler_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qlibinputkeyboard_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qlibinputpointer_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qlibinputtouch_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qtouchoutputmapping_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qtslib_p.h
-/usr/include/qt5/QtInputSupport/5.13.1/QtInputSupport/private/qxkbcommon_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevkeyboard_defaultmap_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevkeyboardhandler_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevkeyboardmanager_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevmousehandler_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevmousemanager_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevtablethandler_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevtabletmanager_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevtouchfilter_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevtouchhandler_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qevdevtouchmanager_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qlibinputhandler_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qlibinputkeyboard_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qlibinputpointer_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qlibinputtouch_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qtouchoutputmapping_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qtslib_p.h
+/usr/include/qt5/QtInputSupport/5.13.2/QtInputSupport/private/qxkbcommon_p.h
 /usr/include/qt5/QtInputSupport/QIntegrityHIDManager
 /usr/include/qt5/QtInputSupport/QtInputSupport
 /usr/include/qt5/QtInputSupport/QtInputSupportDepends
 /usr/include/qt5/QtInputSupport/QtInputSupportVersion
 /usr/include/qt5/QtInputSupport/qintegrityhidmanager.h
 /usr/include/qt5/QtInputSupport/qtinputsupportversion.h
-/usr/include/qt5/QtKmsSupport/5.13.1/QtKmsSupport/private/qkmsdevice_p.h
+/usr/include/qt5/QtKmsSupport/5.13.2/QtKmsSupport/private/qkmsdevice_p.h
 /usr/include/qt5/QtKmsSupport/QtKmsSupport
 /usr/include/qt5/QtKmsSupport/QtKmsSupportDepends
 /usr/include/qt5/QtKmsSupport/QtKmsSupportVersion
 /usr/include/qt5/QtKmsSupport/qtkmssupportversion.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/bitstreams_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/hpack_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/hpacktable_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/http2frames_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/http2protocol_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/http2streams_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/huffman_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qabstractnetworkcache_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qabstractprotocolhandler_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qabstractsocket_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qabstractsocketengine_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qasn1element_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qauthenticator_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qbearerengine_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qbearerplugin_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qdnslookup_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qdtls_openssl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qdtls_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qftp_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhostaddress_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhostinfo_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhsts_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhstsstore_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttp2protocolhandler_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpmultipart_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpnetworkconnection_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpnetworkconnectionchannel_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpnetworkheader_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpnetworkreply_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpnetworkrequest_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpprotocolhandler_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpsocketengine_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qhttpthreaddelegate_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qlocalserver_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qlocalsocket_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnativesocketengine_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnativesocketengine_winrt_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnet_unix_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessauthenticationmanager_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessbackend_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccesscache_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccesscachebackend_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessdebugpipebackend_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessfilebackend_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessftpbackend_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkaccessmanager_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkconfigmanager_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkconfiguration_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkcookie_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkcookiejar_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkdatagram_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkdiskcache_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkfile_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkinterface_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkinterface_uikit_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkinterface_unix_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreply_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreplydataimpl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreplyfileimpl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreplyhttpimpl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreplyimpl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkreplywasmimpl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworkrequest_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qnetworksession_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qocsp_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qocspresponse_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsctpserver_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsctpsocket_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsharednetworksession_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsocks5socketengine_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qspdyprotocolhandler_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qssl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslcertificate_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslcertificateextension_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslcipher_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslconfiguration_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslcontext_openssl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qssldiffiehellmanparameters_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslkey_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslpresharedkeyauthenticator_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_mac_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_openssl11_symbols_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_openssl_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_openssl_symbols_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_opensslpre11_symbols_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_schannel_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qsslsocket_winrt_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qtcpserver_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qtcpsocket_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qtnetwork-config_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qtnetworkglobal_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qurlinfo_p.h
-/usr/include/qt5/QtNetwork/5.13.1/QtNetwork/private/qwindowscarootfetcher_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/bitstreams_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/hpack_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/hpacktable_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/http2frames_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/http2protocol_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/http2streams_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/huffman_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qabstractnetworkcache_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qabstractprotocolhandler_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qabstractsocket_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qabstractsocketengine_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qasn1element_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qauthenticator_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qbearerengine_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qbearerplugin_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qdnslookup_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qdtls_openssl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qdtls_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qftp_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhostaddress_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhostinfo_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhsts_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhstsstore_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttp2protocolhandler_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpmultipart_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpnetworkconnection_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpnetworkconnectionchannel_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpnetworkheader_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpnetworkreply_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpnetworkrequest_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpprotocolhandler_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpsocketengine_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qhttpthreaddelegate_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qlocalserver_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qlocalsocket_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnativesocketengine_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnativesocketengine_winrt_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnet_unix_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessauthenticationmanager_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessbackend_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccesscache_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccesscachebackend_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessdebugpipebackend_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessfilebackend_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessftpbackend_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkaccessmanager_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkconfigmanager_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkconfiguration_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkcookie_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkcookiejar_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkdatagram_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkdiskcache_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkfile_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkinterface_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkinterface_uikit_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkinterface_unix_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreply_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreplydataimpl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreplyfileimpl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreplyhttpimpl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreplyimpl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkreplywasmimpl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworkrequest_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qnetworksession_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qocsp_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qocspresponse_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsctpserver_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsctpsocket_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsharednetworksession_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsocks5socketengine_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qspdyprotocolhandler_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qssl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslcertificate_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslcertificateextension_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslcipher_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslconfiguration_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslcontext_openssl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qssldiffiehellmanparameters_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslkey_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslpresharedkeyauthenticator_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_mac_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_openssl11_symbols_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_openssl_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_openssl_symbols_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_opensslpre11_symbols_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_schannel_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qsslsocket_winrt_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qtcpserver_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qtcpsocket_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qtnetwork-config_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qtnetworkglobal_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qurlinfo_p.h
+/usr/include/qt5/QtNetwork/5.13.2/QtNetwork/private/qwindowscarootfetcher_p.h
 /usr/include/qt5/QtNetwork/QAbstractNetworkCache
 /usr/include/qt5/QtNetwork/QAbstractSocket
 /usr/include/qt5/QtNetwork/QAuthenticator
@@ -2040,19 +2052,19 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtNetwork/qtnetworkglobal.h
 /usr/include/qt5/QtNetwork/qtnetworkversion.h
 /usr/include/qt5/QtNetwork/qudpsocket.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qgl2pexvertexarray_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qgl_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglcustomshaderstage_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglengineshadermanager_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglengineshadersource_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglframebufferobject_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglgradientcache_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglpaintdevice_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglpixelbuffer_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qglshadercache_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qgraphicsshadereffect_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qpaintengineex_opengl2_p.h
-/usr/include/qt5/QtOpenGL/5.13.1/QtOpenGL/private/qtextureglyphcache_gl_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qgl2pexvertexarray_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qgl_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglcustomshaderstage_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglengineshadermanager_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglengineshadersource_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglframebufferobject_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglgradientcache_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglpaintdevice_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglpixelbuffer_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qglshadercache_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qgraphicsshadereffect_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qpaintengineex_opengl2_p.h
+/usr/include/qt5/QtOpenGL/5.13.2/QtOpenGL/private/qtextureglyphcache_gl_p.h
 /usr/include/qt5/QtOpenGL/QGL
 /usr/include/qt5/QtOpenGL/QGLBuffer
 /usr/include/qt5/QtOpenGL/QGLColormap
@@ -2084,8 +2096,8 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtOpenGLExtensions/QtOpenGLExtensionsVersion
 /usr/include/qt5/QtOpenGLExtensions/qopenglextensions.h
 /usr/include/qt5/QtOpenGLExtensions/qtopenglextensionsversion.h
-/usr/include/qt5/QtPlatformCompositorSupport/5.13.1/QtPlatformCompositorSupport/private/qopenglcompositor_p.h
-/usr/include/qt5/QtPlatformCompositorSupport/5.13.1/QtPlatformCompositorSupport/private/qopenglcompositorbackingstore_p.h
+/usr/include/qt5/QtPlatformCompositorSupport/5.13.2/QtPlatformCompositorSupport/private/qopenglcompositor_p.h
+/usr/include/qt5/QtPlatformCompositorSupport/5.13.2/QtPlatformCompositorSupport/private/qopenglcompositorbackingstore_p.h
 /usr/include/qt5/QtPlatformCompositorSupport/QtPlatformCompositorSupport
 /usr/include/qt5/QtPlatformCompositorSupport/QtPlatformCompositorSupportDepends
 /usr/include/qt5/QtPlatformCompositorSupport/QtPlatformCompositorSupportVersion
@@ -2118,24 +2130,24 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtPlatformHeaders/qwindowswindowfunctions.h
 /usr/include/qt5/QtPlatformHeaders/qxcbscreenfunctions.h
 /usr/include/qt5/QtPlatformHeaders/qxcbwindowfunctions.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qabstractprintdialog_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qcups_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qcupsjobwidget_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qpagesetupdialog_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qpagesetupdialog_unix_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qpaintengine_alpha_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qpaintengine_preview_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprint_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprintdevice_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprintengine_pdf_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprintengine_win_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprinter_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qprinterinfo_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qtprintsupport-config_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/private/qtprintsupportglobal_p.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/qpa/qplatformprintdevice.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/qpa/qplatformprintersupport.h
-/usr/include/qt5/QtPrintSupport/5.13.1/QtPrintSupport/qpa/qplatformprintplugin.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qabstractprintdialog_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qcups_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qcupsjobwidget_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qpagesetupdialog_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qpagesetupdialog_unix_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qpaintengine_alpha_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qpaintengine_preview_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprint_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprintdevice_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprintengine_pdf_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprintengine_win_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprinter_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qprinterinfo_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qtprintsupport-config_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/private/qtprintsupportglobal_p.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/qpa/qplatformprintdevice.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/qpa/qplatformprintersupport.h
+/usr/include/qt5/QtPrintSupport/5.13.2/QtPrintSupport/qpa/qplatformprintplugin.h
 /usr/include/qt5/QtPrintSupport/QAbstractPrintDialog
 /usr/include/qt5/QtPrintSupport/QPageSetupDialog
 /usr/include/qt5/QtPrintSupport/QPrintDialog
@@ -2158,19 +2170,19 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtPrintSupport/qtprintsupport-config.h
 /usr/include/qt5/QtPrintSupport/qtprintsupportglobal.h
 /usr/include/qt5/QtPrintSupport/qtprintsupportversion.h
-/usr/include/qt5/QtServiceSupport/5.13.1/QtServiceSupport/private/qgenericunixservices_p.h
+/usr/include/qt5/QtServiceSupport/5.13.2/QtServiceSupport/private/qgenericunixservices_p.h
 /usr/include/qt5/QtServiceSupport/QtServiceSupport
 /usr/include/qt5/QtServiceSupport/QtServiceSupportDepends
 /usr/include/qt5/QtServiceSupport/QtServiceSupportVersion
 /usr/include/qt5/QtServiceSupport/qtservicesupportversion.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqlcachedresult_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqldriver_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqlnulldriver_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqlquerymodel_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqlresult_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qsqltablemodel_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qtsql-config_p.h
-/usr/include/qt5/QtSql/5.13.1/QtSql/private/qtsqlglobal_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqlcachedresult_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqldriver_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqlnulldriver_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqlquerymodel_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqlresult_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qsqltablemodel_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qtsql-config_p.h
+/usr/include/qt5/QtSql/5.13.2/QtSql/private/qtsqlglobal_p.h
 /usr/include/qt5/QtSql/QSql
 /usr/include/qt5/QtSql/QSqlDatabase
 /usr/include/qt5/QtSql/QSqlDriver
@@ -2208,39 +2220,39 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtSql/qtsql-config.h
 /usr/include/qt5/QtSql/qtsqlglobal.h
 /usr/include/qt5/QtSql/qtsqlversion.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/callgrind_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/cycle_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/linux_perf_event_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qabstracttestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qappletestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmark_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarkevent_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarkmeasurement_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarkmetric_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarkperfevents_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarktimemeasurers_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qbenchmarkvalgrind_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qcsvbenchmarklogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qplaintestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qsignaldumper_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtaptestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qteamcitylogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestblacklist_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestcoreelement_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestcorelist_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestelement_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestelementattribute_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtesthelpers_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestlog_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestresult_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtesttable_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestutil_macos_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qtestxunitstreamer_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qttestlib-config_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qxctestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qxmltestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/qxunittestlogger_p.h
-/usr/include/qt5/QtTest/5.13.1/QtTest/private/valgrind_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/callgrind_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/cycle_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/linux_perf_event_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qabstracttestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qappletestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmark_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarkevent_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarkmeasurement_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarkmetric_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarkperfevents_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarktimemeasurers_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qbenchmarkvalgrind_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qcsvbenchmarklogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qplaintestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qsignaldumper_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtaptestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qteamcitylogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestblacklist_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestcoreelement_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestcorelist_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestelement_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestelementattribute_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtesthelpers_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestlog_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestresult_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtesttable_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestutil_macos_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qtestxunitstreamer_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qttestlib-config_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qxctestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qxmltestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/qxunittestlogger_p.h
+/usr/include/qt5/QtTest/5.13.2/QtTest/private/valgrind_p.h
 /usr/include/qt5/QtTest/QAbstractItemModelTester
 /usr/include/qt5/QtTest/QEventSizeOfChecker
 /usr/include/qt5/QtTest/QSignalSpy
@@ -2285,152 +2297,152 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtTest/qttestglobal.h
 /usr/include/qt5/QtTest/qttestlib-config.h
 /usr/include/qt5/QtTest/qttestversion.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qabstractfileiconengine_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusmenuadaptor_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusmenubar_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusmenuconnection_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusmenuregistrarproxy_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusmenutypes_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbusplatformmenu_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbustrayicon_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qdbustraytypes_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qgenericunixthemes_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qstatusnotifieritemadaptor_p.h
-/usr/include/qt5/QtThemeSupport/5.13.1/QtThemeSupport/private/qxdgnotificationproxy_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qabstractfileiconengine_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusmenuadaptor_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusmenubar_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusmenuconnection_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusmenuregistrarproxy_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusmenutypes_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbusplatformmenu_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbustrayicon_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qdbustraytypes_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qgenericunixthemes_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qstatusnotifieritemadaptor_p.h
+/usr/include/qt5/QtThemeSupport/5.13.2/QtThemeSupport/private/qxdgnotificationproxy_p.h
 /usr/include/qt5/QtThemeSupport/QtThemeSupport
 /usr/include/qt5/QtThemeSupport/QtThemeSupportDepends
 /usr/include/qt5/QtThemeSupport/QtThemeSupportVersion
 /usr/include/qt5/QtThemeSupport/qtthemesupportversion.h
-/usr/include/qt5/QtVulkanSupport/5.13.1/QtVulkanSupport/private/qbasicvulkanplatforminstance_p.h
-/usr/include/qt5/QtVulkanSupport/5.13.1/QtVulkanSupport/private/qvkconvenience_p.h
+/usr/include/qt5/QtVulkanSupport/5.13.2/QtVulkanSupport/private/qbasicvulkanplatforminstance_p.h
+/usr/include/qt5/QtVulkanSupport/5.13.2/QtVulkanSupport/private/qvkconvenience_p.h
 /usr/include/qt5/QtVulkanSupport/QtVulkanSupport
 /usr/include/qt5/QtVulkanSupport/QtVulkanSupportDepends
 /usr/include/qt5/QtVulkanSupport/QtVulkanSupportVersion
 /usr/include/qt5/QtVulkanSupport/qtvulkansupportversion.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/complexwidgets_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/itemviews_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractbutton_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractitemdelegate_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractitemview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractscrollarea_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractslider_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qabstractspinbox_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qaccessiblemenu_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qaccessiblewidgetfactory_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qaccessiblewidgets_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qaction_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qapplication_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qbasickeyeventtransition_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qbasicmouseeventtransition_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qbsptree_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qbuttongroup_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcolumnview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcolumnviewgrip_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcombobox_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcommonstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcommonstylepixmaps_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qcompleter_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qdatetimeedit_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qdesktopwidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qdialog_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qdockarealayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qdockwidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qeffects_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfiledialog_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfileiconprovider_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfileinfogatherer_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfilesystemmodel_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qflickgesture_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfontdialog_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qframe_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfscompleter_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfusionstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qfusionstyle_p_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgesture_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgesturemanager_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraph_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsanchorlayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicseffect_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsgridlayoutengine_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsitem_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicslayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicslayoutitem_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicslayoutstyleinfo_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsproxywidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsscene_bsp_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsscene_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsscenebsptreeindex_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicssceneindex_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsscenelinearindex_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicstransform_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicsview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qgraphicswidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qheaderview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qitemeditorfactory_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qkeysequenceedit_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlabel_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlayoutengine_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlineedit_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlistview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qlistwidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmacgesturerecognizer_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmainwindowlayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmdiarea_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmdisubwindow_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmenu_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qmenubar_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qpixmapfilter_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qpixmapstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qpixmapstyle_p_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qplaintextedit_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qproxystyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qpushbutton_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qscrollarea_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qscrollbar_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qscroller_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qscrollerproperties_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qsidebar_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qsimplex_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qsplitter_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qstandardgestures_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qstyleanimation_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qstylehelper_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qstylesheetstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qsystemtrayicon_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qt_widgets_pch.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtabbar_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtableview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtablewidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtextedit_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtoolbar_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtoolbararealayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtoolbarextension_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtoolbarlayout_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtoolbarseparator_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtreeview_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtreewidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtreewidgetitemiterator_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtwidgets-config_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qtwidgetsglobal_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qundostack_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidget_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetaction_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetanimator_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetbackingstore_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetitemdata_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetlinecontrol_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetresizehandler_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgettextcontrol_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgettextcontrol_p_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwidgetwindow_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwindowcontainer_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwindowsstyle_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwindowsstyle_p_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/qwizard_win_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/rangecontrols_p.h
-/usr/include/qt5/QtWidgets/5.13.1/QtWidgets/private/simplewidgets_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/complexwidgets_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/itemviews_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractbutton_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractitemdelegate_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractitemview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractscrollarea_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractslider_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qabstractspinbox_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qaccessiblemenu_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qaccessiblewidgetfactory_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qaccessiblewidgets_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qaction_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qapplication_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qbasickeyeventtransition_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qbasicmouseeventtransition_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qbsptree_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qbuttongroup_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcolumnview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcolumnviewgrip_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcombobox_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcommonstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcommonstylepixmaps_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qcompleter_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qdatetimeedit_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qdesktopwidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qdialog_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qdockarealayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qdockwidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qeffects_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfiledialog_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfileiconprovider_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfileinfogatherer_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfilesystemmodel_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qflickgesture_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfontdialog_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qframe_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfscompleter_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfusionstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qfusionstyle_p_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgesture_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgesturemanager_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraph_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsanchorlayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicseffect_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsgridlayoutengine_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsitem_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicslayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicslayoutitem_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicslayoutstyleinfo_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsproxywidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsscene_bsp_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsscene_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsscenebsptreeindex_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicssceneindex_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsscenelinearindex_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicstransform_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicsview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qgraphicswidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qheaderview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qitemeditorfactory_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qkeysequenceedit_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlabel_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlayoutengine_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlineedit_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlistview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qlistwidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmacgesturerecognizer_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmainwindowlayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmdiarea_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmdisubwindow_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmenu_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qmenubar_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qpixmapfilter_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qpixmapstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qpixmapstyle_p_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qplaintextedit_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qproxystyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qpushbutton_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qscrollarea_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qscrollbar_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qscroller_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qscrollerproperties_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qsidebar_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qsimplex_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qsplitter_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qstandardgestures_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qstyleanimation_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qstylehelper_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qstylesheetstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qsystemtrayicon_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qt_widgets_pch.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtabbar_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtableview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtablewidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtextedit_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtoolbar_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtoolbararealayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtoolbarextension_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtoolbarlayout_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtoolbarseparator_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtreeview_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtreewidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtreewidgetitemiterator_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtwidgets-config_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qtwidgetsglobal_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qundostack_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidget_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetaction_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetanimator_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetbackingstore_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetitemdata_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetlinecontrol_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetresizehandler_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgettextcontrol_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgettextcontrol_p_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwidgetwindow_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwindowcontainer_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwindowsstyle_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwindowsstyle_p_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/qwizard_win_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/rangecontrols_p.h
+/usr/include/qt5/QtWidgets/5.13.2/QtWidgets/private/simplewidgets_p.h
 /usr/include/qt5/QtWidgets/QAbstractButton
 /usr/include/qt5/QtWidgets/QAbstractGraphicsShapeItem
 /usr/include/qt5/QtWidgets/QAbstractItemDelegate
@@ -2784,13 +2796,13 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtWidgets/qwidget.h
 /usr/include/qt5/QtWidgets/qwidgetaction.h
 /usr/include/qt5/QtWidgets/qwizard.h
-/usr/include/qt5/QtXkbCommonSupport/5.13.1/QtXkbCommonSupport/private/qxkbcommon_p.h
+/usr/include/qt5/QtXkbCommonSupport/5.13.2/QtXkbCommonSupport/private/qxkbcommon_p.h
 /usr/include/qt5/QtXkbCommonSupport/QtXkbCommonSupport
 /usr/include/qt5/QtXkbCommonSupport/QtXkbCommonSupportDepends
 /usr/include/qt5/QtXkbCommonSupport/QtXkbCommonSupportVersion
 /usr/include/qt5/QtXkbCommonSupport/qtxkbcommonsupportversion.h
-/usr/include/qt5/QtXml/5.13.1/QtXml/private/qtxml-config_p.h
-/usr/include/qt5/QtXml/5.13.1/QtXml/private/qxml_p.h
+/usr/include/qt5/QtXml/5.13.2/QtXml/private/qtxml-config_p.h
+/usr/include/qt5/QtXml/5.13.2/QtXml/private/qxml_p.h
 /usr/include/qt5/QtXml/QDomAttr
 /usr/include/qt5/QtXml/QDomCDATASection
 /usr/include/qt5/QtXml/QDomCharacterData
@@ -3671,89 +3683,89 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 %defattr(-,root,root,-)
 /usr/lib64/haswell/libQt5Core.so.5
 /usr/lib64/haswell/libQt5Core.so.5.13
-/usr/lib64/haswell/libQt5Core.so.5.13.1
+/usr/lib64/haswell/libQt5Core.so.5.13.2
 /usr/lib64/haswell/libQt5DBus.so.5
 /usr/lib64/haswell/libQt5DBus.so.5.13
-/usr/lib64/haswell/libQt5DBus.so.5.13.1
+/usr/lib64/haswell/libQt5DBus.so.5.13.2
 /usr/lib64/haswell/libQt5Network.so.5
 /usr/lib64/haswell/libQt5Network.so.5.13
-/usr/lib64/haswell/libQt5Network.so.5.13.1
+/usr/lib64/haswell/libQt5Network.so.5.13.2
 /usr/lib64/haswell/libQt5Xml.so.5
 /usr/lib64/haswell/libQt5Xml.so.5.13
-/usr/lib64/haswell/libQt5Xml.so.5.13.1
+/usr/lib64/haswell/libQt5Xml.so.5.13.2
 /usr/lib64/libQt5Core.so.5
 /usr/lib64/libQt5Core.so.5.13
-/usr/lib64/libQt5Core.so.5.13.1
+/usr/lib64/libQt5Core.so.5.13.2
 /usr/lib64/libQt5DBus.so.5
 /usr/lib64/libQt5DBus.so.5.13
-/usr/lib64/libQt5DBus.so.5.13.1
+/usr/lib64/libQt5DBus.so.5.13.2
 /usr/lib64/libQt5Network.so.5
 /usr/lib64/libQt5Network.so.5.13
-/usr/lib64/libQt5Network.so.5.13.1
+/usr/lib64/libQt5Network.so.5.13.2
 /usr/lib64/libQt5Sql.so.5
 /usr/lib64/libQt5Sql.so.5.13
-/usr/lib64/libQt5Sql.so.5.13.1
+/usr/lib64/libQt5Sql.so.5.13.2
 /usr/lib64/libQt5Xml.so.5
 /usr/lib64/libQt5Xml.so.5.13
-/usr/lib64/libQt5Xml.so.5.13.1
+/usr/lib64/libQt5Xml.so.5.13.2
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlite.so
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.13
-/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.13.1
+/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.13.2
 /usr/lib64/haswell/libQt5EglFsKmsSupport.so.5
 /usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.13
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.13.1
+/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.13.2
 /usr/lib64/haswell/libQt5Gui.so.5
 /usr/lib64/haswell/libQt5Gui.so.5.13
-/usr/lib64/haswell/libQt5Gui.so.5.13.1
+/usr/lib64/haswell/libQt5Gui.so.5.13.2
 /usr/lib64/haswell/libQt5OpenGL.so.5
 /usr/lib64/haswell/libQt5OpenGL.so.5.13
-/usr/lib64/haswell/libQt5OpenGL.so.5.13.1
+/usr/lib64/haswell/libQt5OpenGL.so.5.13.2
 /usr/lib64/haswell/libQt5PrintSupport.so.5
 /usr/lib64/haswell/libQt5PrintSupport.so.5.13
-/usr/lib64/haswell/libQt5PrintSupport.so.5.13.1
+/usr/lib64/haswell/libQt5PrintSupport.so.5.13.2
 /usr/lib64/haswell/libQt5Sql.so.5
 /usr/lib64/haswell/libQt5Sql.so.5.13
-/usr/lib64/haswell/libQt5Sql.so.5.13.1
+/usr/lib64/haswell/libQt5Sql.so.5.13.2
 /usr/lib64/haswell/libQt5Test.so.5
 /usr/lib64/haswell/libQt5Test.so.5.13
-/usr/lib64/haswell/libQt5Test.so.5.13.1
+/usr/lib64/haswell/libQt5Test.so.5.13.2
 /usr/lib64/haswell/libQt5Widgets.so.5
 /usr/lib64/haswell/libQt5Widgets.so.5.13
-/usr/lib64/haswell/libQt5Widgets.so.5.13.1
+/usr/lib64/haswell/libQt5Widgets.so.5.13.2
 /usr/lib64/haswell/libQt5XcbQpa.so.5
 /usr/lib64/haswell/libQt5XcbQpa.so.5.13
-/usr/lib64/haswell/libQt5XcbQpa.so.5.13.1
+/usr/lib64/haswell/libQt5XcbQpa.so.5.13.2
 /usr/lib64/libQt5Concurrent.so.5
 /usr/lib64/libQt5Concurrent.so.5.13
-/usr/lib64/libQt5Concurrent.so.5.13.1
+/usr/lib64/libQt5Concurrent.so.5.13.2
 /usr/lib64/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/libQt5EglFSDeviceIntegration.so.5.13
-/usr/lib64/libQt5EglFSDeviceIntegration.so.5.13.1
+/usr/lib64/libQt5EglFSDeviceIntegration.so.5.13.2
 /usr/lib64/libQt5EglFsKmsSupport.so.5
 /usr/lib64/libQt5EglFsKmsSupport.so.5.13
-/usr/lib64/libQt5EglFsKmsSupport.so.5.13.1
+/usr/lib64/libQt5EglFsKmsSupport.so.5.13.2
 /usr/lib64/libQt5Gui.so.5
 /usr/lib64/libQt5Gui.so.5.13
-/usr/lib64/libQt5Gui.so.5.13.1
+/usr/lib64/libQt5Gui.so.5.13.2
 /usr/lib64/libQt5OpenGL.so.5
 /usr/lib64/libQt5OpenGL.so.5.13
-/usr/lib64/libQt5OpenGL.so.5.13.1
+/usr/lib64/libQt5OpenGL.so.5.13.2
 /usr/lib64/libQt5PrintSupport.so.5
 /usr/lib64/libQt5PrintSupport.so.5.13
-/usr/lib64/libQt5PrintSupport.so.5.13.1
+/usr/lib64/libQt5PrintSupport.so.5.13.2
 /usr/lib64/libQt5Test.so.5
 /usr/lib64/libQt5Test.so.5.13
-/usr/lib64/libQt5Test.so.5.13.1
+/usr/lib64/libQt5Test.so.5.13.2
 /usr/lib64/libQt5Widgets.so.5
 /usr/lib64/libQt5Widgets.so.5.13
-/usr/lib64/libQt5Widgets.so.5.13.1
+/usr/lib64/libQt5Widgets.so.5.13.2
 /usr/lib64/libQt5XcbQpa.so.5
 /usr/lib64/libQt5XcbQpa.so.5.13
-/usr/lib64/libQt5XcbQpa.so.5.13.1
+/usr/lib64/libQt5XcbQpa.so.5.13.2
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so.avx2
 /usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
@@ -3802,69 +3814,67 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/qtbase/LICENSE.FDL
-/usr/share/package-licenses/qtbase/LICENSE.GPL2
-/usr/share/package-licenses/qtbase/LICENSE.GPL3
-/usr/share/package-licenses/qtbase/LICENSE.GPL3-EXCEPT
-/usr/share/package-licenses/qtbase/LICENSE.LGPL3
-/usr/share/package-licenses/qtbase/LICENSE.LGPLv3
-/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.cpp
-/usr/share/package-licenses/qtbase/examples_widgets_dialogs_licensewizard_licensewizard.h
-/usr/share/package-licenses/qtbase/src_3rdparty_android_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_SYSTEMINFO_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_TRACEEVENT_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_common_third_party_smhasher_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_compiler_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_angle_src_third_party_libXNVCtrl_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_double-conversion_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_easing_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_forkfd_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_freebsd_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_BDF-LICENSE.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_PCF-LICENSE.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_ZLIB-LICENSE.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_GPLv2.TXT
-/usr/share/package-licenses/qtbase/src_3rdparty_freetype_docs_LICENSE.TXT
-/usr/share/package-licenses/qtbase/src_3rdparty_gradle_LICENSE-GRADLEW.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz-ng_COPYING
-/usr/share/package-licenses/qtbase/src_3rdparty_harfbuzz_COPYING
-/usr/share/package-licenses/qtbase/src_3rdparty_iaccessible2_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_icc_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_3rdparty_libjpeg_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_libpng_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE
-/usr/share/package-licenses/qtbase/src_3rdparty_pcre2_LICENCE-SLJIT
-/usr/share/package-licenses/qtbase/src_3rdparty_pixman_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_rfc6234_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_sha3_BRG_ENDIAN_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_sha3_CC0_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_tinycbor_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_wasm_DEJAVU-LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_xcb_LICENSE
-/usr/share/package-licenses/qtbase/src_3rdparty_zlib_LICENSE
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QBIG5CODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QBKCODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCJPCODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QEUCKRCODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QJISCODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QSJISCODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_codecs_QTSCIICODEC_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_io_PSL-LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_kernel_QEVENTDISPATCHER_CF_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_corelib_tools_UNICODE_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_dbus_LIBDBUS-1-LICENSE.txt
-/usr/share/package-licenses/qtbase/src_gui_opengl_KHRONOS_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_gui_painting_QIMAGETRANSFORM_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_gui_painting_WEBGRADIENTS_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_gui_vulkan_KHRONOS_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_plugins_platforms_cocoa_COCOA_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_testlib_3rdparty_CYCLE_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_testlib_3rdparty_LINUX_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_testlib_3rdparty_VALGRIND_LICENSE.txt
-/usr/share/package-licenses/qtbase/src_tools_moc_util_licenseheader.txt
-/usr/share/package-licenses/qtbase/tests_auto_corelib_serialization_qxmlstream_XML-Test-Suite-LICENSE.txt
+/usr/share/package-licenses/qtbase/0446b384f361f9601238bc2f2e7bd7a833b99288
+/usr/share/package-licenses/qtbase/0ea65384e282e2244c42de4fb6957386e27b0db5
+/usr/share/package-licenses/qtbase/1118a9b7fdff2e9a736acfe764d3d993715e85bb
+/usr/share/package-licenses/qtbase/16da0e0dcdc8ca9463ff2b8cb37072ee522b0924
+/usr/share/package-licenses/qtbase/1ff1aac950759024e9a9f72d47d394e7b4452c6a
+/usr/share/package-licenses/qtbase/21c9a9f31dd8a6784a5ac2836db33acb977532af
+/usr/share/package-licenses/qtbase/2cba132501cc69b943061ac075153ad475c7e72a
+/usr/share/package-licenses/qtbase/2fa43cbb19d1b1e8c642649405461142f260f2ba
+/usr/share/package-licenses/qtbase/322ce1982143941e7bb72f3f61c7087c46ca3c27
+/usr/share/package-licenses/qtbase/472d1249930e41755894c5336b785c2753d704a2
+/usr/share/package-licenses/qtbase/4cc77b90af91e615a64ae04893fdffa7939db84c
+/usr/share/package-licenses/qtbase/5afaf3263848300e6daf9a5cc3761eddb9969946
+/usr/share/package-licenses/qtbase/5f1f3a3317504f51b562784738656be8593c7ffa
+/usr/share/package-licenses/qtbase/60f8838aed230fff6697f59ea3a732f18c723c3d
+/usr/share/package-licenses/qtbase/61907422fefcd2313a9b570c31d203a6dbebd333
+/usr/share/package-licenses/qtbase/64b7f213ddd72695d94866a1a9532ee5b3a472a8
+/usr/share/package-licenses/qtbase/665f7371da2b70dc3908c7c1e8b43bbbada8e4c3
+/usr/share/package-licenses/qtbase/69e3487e6a838e7c9357d55578f64d5995f7e711
+/usr/share/package-licenses/qtbase/6b644a7011be79d1a8ee1cbafa513ce7c533ecf0
+/usr/share/package-licenses/qtbase/6c978ae82e85830764c8683ee4df810c4360c547
+/usr/share/package-licenses/qtbase/70fabf2a986af11354277144546150a1c9783cac
+/usr/share/package-licenses/qtbase/744aeb214e5bd02d894c0390cb505be56847b6be
+/usr/share/package-licenses/qtbase/75b9a0f53529223aae7dd2214b028ef22e179e76
+/usr/share/package-licenses/qtbase/7925382f0cd147aad205ce1a1c6b8f2017ef7d63
+/usr/share/package-licenses/qtbase/819e6935c5ac3ae7bcb7470cb81c07cc383e80eb
+/usr/share/package-licenses/qtbase/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+/usr/share/package-licenses/qtbase/866627e250d50de077ffe78efa8f585f87238180
+/usr/share/package-licenses/qtbase/889f531eb3d7093dee85d5c3afc1340055740678
+/usr/share/package-licenses/qtbase/8d434c9c1704b544a8b0652efbc323380b67f9bc
+/usr/share/package-licenses/qtbase/8fa90a82c684d365e3ee08e257ddfeb11a34daab
+/usr/share/package-licenses/qtbase/99fccba07bdc277439b88e03af273819d29764c7
+/usr/share/package-licenses/qtbase/a52be3a58ec2d18904191c16274cec7d58893d6f
+/usr/share/package-licenses/qtbase/a5f4d6f407de11b9ce0fef27e335ddcaeded9f2d
+/usr/share/package-licenses/qtbase/a90d46253481cf09cf3baf17c6487f6dd81ef1e2
+/usr/share/package-licenses/qtbase/adcc167d614e95a64b755f09d48b61ba85d6e104
+/usr/share/package-licenses/qtbase/af6b93eb335e20dd1fd54208f939dd06042c53d2
+/usr/share/package-licenses/qtbase/b4be9db792cd4bb77ab866ab90d06c4b24a6bcbe
+/usr/share/package-licenses/qtbase/b622f8ec37b3b644621a5f5f672c41ab286ca5d9
+/usr/share/package-licenses/qtbase/ba3bd36a0ef297a2572863c14637ff032a55d29b
+/usr/share/package-licenses/qtbase/c0955b5351b1dcafdd0b9bb2d7e84fe0e3d731ca
+/usr/share/package-licenses/qtbase/c3cd964db231b42526c782d5ad7f8d564269b6d5
+/usr/share/package-licenses/qtbase/c64fcff8000491a2263f9e33894819c687e9706f
+/usr/share/package-licenses/qtbase/c7ace52554ee70719c6b493bf87781cdabb6549a
+/usr/share/package-licenses/qtbase/c7e2ab75c7671491b36e306057bf0f14aa62845c
+/usr/share/package-licenses/qtbase/cd290e37e15d49aabe6dcfa048f4e0165b9f0c07
+/usr/share/package-licenses/qtbase/d134e46110f1cb9253ba4542a2d8770179429da4
+/usr/share/package-licenses/qtbase/d7e3ed5ac149ac1e2d2e0f4daff081c1dafef1c0
+/usr/share/package-licenses/qtbase/dac7127c82749e3107b53530289e1cd548860868
+/usr/share/package-licenses/qtbase/dbb4b3a7c493484294639613ed59f1f5e7f94ada
+/usr/share/package-licenses/qtbase/dc3faa3029d99c3532e8262c2452afd5e11e4918
+/usr/share/package-licenses/qtbase/dc421334344c2641f0a20caf1ecf4abb9c846c1e
+/usr/share/package-licenses/qtbase/e35a38f4b6d9b8fa47bdc313b42ea1930b94a72f
+/usr/share/package-licenses/qtbase/e87d28b43a11605664d10cc7190e454e256684f7
+/usr/share/package-licenses/qtbase/e911adf5641a09f13fdd5d59962ad37da043df79
+/usr/share/package-licenses/qtbase/e92dbdd87a40618fea1cfb376f4456d0b2ee8836
+/usr/share/package-licenses/qtbase/e93757aefa405f2c9a8a55e780ae9c39542dfc3a
+/usr/share/package-licenses/qtbase/e9cb7b4dfa8168c3e4041aa6dc2c48a619f3b76b
+/usr/share/package-licenses/qtbase/f45ee1c765646813b442ca58de72e20a64a7ddba
+/usr/share/package-licenses/qtbase/f62f428fcb4bca5ae06b01409d5a5923163ce4dc
+/usr/share/package-licenses/qtbase/fc3951ba26fe1914759f605696a1d23e3b41766f
+/usr/share/package-licenses/qtbase/fee647168efa75e63122586106fb721b55ee7651
 
 %files staticdev
 %defattr(-,root,root,-)
