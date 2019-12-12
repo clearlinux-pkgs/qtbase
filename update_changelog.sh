@@ -5,6 +5,8 @@ eval `sed -En '/^PKG_NAME\s*:?=\s*/s//PKG_NAME=/p
 
 CHANGES_FILE=https://code.qt.io/cgit/qt/$PKG_NAME.git/plain/dist/changes-$VERSION?h=v$VERSION
 
-rm -f NEWS ChangeLog
-wget -O ChangeLog "$CHANGES_FILE" || \
-    echo > ChangeLog "No changelog file found for $PKG_NAME $VERSION"
+git rm -f NEWS ChangeLog
+if wget -O ChangeLog "$CHANGES_FILE"; then
+    git add ChangeLog
+fi
+exit 0
