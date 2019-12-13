@@ -35,7 +35,7 @@ qtscxml : qtbase qtdeclarative
 MODULES += qtscxml
 
 qtcanvas3d : qtdeclarative 
-MODULES += qtcanvas3d
+#MODULES += qtcanvas3d
 
 qtwebsockets : qtbase qtdeclarative
 MODULES += qtwebsockets
