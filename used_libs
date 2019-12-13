@@ -27,3 +27,4 @@ libudev.so.1
 libxkbcommon-x11.so.0
 libxkbcommon.so.0
 libz.so.1
+libzstd.so.1

@@ -1,4 +1,4 @@
-From a887613e6575d13f56549c29275f0f5bf0cdf30c Mon Sep 17 00:00:00 2001
+From a887613e6575.14f56549c29275f0f5bf0cdf30c Mon Sep 17 00:00:00 2001
 From: Thiago Macieira <thiago.macieira@intel.com>
 Date: Thu, 14 Apr 2016 03:44:11 +0000
 Subject: [PATCH] Force configure not to bail out on unknown cmdline options
