@@ -1,2 +1,3 @@
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
+0002-qfloat16-include-the-tables-in-AVX2-binaries-regardl.patch
 tell-the-truth-about-private-api.patch

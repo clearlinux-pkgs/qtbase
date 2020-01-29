@@ -1,4 +1,4 @@
-From a887613e6575.14f56549c29275f0f5bf0cdf30c Mon Sep 17 00:00:00 2001
+From 1dbea331140bfef0a6fcaeadbd481c3b16fe8d8c Mon Sep 17 00:00:00 2001
 From: Thiago Macieira <thiago.macieira@intel.com>
 Date: Thu, 14 Apr 2016 03:44:11 +0000
 Subject: [PATCH] Force configure not to bail out on unknown cmdline options
@@ -8,10 +8,10 @@ Subject: [PATCH] Force configure not to bail out on unknown cmdline options
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/mkspecs/features/qt_configure.prf b/mkspecs/features/qt_configure.prf
-index 7ca65c92b3..b0c9877fca 100644
+index 6537d98c5d..b3661924a3 100644
 --- a/mkspecs/features/qt_configure.prf
 +++ b/mkspecs/features/qt_configure.prf
-@@ -343,11 +343,7 @@ defineTest(qtConfParseCommandLine) {
+@@ -350,11 +350,7 @@ defineTest(qtConfParseCommandLine) {
          }
  
          isEmpty(type) {
@@ -25,5 +25,5 @@ index 7ca65c92b3..b0c9877fca 100644
  
          call = "qtConfCommandline_$${type}"
 -- 
-2.20.1
+2.25.0
 

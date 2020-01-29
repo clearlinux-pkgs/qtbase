@@ -6,7 +6,7 @@ libQt5Concurrent.so.5:Qt_5.11
 libQt5Concurrent.so.5:Qt_5.12
 libQt5Concurrent.so.5:Qt_5.13
 libQt5Concurrent.so.5:Qt_5.14
-libQt5Concurrent.so.5:Qt_5.14.0_PRIVATE_API
+libQt5Concurrent.so.5:Qt_5.14.1_PRIVATE_API
 libQt5Concurrent.so.5:Qt_5.2
 libQt5Concurrent.so.5:Qt_5.3
 libQt5Concurrent.so.5:Qt_5.4
@@ -45,7 +45,7 @@ libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV214timeBeforeUserEv
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV29blockSizeEv
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV2C1Ei
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV2C2Ei
-libQt5EglFSDeviceIntegration.so.5:Qt_5.14.0_PRIVATE_API
+libQt5EglFSDeviceIntegration.so.5:Qt_5.14.1_PRIVATE_API
 libQt5EglFSDeviceIntegration.so.5:_Z25qt_egl_device_integrationv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacallEN11QMetaObject4CallEiPPv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacastEPKc
@@ -202,7 +202,7 @@ libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration24nativeResourceFor
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration28nativeResourceForIntegrationERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration32nativeResourceFunctionForContextERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_NK17QEglFSIntegration16platformFunctionERK10QByteArray
-libQt5EglFsKmsSupport.so.5:Qt_5.14.0_PRIVATE_API
+libQt5EglFsKmsSupport.so.5:Qt_5.14.1_PRIVATE_API
 libQt5EglFsKmsSupport.so.5:_Z16qLcEglfsKmsDebugv
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDevice14registerScreenEP15QPlatformScreenbRK6QPointRK5QListIS1_E
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDeviceC1EP16QKmsScreenConfigRK7QString
@@ -259,7 +259,7 @@ libQt5Gui.so.5:Qt_5.11
 libQt5Gui.so.5:Qt_5.12
 libQt5Gui.so.5:Qt_5.13
 libQt5Gui.so.5:Qt_5.14
-libQt5Gui.so.5:Qt_5.14.0_PRIVATE_API
+libQt5Gui.so.5:Qt_5.14.1_PRIVATE_API
 libQt5Gui.so.5:Qt_5.2
 libQt5Gui.so.5:Qt_5.3
 libQt5Gui.so.5:Qt_5.4
@@ -3656,6 +3656,7 @@ libQt5Gui.so.5:_ZN22QDashedStrokeProcessor7processERK11QVectorPathRK4QPenRK6QRec
 libQt5Gui.so.5:_ZN22QDashedStrokeProcessorC1Ev
 libQt5Gui.so.5:_ZN22QDashedStrokeProcessorC2Ev
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate10commitDataEv
+libQt5Gui.so.5:_ZN22QGuiApplicationPrivate10setPaletteERK8QPalette
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate10shouldQuitEv
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate11processDragEP7QWindowPK9QMimeDataRK6QPoint6QFlagsIN2Qt10DropActionEES8_INS9_11MouseButtonEES8_INS9_16KeyboardModifierEE
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate11processDropEP7QWindowPK9QMimeDataRK6QPoint6QFlagsIN2Qt10DropActionEES8_INS9_11MouseButtonEES8_INS9_16KeyboardModifierEE
@@ -3938,7 +3939,9 @@ libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleTabletEventEP7QWindowRK7QPoint
 libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleTabletEventEP7QWindowbRK7QPointFS4_iidiiddix6QFlagsIN2Qt16KeyboardModifierEE
 libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleTabletEventEP7QWindowmRK7QPointFS4_ii6QFlagsIN2Qt11MouseButtonEEdiiddixS5_INS6_16KeyboardModifierEE
 libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleTabletEventEP7QWindowmbRK7QPointFS4_iidiiddix6QFlagsIN2Qt16KeyboardModifierEE
-libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleThemeChangeEP7QWindow
+libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleThemeChangeINS_15DefaultDeliveryEEEvP7QWindow
+libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleThemeChangeINS_19SynchronousDeliveryEEEvP7QWindow
+libQt5Gui.so.5:_ZN22QWindowSystemInterface17handleThemeChangeINS_20AsynchronousDeliveryEEEvP7QWindow
 libQt5Gui.so.5:_ZN22QWindowSystemInterface18handleGestureEventEP7QWindowP12QTouchDevicemN2Qt17NativeGestureTypeER7QPointFS7_
 libQt5Gui.so.5:_ZN22QWindowSystemInterface19handleFileOpenEventERK4QUrl
 libQt5Gui.so.5:_ZN22QWindowSystemInterface19handleFileOpenEventERK7QString
@@ -6543,6 +6546,7 @@ libQt5Gui.so.5:_ZNK15QImageIOHandler9setFormatERK10QByteArray
 libQt5Gui.so.5:_ZNK15QLinearGradient5startEv
 libQt5Gui.so.5:_ZNK15QLinearGradient9finalStopEv
 libQt5Gui.so.5:_ZNK15QPlatformCursor3posEv
+libQt5Gui.so.5:_ZNK15QPlatformCursor4sizeEv
 libQt5Gui.so.5:_ZNK15QPlatformPixmap11transformedERK10QTransformN2Qt18TransformationModeE
 libQt5Gui.so.5:_ZNK15QPlatformPixmap30createCompatiblePlatformPixmapEv
 libQt5Gui.so.5:_ZNK15QPlatformPixmap4maskEv
@@ -8018,7 +8022,7 @@ libQt5OpenGL.so.5:Qt_5.11
 libQt5OpenGL.so.5:Qt_5.12
 libQt5OpenGL.so.5:Qt_5.13
 libQt5OpenGL.so.5:Qt_5.14
-libQt5OpenGL.so.5:Qt_5.14.0_PRIVATE_API
+libQt5OpenGL.so.5:Qt_5.14.1_PRIVATE_API
 libQt5OpenGL.so.5:Qt_5.2
 libQt5OpenGL.so.5:Qt_5.3
 libQt5OpenGL.so.5:Qt_5.4
@@ -8647,7 +8651,7 @@ libQt5PrintSupport.so.5:Qt_5.11
 libQt5PrintSupport.so.5:Qt_5.12
 libQt5PrintSupport.so.5:Qt_5.13
 libQt5PrintSupport.so.5:Qt_5.14
-libQt5PrintSupport.so.5:Qt_5.14.0_PRIVATE_API
+libQt5PrintSupport.so.5:Qt_5.14.1_PRIVATE_API
 libQt5PrintSupport.so.5:Qt_5.2
 libQt5PrintSupport.so.5:Qt_5.3
 libQt5PrintSupport.so.5:Qt_5.4
@@ -9089,7 +9093,7 @@ libQt5Test.so.5:Qt_5.11
 libQt5Test.so.5:Qt_5.12
 libQt5Test.so.5:Qt_5.13
 libQt5Test.so.5:Qt_5.14
-libQt5Test.so.5:Qt_5.14.0_PRIVATE_API
+libQt5Test.so.5:Qt_5.14.1_PRIVATE_API
 libQt5Test.so.5:Qt_5.2
 libQt5Test.so.5:Qt_5.3
 libQt5Test.so.5:Qt_5.4
@@ -9308,7 +9312,7 @@ libQt5Widgets.so.5:Qt_5.11
 libQt5Widgets.so.5:Qt_5.12
 libQt5Widgets.so.5:Qt_5.13
 libQt5Widgets.so.5:Qt_5.14
-libQt5Widgets.so.5:Qt_5.14.0_PRIVATE_API
+libQt5Widgets.so.5:Qt_5.14.1_PRIVATE_API
 libQt5Widgets.so.5:Qt_5.2
 libQt5Widgets.so.5:Qt_5.3
 libQt5Widgets.so.5:Qt_5.4
@@ -12577,7 +12581,7 @@ libQt5Widgets.so.5:_ZN19QApplicationPrivate16setSystemPaletteERK8QPalette
 libQt5Widgets.so.5:_ZN19QApplicationPrivate17cleanupMultitouchEv
 libQt5Widgets.so.5:_ZN19QApplicationPrivate17notifyDragStartedEPK5QDrag
 libQt5Widgets.so.5:_ZN19QApplicationPrivate17pickMouseReceiverEP7QWidgetRK6QPointPS2_N6QEvent4TypeE6QFlagsIN2Qt11MouseButtonEES1_S1_
-libQt5Widgets.so.5:_ZN19QApplicationPrivate17setPalette_helperERK8QPalettePKcb
+libQt5Widgets.so.5:_ZN19QApplicationPrivate17setPalette_helperERK8QPalettePKc
 libQt5Widgets.so.5:_ZN19QApplicationPrivate18dispatchEnterLeaveEP7QWidgetS1_RK7QPointF
 libQt5Widgets.so.5:_ZN19QApplicationPrivate18notifyThemeChangedEv
 libQt5Widgets.so.5:_ZN19QApplicationPrivate18tryCloseAllWindowsEv
@@ -17348,7 +17352,7 @@ libQt5Widgets.so.5:_ZrsR11QDataStreamR15QListWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR15QTreeWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR16QTableWidgetItem
 libQt5Widgets.so.5:_ZrsR11QTextStreamR9QSplitter
-libQt5XcbQpa.so.5:Qt_5.14.0_PRIVATE_API
+libQt5XcbQpa.so.5:Qt_5.14.1_PRIVATE_API
 libQt5XcbQpa.so.5:_Z7lcQpaGlv
 libQt5XcbQpa.so.5:_ZN10QXcbScreen11windowShownEP10QXcbWindow
 libQt5XcbQpa.so.5:_ZN10QXcbScreen13getOutputNameEP33xcb_randr_get_output_info_reply_t
