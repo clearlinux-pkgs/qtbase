@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.14.1
-Release  : 41
+Release  : 42
 URL      : https://download.qt.io/official_releases/qt/5.14/5.14.1/submodules/qtbase-everywhere-src-5.14.1.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.14/5.14.1/submodules/qtbase-everywhere-src-5.14.1.tar.xz
 Summary  : No detailed summary available
@@ -20,11 +20,9 @@ BuildRequires : Vulkan-Headers-dev
 BuildRequires : Vulkan-Loader-dev
 BuildRequires : Vulkan-Tools
 BuildRequires : buildreq-cmake
-BuildRequires : buildreq-mvn
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
-BuildRequires : gradle
 BuildRequires : krb5-dev
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
@@ -145,7 +143,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1580261169
+export SOURCE_DATE_EPOCH=1582839515
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -255,7 +253,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1580261169
+export SOURCE_DATE_EPOCH=1582839515
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
