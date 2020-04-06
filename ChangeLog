@@ -1,5 +1,5 @@
-Qt 5.14.1 is a bug-fix release. It maintains both forward and backward
-compatibility (source and binary) with Qt 5.14.0.
+Qt 5.14.2 is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 5.14.0 through 5.14.1.
 
 For more details, refer to the online documentation included in this
 distribution. The documentation is also available online:
@@ -18,57 +18,100 @@ Each of these identifiers can be entered in the bug tracker to obtain more
 information about a particular change.
 
 ****************************************************************************
-*                                  MinGW                                   *
-****************************************************************************
-
- - Qt will by default be built in release mode. Use -debug-or-release to
-   force the pre 5.14.0 default.
-
-****************************************************************************
 *                                  QtCore                                  *
 ****************************************************************************
 
- - QCborValue:
-   * The constructor taking a CBOR tag and a value to be tagged now
-     attempts to convert to a QCborValue extended type. For example, if the
-     tag is 0 (UnixTime_t) and the payload is a number, the resulting
-     object will become tag 1 (DateTime) and the payload will be the the
-     ISO-8601 date/time string.
+ - QCollator:
+   * QTBUG-81673: Fixed a regression introduced in 5.14.0 that caused
+     QCollator not to operate with default-constructed QStrings and print a
+     warning on Windows.
 
- - QDateTime:
-   * ISO 8601: parsing of dates now requires a punctuator as separator (it
-     previously allowed any non-digit; officially only a dash should be
-     allowed) and parsing of date-times no longer tolerates spaces in the
-     numeric fields: an internal space is only allowed in an ISO 8601
-     date-time as replacement for the T between date and time.
+ - QString, codecs:
+   * QTBUG-62011: ZWNBS is no longer discarded (mistaken for a BOM despite
+     not being at the start) when converting UCS4 to QString's UCS2.
+
+ - QLocale:
+   * QTBUG-80459: Skip digit-grouping if the system locale is configured to
+     use an empty group separator.
+   * QTBUG-81530: Use "+" if MS reports empty for the system locale's plus
+     sign, as documented in MS's API for the relevant query.
+
+ - QLockFile:
+   * Suppressed the warning on QNX that said 'setNativeLocks failed:
+     "Function not implemented"'. There is no difference in behavior: Qt
+     will continue not to be able to apply an OS- level file lock, which
+     means the lock could be accidentally stolen by buggy software. Correct
+     software using QLockFile should not be affected.
+
+ - QObject:
+   * For the purposes of QT_NO_NARROWING_CONVERSIONS_IN_CONNECT, pointer
+     (incl. pointer-to-member) to bool conversions are now considered
+     narrowing. This matches the resolution of a defect report in C++
+     itself.
+
+ - QStorageInfo:
+   * Improved discovery of device nodes on Linux if the /dev entry was
+     renamed after the filesystem was mounted and udev is in use.
 
 ****************************************************************************
 *                                  QtGui                                   *
 ****************************************************************************
 
- - QGuiApplication:
-   * [QTBUG-80934] Fixed High DPI scaling factors to be equal to pre 5.14.
+ - QTextMarkdownImporter:
+   * Text in Markdown format is assumed to be UTF-8.
+   * The "title" in a Markdown hyperlink is now used as the tooltip,
+     not the anchor name.
+   * Fixed vulnerability oss-fuzz-20450 (invalid input resulted in an
+     attempt to insert items into a list that no longer exists).
 
 ****************************************************************************
 *                                QtWidgets                                 *
 ****************************************************************************
 
- - QApplication:
-   * [QTBUG-81107] Fixed an exit hang related to QGraphicsProxyWidget.
- - QToolTip:
-   * Make sure that the tooltip is not obscured by very large mouse
-     pointers on Windows and macOS.
+ - QLineEdit:
+   * the inputMask property has allowed any Letter or Number category
+     character for the respective mask characters, not just ASCII. The
+     documentation has been updated accordingly.
 
 ****************************************************************************
-*                                  Tools                                   *
+*                                  qmake                                   *
 ****************************************************************************
 
- - rcc:
-   * rcc now generates correct code when using the --namespace option.
+ - To remove the NDEBUG define that is added by default in MSVC mkspecs,
+   write DEFINES_RELEASE -= NDEBUG in your .pro file.
+ - Install/uninstall rules are now generated for target.targets on Windows.
+   This mirrors the behavior on Unix.
 
 ****************************************************************************
-*                                macOS/iOS                                 *
+*                             Third-Party Code                             *
 ****************************************************************************
 
- - Fixed a bug where QFontDatabase::systemFont() would return the wrong
-   fonts on macOS 10.15 and iOS 13.
+ - md4c was updated to 0.4.3. This fixes vulnerability oss-fuzz-20580.
+
+ - QtSQL, sqlite:
+   * Updated to v3.31.1
+   * [QTBUG-82533] Fixed CVE-2020-9327
+
+****************************************************************************
+*                                  CMake                                   *
+****************************************************************************
+
+ - Windows:
+   * Fixed linking with Qt static build
+
+****************************************************************************
+*                                   MSVC                                   *
+****************************************************************************
+
+ - Fixed a compatibility issue found when linking code compiled with
+   version 16.6 to a Qt compiled with 16.5.
+
+****************************************************************************
+*                                   MinGW                                  *
+****************************************************************************
+
+ - Fixed build regressions.
+ - The -debug-and-release configuration has been fixed. In this
+   configuration, Qt libraries again have a 'd' suffix.
+ - In the -debug configuration, libraries do not have a 'd' suffix, similar
+   to Unix platforms.

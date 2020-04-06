@@ -1,0 +1,94 @@
+From 67971182c161e95d3ad629cc4fc64ae6efc17d2c Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Sat, 7 Mar 2020 07:31:42 -0800
+Subject: [PATCH] QCborValue: create a wrapper to set the QCborStreamReader
+ error state
+
+The next commit will need to do so from outside QCborContainerPrivate,
+where QCborStreamReader::d can't be accessed (private).
+
+Change-Id: Iaa63461109844e978376fffd15fa0f6f04081bf2
+Reviewed-by: Lars Knoll <lars.knoll@qt.io>
+---
+ src/corelib/serialization/qcborvalue.cpp | 17 +++++++++++------
+ src/corelib/serialization/qcborvalue_p.h |  1 +
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/src/corelib/serialization/qcborvalue.cpp b/src/corelib/serialization/qcborvalue.cpp
+index 4052bfa22e..5d4dc6ad5e 100644
+--- a/src/corelib/serialization/qcborvalue.cpp
++++ b/src/corelib/serialization/qcborvalue.cpp
+@@ -833,8 +833,6 @@ static QCborValue::Type convertToExtendedType(QCborContainerPrivate *d)
+     return QCborValue::Tag;
+ }
+ 
+-// in qcborstream.cpp
+-extern void qt_cbor_stream_set_error(QCborStreamReaderPrivate *d, QCborError error);
+ 
+ static void writeDoubleToCbor(QCborStreamWriter &writer, double d, QCborValue::EncodingOptions opt)
+ {
+@@ -1472,6 +1470,13 @@ static QCborValue taggedValueFromCbor(QCborStreamReader &reader)
+     return QCborContainerPrivate::makeValue(type, -1, d);
+ }
+ 
++// in qcborstream.cpp
++extern void qt_cbor_stream_set_error(QCborStreamReaderPrivate *d, QCborError error);
++inline void QCborContainerPrivate::setErrorInReader(QCborStreamReader &reader, QCborError error)
++{
++    qt_cbor_stream_set_error(reader.d.data(), error);
++}
++
+ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+ {
+     auto addByteData_local = [this](QByteArray::size_type len) -> qint64 {
+@@ -1516,7 +1521,7 @@ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+         return;                     // error
+     if (len != rawlen) {
+         // truncation
+-        qt_cbor_stream_set_error(reader.d.data(), { QCborError::DataTooLarge });
++        setErrorInReader(reader, { QCborError::DataTooLarge });
+         return;
+     }
+ 
+@@ -1526,7 +1531,7 @@ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+         e.value = addByteData_local(len);
+         if (e.value < 0) {
+             // overflow
+-            qt_cbor_stream_set_error(reader.d.data(), { QCborError::DataTooLarge });
++            setErrorInReader(reader, { QCborError::DataTooLarge });
+             return;
+         }
+     }
+@@ -1540,7 +1545,7 @@ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+             auto utf8result = QUtf8::isValidUtf8(dataPtr() + data.size() - len, len);
+             if (!utf8result.isValidUtf8) {
+                 r.status = QCborStreamReader::Error;
+-                qt_cbor_stream_set_error(reader.d.data(), { QCborError::InvalidUtf8String });
++                setErrorInReader(reader, { QCborError::InvalidUtf8String });
+                 break;
+             }
+             isAscii = isAscii && utf8result.isValidAscii;
+@@ -1564,7 +1569,7 @@ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+ 
+         // error
+         r.status = QCborStreamReader::Error;
+-        qt_cbor_stream_set_error(reader.d.data(), { QCborError::DataTooLarge });
++        setErrorInReader(reader, { QCborError::DataTooLarge });
+     }
+ 
+     if (r.status == QCborStreamReader::Error) {
+diff --git a/src/corelib/serialization/qcborvalue_p.h b/src/corelib/serialization/qcborvalue_p.h
+index a74ac2ba10..6d41586594 100644
+--- a/src/corelib/serialization/qcborvalue_p.h
++++ b/src/corelib/serialization/qcborvalue_p.h
+@@ -408,6 +408,7 @@ public:
+     void decodeValueFromCbor(QCborStreamReader &reader);
+     void decodeFromCbor(QCborStreamReader &reader);
+     void decodeStringFromCbor(QCborStreamReader &reader);
++    static inline void setErrorInReader(QCborStreamReader &reader, QCborError error);
+ };
+ 
+ QT_END_NAMESPACE
+-- 
+2.26.0
+

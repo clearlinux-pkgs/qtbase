@@ -1,0 +1,227 @@
+From 0f6382be7ef4c577bf8d7a007aceece9235b7122 Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Sat, 7 Mar 2020 07:38:51 -0800
+Subject: [PATCH] QCborValue::fromCbor: Apply a recursion limit to decoding
+
+A simple 16k file can produce deep enough recursion in Qt to cause stack
+overflow. So prevent that.
+
+I tested 4096 recursions just fine on my Linux system (8 MB stack), but
+decided 1024 was sufficient, as this code will also be run on embedded
+systems that could have smaller stacks.
+
+[ChangeLog][QtCore][QCborValue] fromCbor() now limits decoding to at
+most 1024 nested maps, arrays, and tags to prevent stack overflows. This
+should be sufficient for most uses of CBOR. An API to limit further or
+to relax the limit will be provided in 5.15. Meanwhile, if decoding more
+is required, QCborStreamReader can be used (note that each level of map
+and array allocates memory).
+
+Change-Id: Iaa63461109844e978376fffd15fa0fbefbf607a2
+Reviewed-by: Lars Knoll <lars.knoll@qt.io>
+---
+ src/corelib/serialization/qcborvalue.cpp      | 39 ++++++++++----
+ src/corelib/serialization/qcborvalue_p.h      |  4 +-
+ .../qcborvalue/tst_qcborvalue.cpp             | 54 +++++++++++++++++++
+ 3 files changed, 84 insertions(+), 13 deletions(-)
+
+diff --git a/src/corelib/serialization/qcborvalue.cpp b/src/corelib/serialization/qcborvalue.cpp
+index 5d4dc6ad5e..23b4a15c0c 100644
+--- a/src/corelib/serialization/qcborvalue.cpp
++++ b/src/corelib/serialization/qcborvalue.cpp
+@@ -1438,23 +1438,33 @@ static Element decodeBasicValueFromCbor(QCborStreamReader &reader)
+     return e;
+ }
+ 
+-static inline QCborContainerPrivate *createContainerFromCbor(QCborStreamReader &reader)
++static inline QCborContainerPrivate *createContainerFromCbor(QCborStreamReader &reader, int remainingRecursionDepth)
+ {
++    if (Q_UNLIKELY(remainingRecursionDepth == 0)) {
++        QCborContainerPrivate::setErrorInReader(reader, { QCborError::NestingTooDeep });
++        return nullptr;
++    }
++
+     auto d = new QCborContainerPrivate;
+     d->ref.storeRelaxed(1);
+-    d->decodeFromCbor(reader);
++    d->decodeContainerFromCbor(reader, remainingRecursionDepth - 1);
+     return d;
+ }
+ 
+-static QCborValue taggedValueFromCbor(QCborStreamReader &reader)
++static QCborValue taggedValueFromCbor(QCborStreamReader &reader, int remainingRecursionDepth)
+ {
++    if (Q_UNLIKELY(remainingRecursionDepth == 0)) {
++        QCborContainerPrivate::setErrorInReader(reader, { QCborError::NestingTooDeep });
++        return QCborValue::Invalid;
++    }
++
+     auto d = new QCborContainerPrivate;
+     d->append(reader.toTag());
+     reader.next();
+ 
+     if (reader.lastError() == QCborError::NoError) {
+         // decode tagged value
+-        d->decodeValueFromCbor(reader);
++        d->decodeValueFromCbor(reader, remainingRecursionDepth - 1);
+     }
+ 
+     QCborValue::Type type;
+@@ -1595,9 +1605,10 @@ void QCborContainerPrivate::decodeStringFromCbor(QCborStreamReader &reader)
+     elements.append(e);
+ }
+ 
+-void QCborContainerPrivate::decodeValueFromCbor(QCborStreamReader &reader)
++void QCborContainerPrivate::decodeValueFromCbor(QCborStreamReader &reader, int remainingRecursionDepth)
+ {
+-    switch (reader.type()) {
++    QCborStreamReader::Type t = reader.type();
++    switch (t) {
+     case QCborStreamReader::UnsignedInteger:
+     case QCborStreamReader::NegativeInteger:
+     case QCborStreamReader::SimpleType:
+@@ -1614,15 +1625,19 @@ void QCborContainerPrivate::decodeValueFromCbor(QCborStreamReader &reader)
+ 
+     case QCborStreamReader::Array:
+     case QCborStreamReader::Map:
++        return append(makeValue(t == QCborStreamReader::Array ? QCborValue::Array : QCborValue::Map, -1,
++                                createContainerFromCbor(reader, remainingRecursionDepth),
++                                MoveContainer));
++
+     case QCborStreamReader::Tag:
+-        return append(QCborValue::fromCbor(reader));
++        return append(taggedValueFromCbor(reader, remainingRecursionDepth));
+ 
+     case QCborStreamReader::Invalid:
+         return;                 // probably a decode error
+     }
+ }
+ 
+-void QCborContainerPrivate::decodeFromCbor(QCborStreamReader &reader)
++void QCborContainerPrivate::decodeContainerFromCbor(QCborStreamReader &reader, int remainingRecursionDepth)
+ {
+     int mapShift = reader.isMap() ? 1 : 0;
+     if (reader.isLengthKnown()) {
+@@ -1640,7 +1655,7 @@ void QCborContainerPrivate::decodeFromCbor(QCborStreamReader &reader)
+         return;
+ 
+     while (reader.hasNext() && reader.lastError() == QCborError::NoError)
+-        decodeValueFromCbor(reader);
++        decodeValueFromCbor(reader, remainingRecursionDepth);
+ 
+     if (reader.lastError() == QCborError::NoError)
+         reader.leaveContainer();
+@@ -2340,6 +2355,8 @@ QCborValueRef QCborValue::operator[](qint64 key)
+     return { container, index };
+ }
+ 
++enum { MaximumRecursionDepth = 1024 };
++
+ /*!
+     Decodes one item from the CBOR stream found in \a reader and returns the
+     equivalent representation. This function is recursive: if the item is a map
+@@ -2400,12 +2417,12 @@ QCborValue QCborValue::fromCbor(QCborStreamReader &reader)
+     case QCborStreamReader::Map:
+         result.n = -1;
+         result.t = reader.isArray() ? Array : Map;
+-        result.container = createContainerFromCbor(reader);
++        result.container = createContainerFromCbor(reader, MaximumRecursionDepth);
+         break;
+ 
+     // tag
+     case QCborStreamReader::Tag:
+-        result = taggedValueFromCbor(reader);
++        result = taggedValueFromCbor(reader, MaximumRecursionDepth);
+         break;
+     }
+ 
+diff --git a/src/corelib/serialization/qcborvalue_p.h b/src/corelib/serialization/qcborvalue_p.h
+index 6d41586594..2358626541 100644
+--- a/src/corelib/serialization/qcborvalue_p.h
++++ b/src/corelib/serialization/qcborvalue_p.h
+@@ -405,8 +405,8 @@ public:
+         elements.remove(idx);
+     }
+ 
+-    void decodeValueFromCbor(QCborStreamReader &reader);
+-    void decodeFromCbor(QCborStreamReader &reader);
++    void decodeValueFromCbor(QCborStreamReader &reader, int remainiingStackDepth);
++    void decodeContainerFromCbor(QCborStreamReader &reader, int remainingStackDepth);
+     void decodeStringFromCbor(QCborStreamReader &reader);
+     static inline void setErrorInReader(QCborStreamReader &reader, QCborError error);
+ };
+diff --git a/tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp b/tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp
+index d5a9012f9f..49bb9cc144 100644
+--- a/tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp
++++ b/tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp
+@@ -102,6 +102,8 @@ private slots:
+     void fromCborStreamReaderIODevice();
+     void validation_data();
+     void validation();
++    void recursionLimit_data();
++    void recursionLimit();
+     void toDiagnosticNotation_data();
+     void toDiagnosticNotation();
+ 
+@@ -1720,6 +1722,58 @@ void tst_QCborValue::validation()
+     }
+ }
+ 
++void tst_QCborValue::recursionLimit_data()
++{
++    constexpr int RecursionAttempts = 4096;
++    QTest::addColumn<QByteArray>("data");
++    QByteArray arrays(RecursionAttempts, char(0x81));
++    QByteArray _arrays(RecursionAttempts, char(0x9f));
++    QByteArray maps(RecursionAttempts, char(0xa1));
++    QByteArray _maps(RecursionAttempts, char(0xbf));
++    QByteArray tags(RecursionAttempts, char(0xc0));
++
++    QTest::newRow("array-nesting-too-deep") << arrays;
++    QTest::newRow("_array-nesting-too-deep") << _arrays;
++    QTest::newRow("map-nesting-too-deep") << maps;
++    QTest::newRow("_map-nesting-too-deep") << _maps;
++    QTest::newRow("tag-nesting-too-deep") << tags;
++
++    QByteArray mixed(5 * RecursionAttempts, Qt::Uninitialized);
++    char *ptr = mixed.data();
++    for (int i = 0; i < RecursionAttempts; ++i) {
++        quint8 type = qBound(quint8(QCborStreamReader::Array), quint8(i & 0x80), quint8(QCborStreamReader::Tag));
++        quint8 additional_info = i & 0x1f;
++        if (additional_info == 0x1f)
++            (void)additional_info;      // leave it
++        else if (additional_info > 0x1a)
++            additional_info = 0x1a;
++        else if (additional_info < 1)
++            additional_info = 1;
++
++        *ptr++ = type | additional_info;
++        if (additional_info == 0x18) {
++            *ptr++ = uchar(i);
++        } else if (additional_info == 0x19) {
++            qToBigEndian(ushort(i), ptr);
++            ptr += 2;
++        } else if (additional_info == 0x1a) {
++            qToBigEndian(uint(i), ptr);
++            ptr += 4;
++        }
++    }
++
++    QTest::newRow("mixed-nesting-too-deep") << mixed;
++}
++
++void tst_QCborValue::recursionLimit()
++{
++    QFETCH(QByteArray, data);
++
++    QCborParserError error;
++    QCborValue decoded = QCborValue::fromCbor(data, &error);
++    QCOMPARE(error.error, QCborError::NestingTooDeep);
++}
++
+ void tst_QCborValue::toDiagnosticNotation_data()
+ {
+     QTest::addColumn<QCborValue>("v");
+-- 
+2.26.0
+

@@ -9,7 +9,7 @@
 -no-separate-debug-info
 -no-use-gold-linker
 -no-strip -no-rpath -no-pch
--nomake examples
+-no-compile-examples
 -accessibility
 -cups
 -dbus-linked

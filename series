@@ -1,3 +1,7 @@
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
-0002-qfloat16-include-the-tables-in-AVX2-binaries-regardl.patch
+0002-QCborValue-create-a-wrapper-to-set-the-QCborStreamRe.patch
+0003-QCborValue-fromCbor-Apply-a-recursion-limit-to-decod.patch
+0004-QCborValue-apply-a-simple-optimization-to-avoid-unne.patch
+0005-CBOR-support-prevent-overflowing-QByteArray-s-max-al.patch
+0006-QLibrary-fix-deadlock-caused-by-fix-to-QTBUG-39642.patch
 tell-the-truth-about-private-api.patch
