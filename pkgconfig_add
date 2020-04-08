@@ -4,12 +4,14 @@ dbus-1
 freetype2
 glib-2.0
 gl
+krb5-gssapi
 icu-uc
 icu-i18n
 libinput
 libpcre2-16
 libproxy-1.0
 libudev
+md4c
 sm
 xcb-icccm
 xcb-image

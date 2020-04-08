@@ -19,6 +19,7 @@ libinput.so.10
 libjpeg.so.62
 libm.so.6
 libmariadb.so.3
+libmd4c.so.0
 libpng16.so.16
 libpq.so.5
 libpthread.so.0

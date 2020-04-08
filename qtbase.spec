@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.14.2
-Release  : 43
+Release  : 44
 URL      : https://download.qt.io/official_releases/qt/5.14/5.14.2/submodules/qtbase-everywhere-src-5.14.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.14/5.14.2/submodules/qtbase-everywhere-src-5.14.2.tar.xz
 Summary  : No detailed summary available
@@ -23,7 +23,6 @@ BuildRequires : buildreq-cmake
 BuildRequires : cups-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
-BuildRequires : krb5-dev
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : mariadb-dev
@@ -34,10 +33,12 @@ BuildRequires : pkgconfig(gl)
 BuildRequires : pkgconfig(glib-2.0)
 BuildRequires : pkgconfig(icu-i18n)
 BuildRequires : pkgconfig(icu-uc)
+BuildRequires : pkgconfig(krb5-gssapi)
 BuildRequires : pkgconfig(libinput)
 BuildRequires : pkgconfig(libpcre2-16)
 BuildRequires : pkgconfig(libproxy-1.0)
 BuildRequires : pkgconfig(libudev)
+BuildRequires : pkgconfig(md4c)
 BuildRequires : pkgconfig(sm)
 BuildRequires : pkgconfig(xcb-icccm)
 BuildRequires : pkgconfig(xcb-image)
@@ -160,7 +161,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1586200726
+export SOURCE_DATE_EPOCH=1586386668
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -272,7 +273,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1586200726
+export SOURCE_DATE_EPOCH=1586386668
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
