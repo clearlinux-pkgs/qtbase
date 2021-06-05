@@ -1,2 +1,4 @@
 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 tell-the-truth-about-private-api.patch
+0002-Fix-build-with-GCC-11-include-limits.patch
+0003-Build-fixes-for-GCC-11.patch

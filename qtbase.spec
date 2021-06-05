@@ -5,12 +5,12 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.0
-Release  : 46
+Release  : 47
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.0/submodules/qtbase-everywhere-src-5.15.0.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.0/submodules/qtbase-everywhere-src-5.15.0.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 ICU IJG ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 W3C-19980720 Zlib bzip2-1.0.6
+License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 IJG ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 Unicode-DFS-2016 W3C-19980720 Zlib bzip2-1.0.6
 Requires: qtbase-bin = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
@@ -54,6 +54,8 @@ BuildRequires : systemd-dev
 BuildRequires : zstd-dev
 Patch1: 0001-Force-configure-not-to-bail-out-on-unknown-cmdline-o.patch
 Patch2: tell-the-truth-about-private-api.patch
+Patch3: 0002-Fix-build-with-GCC-11-include-limits.patch
+Patch4: 0003-Build-fixes-for-GCC-11.patch
 
 %description
 program used to generate qkeymapper_x11_p.cpp
@@ -135,6 +137,8 @@ staticdev components for the qtbase package.
 cd %{_builddir}/qtbase-everywhere-src-5.15.0
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.15.0 buildavx2
 popd
@@ -151,7 +155,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1589474054
+export SOURCE_DATE_EPOCH=1622862086
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -261,7 +265,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1589474054
+export SOURCE_DATE_EPOCH=1622862086
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -5861,12 +5865,15 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/bearer/libqnmbearer.so
 /usr/lib64/qt5/plugins/bearer/libqnmbearer.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so
+/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
 /usr/lib64/qt5/plugins/generic/libqevdevkeyboardplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so
+/usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqevdevtabletplugin.so
+/usr/lib64/qt5/plugins/generic/libqevdevtabletplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqlibinputplugin.so
@@ -5896,8 +5903,10 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/platformthemes/libqxdgdesktopportal.so
 /usr/lib64/qt5/plugins/platformthemes/libqxdgdesktopportal.so.avx2
 /usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so
+/usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so.avx2
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlmysql.so
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
+/usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so.avx2
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
 
