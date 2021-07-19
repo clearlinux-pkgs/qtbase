@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.0
-Release  : 47
+Release  : 48
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.0/submodules/qtbase-everywhere-src-5.15.0.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.0/submodules/qtbase-everywhere-src-5.15.0.tar.xz
 Summary  : No detailed summary available
@@ -155,15 +155,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1622862086
+export SOURCE_DATE_EPOCH=1626719680
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FCFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=4 -fno-semantic-interposition -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=4 -fno-semantic-interposition -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=4 -fno-semantic-interposition -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=4 -fno-semantic-interposition -mprefer-vector-width=256 "
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -265,7 +265,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1622862086
+export SOURCE_DATE_EPOCH=1626719680
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -3037,6 +3037,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/cmake/Qt5XkbCommonSupport/Qt5XkbCommonSupportConfigVersion.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfig.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake
+/usr/lib64/haswell/libQt5Concurrent.so
 /usr/lib64/haswell/libQt5Core.so
 /usr/lib64/haswell/libQt5DBus.so
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so
@@ -3045,7 +3046,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/haswell/libQt5Network.so
 /usr/lib64/haswell/libQt5OpenGL.so
 /usr/lib64/haswell/libQt5PrintSupport.so
-/usr/lib64/haswell/libQt5Sql.so
 /usr/lib64/haswell/libQt5Test.so
 /usr/lib64/haswell/libQt5Widgets.so
 /usr/lib64/haswell/libQt5XcbQpa.so
@@ -5805,6 +5805,9 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/libQt5Concurrent.so.5
+/usr/lib64/haswell/libQt5Concurrent.so.5.15
+/usr/lib64/haswell/libQt5Concurrent.so.5.15.0
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.15
 /usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.15.0
@@ -5820,9 +5823,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/haswell/libQt5PrintSupport.so.5
 /usr/lib64/haswell/libQt5PrintSupport.so.5.15
 /usr/lib64/haswell/libQt5PrintSupport.so.5.15.0
-/usr/lib64/haswell/libQt5Sql.so.5
-/usr/lib64/haswell/libQt5Sql.so.5.15
-/usr/lib64/haswell/libQt5Sql.so.5.15.0
 /usr/lib64/haswell/libQt5Test.so.5
 /usr/lib64/haswell/libQt5Test.so.5.15
 /usr/lib64/haswell/libQt5Test.so.5.15.0
@@ -5868,6 +5868,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so
+/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
 /usr/lib64/qt5/plugins/generic/libqevdevkeyboardplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so
@@ -5887,7 +5888,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/imageformats/libqjpeg.so.avx2
 /usr/lib64/qt5/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so
 /usr/lib64/qt5/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so
-/usr/lib64/qt5/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqeglfs.so
 /usr/lib64/qt5/plugins/platforms/libqlinuxfb.so
 /usr/lib64/qt5/plugins/platforms/libqlinuxfb.so.avx2
@@ -5906,7 +5906,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so.avx2
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlmysql.so
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
-/usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so.avx2
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
 
