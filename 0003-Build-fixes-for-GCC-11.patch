@@ -32,7 +32,7 @@ diff --git a/src/corelib/tools/qsharedpointer_impl.h b/src/corelib/tools/qshared
 index 362d57fb..e2f31e5f 100644
 --- a/src/corelib/tools/qsharedpointer_impl.h
 +++ b/src/corelib/tools/qsharedpointer_impl.h
-@@ -154,9 +154,6 @@ namespace QtSharedPointer {
+@@ -155,9 +155,6 @@ namespace QtSharedPointer {
  #endif
          inline void checkQObjectShared(...) { }
          inline void setQObjectShared(...) { }
@@ -46,7 +46,7 @@ diff --git a/src/plugins/platforms/xcb/qxcbwindow.cpp b/src/plugins/platforms/xc
 index 40106bbe..00e8441d 100644
 --- a/src/plugins/platforms/xcb/qxcbwindow.cpp
 +++ b/src/plugins/platforms/xcb/qxcbwindow.cpp
-@@ -715,7 +715,7 @@ void QXcbWindow::show()
+@@ -698,7 +698,7 @@ void QXcbWindow::show()
          if (isTransient(window())) {
              const QWindow *tp = window()->transientParent();
              if (tp && tp->handle())

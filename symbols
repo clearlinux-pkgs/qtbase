@@ -7,7 +7,7 @@ libQt5Concurrent.so.5:Qt_5.12
 libQt5Concurrent.so.5:Qt_5.13
 libQt5Concurrent.so.5:Qt_5.14
 libQt5Concurrent.so.5:Qt_5.15
-libQt5Concurrent.so.5:Qt_5.15.0_PRIVATE_API
+libQt5Concurrent.so.5:Qt_5.15.2_PRIVATE_API
 libQt5Concurrent.so.5:Qt_5.2
 libQt5Concurrent.so.5:Qt_5.3
 libQt5Concurrent.so.5:Qt_5.4
@@ -46,7 +46,7 @@ libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV214timeBeforeUserEv
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV29blockSizeEv
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV2C1Ei
 libQt5Concurrent.so.5:_ZN12QtConcurrent18BlockSizeManagerV2C2Ei
-libQt5EglFSDeviceIntegration.so.5:Qt_5.15.0_PRIVATE_API
+libQt5EglFSDeviceIntegration.so.5:Qt_5.15.2_PRIVATE_API
 libQt5EglFSDeviceIntegration.so.5:_Z25qt_egl_device_integrationv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacallEN11QMetaObject4CallEiPPv
 libQt5EglFSDeviceIntegration.so.5:_ZN12QEglFSCursor11qt_metacastEPKc
@@ -219,7 +219,7 @@ libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration24nativeResourceFor
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration28nativeResourceForIntegrationERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_N17QEglFSIntegration32nativeResourceFunctionForContextERK10QByteArray
 libQt5EglFSDeviceIntegration.so.5:_ZThn8_NK17QEglFSIntegration16platformFunctionERK10QByteArray
-libQt5EglFsKmsSupport.so.5:Qt_5.15.0_PRIVATE_API
+libQt5EglFsKmsSupport.so.5:Qt_5.15.2_PRIVATE_API
 libQt5EglFsKmsSupport.so.5:_Z16qLcEglfsKmsDebugv
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDevice14registerScreenEP15QPlatformScreenbRK6QPointRK5QListIS1_E
 libQt5EglFsKmsSupport.so.5:_ZN15QEglFSKmsDeviceC1EP16QKmsScreenConfigRK7QString
@@ -282,7 +282,7 @@ libQt5Gui.so.5:Qt_5.12
 libQt5Gui.so.5:Qt_5.13
 libQt5Gui.so.5:Qt_5.14
 libQt5Gui.so.5:Qt_5.15
-libQt5Gui.so.5:Qt_5.15.0_PRIVATE_API
+libQt5Gui.so.5:Qt_5.15.2_PRIVATE_API
 libQt5Gui.so.5:Qt_5.2
 libQt5Gui.so.5:Qt_5.3
 libQt5Gui.so.5:Qt_5.4
@@ -3742,6 +3742,7 @@ libQt5Gui.so.5:_ZN22QGuiApplicationPrivate24processWindowSystemEventEPN29QWindow
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate24tryCloseRemainingWindowsE5QListIP7QWindowE
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate25createPlatformIntegrationEv
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate25processPlatformPanelEventEPN29QWindowSystemInterfacePrivate18PlatformPanelEventE
+libQt5Gui.so.5:_ZN22QGuiApplicationPrivate26captureGlobalModifierStateEP6QEvent
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate26processGeometryChangeEventEPN29QWindowSystemInterfacePrivate19GeometryChangeEventE
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate27notifyLayoutDirectionChangeEv
 libQt5Gui.so.5:_ZN22QGuiApplicationPrivate27processScreenGeometryChangeEPN29QWindowSystemInterfacePrivate19ScreenGeometryEventE
@@ -4009,7 +4010,6 @@ libQt5Gui.so.5:_ZN22QWindowSystemInterface24handleWindowStateChangedINS_15Defaul
 libQt5Gui.so.5:_ZN22QWindowSystemInterface24handleWindowStateChangedINS_19SynchronousDeliveryEEEvP7QWindow6QFlagsIN2Qt11WindowStateEEi
 libQt5Gui.so.5:_ZN22QWindowSystemInterface24handleWindowStateChangedINS_20AsynchronousDeliveryEEEvP7QWindow6QFlagsIN2Qt11WindowStateEEi
 libQt5Gui.so.5:_ZN22QWindowSystemInterface24nonUserInputEventsQueuedEv
-libQt5Gui.so.5:_ZN22QWindowSystemInterface24setPlatformFiltersEventsEb
 libQt5Gui.so.5:_ZN22QWindowSystemInterface24windowSystemEventsQueuedEv
 libQt5Gui.so.5:_ZN22QWindowSystemInterface25handleEnterWhatsThisEventEv
 libQt5Gui.so.5:_ZN22QWindowSystemInterface25handleWindowScreenChangedINS_15DefaultDeliveryEEEvP7QWindowP7QScreen
@@ -8082,7 +8082,7 @@ libQt5OpenGL.so.5:Qt_5.12
 libQt5OpenGL.so.5:Qt_5.13
 libQt5OpenGL.so.5:Qt_5.14
 libQt5OpenGL.so.5:Qt_5.15
-libQt5OpenGL.so.5:Qt_5.15.0_PRIVATE_API
+libQt5OpenGL.so.5:Qt_5.15.2_PRIVATE_API
 libQt5OpenGL.so.5:Qt_5.2
 libQt5OpenGL.so.5:Qt_5.3
 libQt5OpenGL.so.5:Qt_5.4
@@ -8712,7 +8712,7 @@ libQt5PrintSupport.so.5:Qt_5.12
 libQt5PrintSupport.so.5:Qt_5.13
 libQt5PrintSupport.so.5:Qt_5.14
 libQt5PrintSupport.so.5:Qt_5.15
-libQt5PrintSupport.so.5:Qt_5.15.0_PRIVATE_API
+libQt5PrintSupport.so.5:Qt_5.15.2_PRIVATE_API
 libQt5PrintSupport.so.5:Qt_5.2
 libQt5PrintSupport.so.5:Qt_5.3
 libQt5PrintSupport.so.5:Qt_5.4
@@ -9155,7 +9155,7 @@ libQt5Test.so.5:Qt_5.12
 libQt5Test.so.5:Qt_5.13
 libQt5Test.so.5:Qt_5.14
 libQt5Test.so.5:Qt_5.15
-libQt5Test.so.5:Qt_5.15.0_PRIVATE_API
+libQt5Test.so.5:Qt_5.15.2_PRIVATE_API
 libQt5Test.so.5:Qt_5.2
 libQt5Test.so.5:Qt_5.3
 libQt5Test.so.5:Qt_5.4
@@ -9376,7 +9376,7 @@ libQt5Widgets.so.5:Qt_5.12
 libQt5Widgets.so.5:Qt_5.13
 libQt5Widgets.so.5:Qt_5.14
 libQt5Widgets.so.5:Qt_5.15
-libQt5Widgets.so.5:Qt_5.15.0_PRIVATE_API
+libQt5Widgets.so.5:Qt_5.15.2_PRIVATE_API
 libQt5Widgets.so.5:Qt_5.2
 libQt5Widgets.so.5:Qt_5.3
 libQt5Widgets.so.5:Qt_5.4
@@ -12381,8 +12381,6 @@ libQt5Widgets.so.5:_ZN18QFileDialogPrivate16_q_deleteCurrentEv
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate16_q_goToDirectoryERK7QString
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate16_q_renameCurrentEv
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate16_q_useNameFilterEi
-libQt5Widgets.so.5:_ZN18QFileDialogPrivate16initialSelectionERK4QUrl
-libQt5Widgets.so.5:_ZN18QFileDialogPrivate16workingDirectoryERK4QUrl
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate17_q_currentChangedERK11QModelIndex
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate17_q_enterDirectoryERK11QModelIndex
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate17_q_updateOkButtonEv
@@ -12413,7 +12411,7 @@ libQt5Widgets.so.5:_ZN18QFileDialogPrivate23_q_autoCompleteFileNameERK7QString
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate23_q_nativeCurrentChangedERK4QUrl
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate23_q_nativeEnterDirectoryERK4QUrl
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate23setLastVisitedDirectoryERK4QUrl
-libQt5Widgets.so.5:_ZN18QFileDialogPrivate4initERK4QUrlRK7QStringS5_
+libQt5Widgets.so.5:_ZN18QFileDialogPrivate4initERK15QFileDialogArgs
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate8navigateERNS_11HistoryItemE
 libQt5Widgets.so.5:_ZN18QFileDialogPrivate9_q_goHomeEv
 libQt5Widgets.so.5:_ZN18QFileDialogPrivateC1Ev
@@ -17438,7 +17436,7 @@ libQt5Widgets.so.5:_ZrsR11QDataStreamR15QListWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR15QTreeWidgetItem
 libQt5Widgets.so.5:_ZrsR11QDataStreamR16QTableWidgetItem
 libQt5Widgets.so.5:_ZrsR11QTextStreamR9QSplitter
-libQt5XcbQpa.so.5:Qt_5.15.0_PRIVATE_API
+libQt5XcbQpa.so.5:Qt_5.15.2_PRIVATE_API
 libQt5XcbQpa.so.5:_Z7lcQpaGlv
 libQt5XcbQpa.so.5:_ZN10QXcbScreen11windowShownEP10QXcbWindow
 libQt5XcbQpa.so.5:_ZN10QXcbScreen13getOutputNameEP33xcb_randr_get_output_info_reply_t

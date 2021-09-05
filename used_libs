@@ -8,7 +8,6 @@ libQt5Sql.so.5
 libX11.so.6
 libc.so.6
 libcups.so.2
-libdl.so.2
 libdrm.so.2
 libfontconfig.so.1
 libfreetype.so.6
@@ -23,7 +22,6 @@ libmariadb.so.3
 libmd4c.so.0
 libpng16.so.16
 libpq.so.5
-libpthread.so.0
 libstdc++.so.6
 libudev.so.1
 libxkbcommon-x11.so.0
