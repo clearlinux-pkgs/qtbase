@@ -5,13 +5,14 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 50
+Release  : 51
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 Unicode-DFS-2016 W3C-19980720 Zlib bzip2-1.0.6
 Requires: qtbase-bin = %{version}-%{release}
+Requires: qtbase-filemap = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
@@ -64,6 +65,7 @@ program used to generate qkeymapper_x11_p.cpp
 Summary: bin components for the qtbase package.
 Group: Binaries
 Requires: qtbase-license = %{version}-%{release}
+Requires: qtbase-filemap = %{version}-%{release}
 
 %description bin
 bin components for the qtbase package.
@@ -106,10 +108,19 @@ Group: Default
 extras components for the qtbase package.
 
 
+%package filemap
+Summary: filemap components for the qtbase package.
+Group: Default
+
+%description filemap
+filemap components for the qtbase package.
+
+
 %package lib
 Summary: lib components for the qtbase package.
 Group: Libraries
 Requires: qtbase-license = %{version}-%{release}
+Requires: qtbase-filemap = %{version}-%{release}
 
 %description lib
 lib components for the qtbase package.
@@ -155,15 +166,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1630803587
+export SOURCE_DATE_EPOCH=1634049220
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
-export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=256 "
+export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -217,11 +228,11 @@ echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
 ## build_prepend end
-export CFLAGS="$CFLAGS -m64 -march=haswell"
-export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
-export FFLAGS="$FFLAGS -m64 -march=haswell"
-export FCFLAGS="$FCFLAGS -m64 -march=haswell"
-export LDFLAGS="$LDFLAGS -m64 -march=haswell"
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 %configure  -v \
 -opensource -confirm-license \
 -release -optimized-tools \
@@ -267,7 +278,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1630803587
+export SOURCE_DATE_EPOCH=1634049220
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -349,7 +360,8 @@ cp %{_builddir}/qtbase-everywhere-src-5.15.2/src/testlib/3rdparty/VALGRIND_LICEN
 cp %{_builddir}/qtbase-everywhere-src-5.15.2/src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/b4be9db792cd4bb77ab866ab90d06c4b24a6bcbe
 cp %{_builddir}/qtbase-everywhere-src-5.15.2/tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/d134e46110f1cb9253ba4542a2d8770179429da4
 pushd ../buildavx2/
-%make_install_avx2
+%make_install_v3
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 popd
 %make_install
 ## Remove excluded files
@@ -366,19 +378,12 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files bin
 %defattr(-,root,root,-)
-/usr/bin/haswell/tracegen
 /usr/bin/tracegen
+/usr/share/clear/optimized-elf/bin*
 
 %files dev
 %defattr(-,root,root,-)
 /usr/bin/fixqt4headers.pl
-/usr/bin/haswell/moc
-/usr/bin/haswell/qdbuscpp2xml
-/usr/bin/haswell/qdbusxml2cpp
-/usr/bin/haswell/qlalr
-/usr/bin/haswell/qvkgen
-/usr/bin/haswell/rcc
-/usr/bin/haswell/uic
 /usr/bin/moc
 /usr/bin/qdbuscpp2xml
 /usr/bin/qdbusxml2cpp
@@ -3038,19 +3043,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/cmake/Qt5XkbCommonSupport/Qt5XkbCommonSupportConfigVersion.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfig.cmake
 /usr/lib64/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake
-/usr/lib64/haswell/libQt5Concurrent.so
-/usr/lib64/haswell/libQt5Core.so
-/usr/lib64/haswell/libQt5DBus.so
-/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so
-/usr/lib64/haswell/libQt5Gui.so
-/usr/lib64/haswell/libQt5Network.so
-/usr/lib64/haswell/libQt5OpenGL.so
-/usr/lib64/haswell/libQt5PrintSupport.so
-/usr/lib64/haswell/libQt5Test.so
-/usr/lib64/haswell/libQt5Widgets.so
-/usr/lib64/haswell/libQt5XcbQpa.so
-/usr/lib64/haswell/libQt5Xml.so
 /usr/lib64/libQt5AccessibilitySupport.prl
 /usr/lib64/libQt5Bootstrap.prl
 /usr/lib64/libQt5Concurrent.prl
@@ -5775,18 +5767,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files extras
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libQt5Core.so.5
-/usr/lib64/haswell/libQt5Core.so.5.15
-/usr/lib64/haswell/libQt5Core.so.5.15.2
-/usr/lib64/haswell/libQt5DBus.so.5
-/usr/lib64/haswell/libQt5DBus.so.5.15
-/usr/lib64/haswell/libQt5DBus.so.5.15.2
-/usr/lib64/haswell/libQt5Network.so.5
-/usr/lib64/haswell/libQt5Network.so.5.15
-/usr/lib64/haswell/libQt5Network.so.5.15.2
-/usr/lib64/haswell/libQt5Xml.so.5
-/usr/lib64/haswell/libQt5Xml.so.5.15
-/usr/lib64/haswell/libQt5Xml.so.5.15.2
 /usr/lib64/libQt5Core.so.5
 /usr/lib64/libQt5Core.so.5.15
 /usr/lib64/libQt5Core.so.5.15.2
@@ -5804,35 +5784,12 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/libQt5Xml.so.5.15.2
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlite.so
 
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-qtbase
+
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libQt5Concurrent.so.5
-/usr/lib64/haswell/libQt5Concurrent.so.5.15
-/usr/lib64/haswell/libQt5Concurrent.so.5.15.2
-/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5
-/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.15
-/usr/lib64/haswell/libQt5EglFSDeviceIntegration.so.5.15.2
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.15
-/usr/lib64/haswell/libQt5EglFsKmsSupport.so.5.15.2
-/usr/lib64/haswell/libQt5Gui.so.5
-/usr/lib64/haswell/libQt5Gui.so.5.15
-/usr/lib64/haswell/libQt5Gui.so.5.15.2
-/usr/lib64/haswell/libQt5OpenGL.so.5
-/usr/lib64/haswell/libQt5OpenGL.so.5.15
-/usr/lib64/haswell/libQt5OpenGL.so.5.15.2
-/usr/lib64/haswell/libQt5PrintSupport.so.5
-/usr/lib64/haswell/libQt5PrintSupport.so.5.15
-/usr/lib64/haswell/libQt5PrintSupport.so.5.15.2
-/usr/lib64/haswell/libQt5Test.so.5
-/usr/lib64/haswell/libQt5Test.so.5.15
-/usr/lib64/haswell/libQt5Test.so.5.15.2
-/usr/lib64/haswell/libQt5Widgets.so.5
-/usr/lib64/haswell/libQt5Widgets.so.5.15
-/usr/lib64/haswell/libQt5Widgets.so.5.15.2
-/usr/lib64/haswell/libQt5XcbQpa.so.5
-/usr/lib64/haswell/libQt5XcbQpa.so.5.15
-/usr/lib64/haswell/libQt5XcbQpa.so.5.15.2
 /usr/lib64/libQt5Concurrent.so.5
 /usr/lib64/libQt5Concurrent.so.5.15
 /usr/lib64/libQt5Concurrent.so.5.15.2
@@ -5861,54 +5818,37 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/libQt5XcbQpa.so.5.15
 /usr/lib64/libQt5XcbQpa.so.5.15.2
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
-/usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so.avx2
 /usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
 /usr/lib64/qt5/plugins/bearer/libqnmbearer.so
-/usr/lib64/qt5/plugins/bearer/libqnmbearer.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so
-/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so
-/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-kms-integration.so.avx2
 /usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
 /usr/lib64/qt5/plugins/generic/libqevdevkeyboardplugin.so
 /usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so
-/usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqevdevtabletplugin.so
-/usr/lib64/qt5/plugins/generic/libqevdevtabletplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so
-/usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqlibinputplugin.so
-/usr/lib64/qt5/plugins/generic/libqlibinputplugin.so.avx2
 /usr/lib64/qt5/plugins/generic/libqtuiotouchplugin.so
-/usr/lib64/qt5/plugins/generic/libqtuiotouchplugin.so.avx2
 /usr/lib64/qt5/plugins/imageformats/libqgif.so
-/usr/lib64/qt5/plugins/imageformats/libqgif.so.avx2
 /usr/lib64/qt5/plugins/imageformats/libqico.so
 /usr/lib64/qt5/plugins/imageformats/libqjpeg.so
-/usr/lib64/qt5/plugins/imageformats/libqjpeg.so.avx2
 /usr/lib64/qt5/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so
 /usr/lib64/qt5/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so
 /usr/lib64/qt5/plugins/platforms/libqeglfs.so
 /usr/lib64/qt5/plugins/platforms/libqlinuxfb.so
-/usr/lib64/qt5/plugins/platforms/libqlinuxfb.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqminimal.so
-/usr/lib64/qt5/plugins/platforms/libqminimal.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqminimalegl.so
-/usr/lib64/qt5/plugins/platforms/libqminimalegl.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqoffscreen.so
-/usr/lib64/qt5/plugins/platforms/libqoffscreen.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqvnc.so
-/usr/lib64/qt5/plugins/platforms/libqvnc.so.avx2
 /usr/lib64/qt5/plugins/platforms/libqxcb.so
 /usr/lib64/qt5/plugins/platformthemes/libqxdgdesktopportal.so
-/usr/lib64/qt5/plugins/platformthemes/libqxdgdesktopportal.so.avx2
 /usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so
-/usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so.avx2
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlmysql.so
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
+/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
