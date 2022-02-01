@@ -1,8 +1,6 @@
 update:
 	mkdir -p ~/git/qtstable
-	pushd ~/git/qtstable
-	[ -d $(PKG_NAME) ] || git clone https://invent.kde.org/qt/qt/$(PKG_NAME).git
-	popd
+	pushd ~/git/qtstable ; [ -d $(PKG_NAME) ] || git clone https://invent.kde.org/qt/qt/$(PKG_NAME).git ; popd
 	git -C ~/git/qtstable/$(PKG_NAME) remote update -p
 	git -C ~/git/qtstable/$(PKG_NAME) diff origin/5.15.2..origin/kde/5.15 > new.patch~
 	git -C ~/git/qtstable/$(PKG_NAME) shortlog origin/5.15.2..origin/kde/5.15 > $(PKG_NAME)-stable-branch.patch~
