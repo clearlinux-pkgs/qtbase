@@ -10,4 +10,5 @@ update:
 	rm -f *.patch~
 	$(MAKE) bumpnogit
 	git commit -m "stable update" -a
+	make autospec
 	test -n "$(NO_KOJI)" || $(MAKE) koji-nowait
