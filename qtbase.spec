@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 85
+Release  : 86
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -163,7 +163,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1655663500
+export SOURCE_DATE_EPOCH=1655853642
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -275,7 +275,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1655663500
+export SOURCE_DATE_EPOCH=1655853642
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -365,7 +365,7 @@ rm -f %{buildroot}*/usr/bin/haswell/qmake
 ## install_append content
 rm -f %{buildroot}/usr/bin/haswell/*.pl
 ## install_append end
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -5787,6 +5787,94 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Concurrent.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Concurrent.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Concurrent.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Concurrent.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Core.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Core.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Core.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Core.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5DBus.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5DBus.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5DBus.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5DBus.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFSDeviceIntegration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFSDeviceIntegration.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFSDeviceIntegration.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFSDeviceIntegration.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFsKmsSupport.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFsKmsSupport.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFsKmsSupport.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5EglFsKmsSupport.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Gui.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Gui.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Gui.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Gui.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Network.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Network.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Network.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Network.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5OpenGL.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5OpenGL.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5OpenGL.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5OpenGL.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5PrintSupport.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5PrintSupport.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5PrintSupport.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5PrintSupport.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Sql.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Sql.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Sql.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Sql.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Test.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Test.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Test.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Test.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Widgets.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Widgets.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Widgets.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Widgets.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5XcbQpa.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5XcbQpa.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5XcbQpa.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5XcbQpa.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Xml.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Xml.so.5
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Xml.so.5.15
+/usr/lib64/glibc-hwcaps/x86-64-v3/libQt5Xml.so.5.15.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libcomposeplatforminputcontextplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libcupsprintersupport.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libibusplatforminputcontextplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqconnmanbearer.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqeglfs-emu-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqeglfs-kms-egldevice-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqeglfs-kms-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqeglfs-x11-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqeglfs.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqevdevkeyboardplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqevdevmouseplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqevdevtabletplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqevdevtouchplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqgenericbearer.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqgif.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqico.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqjpeg.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqlibinputplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqlinuxfb.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqminimal.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqminimalegl.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqnmbearer.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqoffscreen.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqsqlite.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqsqlmysql.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqsqlpsql.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqtuiotouchplugin.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqvnc.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqxcb-egl-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqxcb-glx-integration.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqxcb.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libqxdgdesktopportal.so
 /usr/lib64/libQt5Concurrent.so.5
 /usr/lib64/libQt5Concurrent.so.5.15
 /usr/lib64/libQt5Concurrent.so.5.15.2
@@ -5845,7 +5933,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
-/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
