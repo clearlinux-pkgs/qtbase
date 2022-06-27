@@ -25,7 +25,6 @@ libpcre2-16.so.0
 libpng16.so.16
 libpq.so.5
 libproxy.so.1
-libsqlite3.so.0
 libstdc++.so.6
 libudev.so.1
 libxkbcommon-x11.so.0
