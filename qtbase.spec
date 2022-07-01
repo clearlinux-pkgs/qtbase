@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 90
+Release  : 91
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -163,7 +163,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656539309
+export SOURCE_DATE_EPOCH=1656715919
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -275,7 +275,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1656539309
+export SOURCE_DATE_EPOCH=1656715919
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -5901,6 +5901,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
+/usr/share/clear/optimized-elf/other*
 
 %files license
 %defattr(0644,root,root,0755)
