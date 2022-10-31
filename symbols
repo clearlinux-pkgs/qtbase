@@ -1510,7 +1510,7 @@ libQt5Gui.so.5:_ZN13QFontDatabase25removeAllApplicationFontsEv
 libQt5Gui.so.5:_ZN13QFontDatabase26addApplicationFontFromDataERK10QByteArray
 libQt5Gui.so.5:_ZN13QFontDatabase29supportsThreadedFontRenderingEv
 libQt5Gui.so.5:_ZN13QFontDatabase4loadEPK12QFontPrivatei
-libQt5Gui.so.5:_ZN13QFontDatabase8findFontERK8QFontDefi
+libQt5Gui.so.5:_ZN13QFontDatabase8findFontERK8QFontDefib
 libQt5Gui.so.5:_ZN13QFontDatabaseC1Ev
 libQt5Gui.so.5:_ZN13QFontDatabaseC2Ev
 libQt5Gui.so.5:_ZN13QFontMetricsFC1ERK12QFontMetrics
