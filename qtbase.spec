@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 122
+Release  : 123
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -166,7 +166,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1676657865
+export SOURCE_DATE_EPOCH=1676669049
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -278,7 +278,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1676657865
+export SOURCE_DATE_EPOCH=1676669049
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -1173,6 +1173,7 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/include/qt5/QtCore/qtimezone.h
 /usr/include/qt5/QtCore/qtranslator.h
 /usr/include/qt5/QtCore/qtransposeproxymodel.h
+/usr/include/qt5/QtCore/qtsan_impl.h
 /usr/include/qt5/QtCore/qtypeinfo.h
 /usr/include/qt5/QtCore/qtypetraits.h
 /usr/include/qt5/QtCore/qurl.h
