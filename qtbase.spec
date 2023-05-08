@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 125
+Release  : 126
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -22,12 +22,15 @@ BuildRequires : Vulkan-Loader-dev
 BuildRequires : Vulkan-Tools
 BuildRequires : buildreq-configure
 BuildRequires : cups-dev
+BuildRequires : dbus-dev
+BuildRequires : dbus-glib-dev
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : mariadb-dev
 BuildRequires : openssl-dev
+BuildRequires : pkg-config
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(freetype2)
 BuildRequires : pkgconfig(gl)
@@ -156,7 +159,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683226616
+export SOURCE_DATE_EPOCH=1683566886
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -268,7 +271,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1683226616
+export SOURCE_DATE_EPOCH=1683566886
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions

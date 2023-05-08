@@ -13,3 +13,6 @@ systemd-dev
 Vulkan-Headers-dev
 Vulkan-Loader-dev
 Vulkan-Tools
+pkg-config
+dbus-dev
+dbus-glib-dev
