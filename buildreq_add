@@ -17,3 +17,4 @@ pkg-config
 dbus-dev
 dbus-glib-dev
 glib-dev
+openssl-dev
