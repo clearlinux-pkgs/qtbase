@@ -1,0 +1,15 @@
+--- qtbase-everywhere-src-5.15.2/src/network/configure.json~	2020-10-27 08:02:11.000000000 +0000
++++ qtbase-everywhere-src-5.15.2/src/network/configure.json	2023-05-24 20:42:57.909073335 +0000
+@@ -51,9 +51,10 @@
+                     "px_proxy_factory_free(factory);"
+                 ]
+             },
+-            "headers": "proxy.h",
++            "headers": "libproxy/proxy.h",
+             "sources": [
+-                "-lproxy"
++                "-lproxy",
++                { "type": "pkgConfig", "args": "libproxy-1.0" }
+             ]
+         },
+         "openssl_headers": {
