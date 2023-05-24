@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 127
+Release  : 128
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -164,7 +164,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1684961867
+export SOURCE_DATE_EPOCH=1684964668
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -191,6 +191,7 @@ export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -fdebug-types-section
 -fontconfig \
 -glib \
 -libproxy \
+-openssl-linked \
 -no-mimetype-database \
 -no-qml-debug \
 -plugin-sql-mysql \
@@ -249,6 +250,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 -fontconfig \
 -glib \
 -libproxy \
+-openssl-linked \
 -no-mimetype-database \
 -no-qml-debug \
 -plugin-sql-mysql \
@@ -276,7 +278,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1684961867
+export SOURCE_DATE_EPOCH=1684964668
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
