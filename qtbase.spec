@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 129
+Release  : 130
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -159,12 +159,13 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
+export OPENSSL_LIBS=" -lssl -lcrypto"
 ## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1684965593
+export SOURCE_DATE_EPOCH=1685117465
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -226,6 +227,7 @@ if ! grep -wq avx2 /proc/cpuinfo; then
 echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
 exit 1
 fi
+export OPENSSL_LIBS=" -lssl -lcrypto"
 ## build_prepend end
 export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
 export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
@@ -278,7 +280,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1684965593
+export SOURCE_DATE_EPOCH=1685117465
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
