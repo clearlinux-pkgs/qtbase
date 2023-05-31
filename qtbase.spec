@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 130
+Release  : 131
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -165,7 +165,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1685117465
+export SOURCE_DATE_EPOCH=1685511904
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -280,7 +280,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1685117465
+export SOURCE_DATE_EPOCH=1685511904
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -392,19 +392,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /V3/usr/bin/qvkgen
 /V3/usr/bin/rcc
 /V3/usr/bin/uic
-/V3/usr/lib64/libQt5Concurrent.so
-/V3/usr/lib64/libQt5Core.so
-/V3/usr/lib64/libQt5DBus.so
-/V3/usr/lib64/libQt5EglFSDeviceIntegration.so
-/V3/usr/lib64/libQt5Gui.so
-/V3/usr/lib64/libQt5Network.so
-/V3/usr/lib64/libQt5OpenGL.so
-/V3/usr/lib64/libQt5PrintSupport.so
-/V3/usr/lib64/libQt5Sql.so
-/V3/usr/lib64/libQt5Test.so
-/V3/usr/lib64/libQt5Widgets.so
-/V3/usr/lib64/libQt5XcbQpa.so
-/V3/usr/lib64/libQt5Xml.so
 /usr/bin/fixqt4headers.pl
 /usr/bin/moc
 /usr/bin/qdbuscpp2xml
@@ -5774,20 +5761,10 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files extras
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt5Core.so.5
-/V3/usr/lib64/libQt5Core.so.5.15
 /V3/usr/lib64/libQt5Core.so.5.15.2
-/V3/usr/lib64/libQt5DBus.so.5
-/V3/usr/lib64/libQt5DBus.so.5.15
 /V3/usr/lib64/libQt5DBus.so.5.15.2
-/V3/usr/lib64/libQt5Network.so.5
-/V3/usr/lib64/libQt5Network.so.5.15
 /V3/usr/lib64/libQt5Network.so.5.15.2
-/V3/usr/lib64/libQt5Sql.so.5
-/V3/usr/lib64/libQt5Sql.so.5.15
 /V3/usr/lib64/libQt5Sql.so.5.15.2
-/V3/usr/lib64/libQt5Xml.so.5
-/V3/usr/lib64/libQt5Xml.so.5.15
 /V3/usr/lib64/libQt5Xml.so.5.15.2
 /V3/usr/lib64/qt5/plugins/sqldrivers/libqsqlite.so
 /usr/lib64/libQt5Core.so.5
@@ -5809,29 +5786,13 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt5Concurrent.so.5
-/V3/usr/lib64/libQt5Concurrent.so.5.15
 /V3/usr/lib64/libQt5Concurrent.so.5.15.2
-/V3/usr/lib64/libQt5EglFSDeviceIntegration.so.5
-/V3/usr/lib64/libQt5EglFSDeviceIntegration.so.5.15
 /V3/usr/lib64/libQt5EglFSDeviceIntegration.so.5.15.2
-/V3/usr/lib64/libQt5Gui.so.5
-/V3/usr/lib64/libQt5Gui.so.5.15
 /V3/usr/lib64/libQt5Gui.so.5.15.2
-/V3/usr/lib64/libQt5OpenGL.so.5
-/V3/usr/lib64/libQt5OpenGL.so.5.15
 /V3/usr/lib64/libQt5OpenGL.so.5.15.2
-/V3/usr/lib64/libQt5PrintSupport.so.5
-/V3/usr/lib64/libQt5PrintSupport.so.5.15
 /V3/usr/lib64/libQt5PrintSupport.so.5.15.2
-/V3/usr/lib64/libQt5Test.so.5
-/V3/usr/lib64/libQt5Test.so.5.15
 /V3/usr/lib64/libQt5Test.so.5.15.2
-/V3/usr/lib64/libQt5Widgets.so.5
-/V3/usr/lib64/libQt5Widgets.so.5.15
 /V3/usr/lib64/libQt5Widgets.so.5.15.2
-/V3/usr/lib64/libQt5XcbQpa.so.5
-/V3/usr/lib64/libQt5XcbQpa.so.5.15
 /V3/usr/lib64/libQt5XcbQpa.so.5.15.2
 /V3/usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
 /V3/usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
