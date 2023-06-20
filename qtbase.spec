@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 131
+Release  : 132
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -84,6 +84,7 @@ Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-bin = %{version}-%{release}
 Provides: qtbase-devel = %{version}-%{release}
 Requires: qtbase = %{version}-%{release}
+Requires: qtbase-staticdev
 
 %description dev
 dev components for the qtbase package.
@@ -143,11 +144,11 @@ staticdev components for the qtbase package.
 %prep
 %setup -q -n qtbase-everywhere-src-5.15.2
 cd %{_builddir}/qtbase-everywhere-src-5.15.2
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+%patch -P 1 -p1
+%patch -P 2 -p1
+%patch -P 3 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
 pushd ..
 cp -a qtbase-everywhere-src-5.15.2 buildavx2
 popd
@@ -165,7 +166,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1685511904
+export SOURCE_DATE_EPOCH=1687276581
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -280,7 +281,7 @@ QMAKE_LFLAGS="$CXXFLAGS"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1685511904
+export SOURCE_DATE_EPOCH=1687276581
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
