@@ -18,3 +18,4 @@ dbus-dev
 dbus-glib-dev
 glib-dev
 openssl-dev
+at-spi2-core-dev
