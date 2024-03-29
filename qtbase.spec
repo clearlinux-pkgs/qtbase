@@ -8,13 +8,12 @@
 %define keepstatic 1
 Name     : qtbase
 Version  : 5.15.2
-Release  : 134
+Release  : 135
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 Artistic-2.0 BSD-2-Clause BSD-3-Clause Bitstream-Vera CC0-1.0 FTL GFDL-1.3 GPL-2.0 GPL-3.0 ISC LGPL-3.0 Libpng MIT MIT-feh MPL-2.0-no-copyleft-exception OFL-1.0 Unicode-DFS-2016 W3C-19980720 Zlib bzip2-1.0.6
-Requires: qtbase-bin = %{version}-%{release}
 Requires: qtbase-lib = %{version}-%{release}
 Requires: qtbase-license = %{version}-%{release}
 Requires: qtbase-extras
@@ -74,20 +73,10 @@ Welcome to Qt 5
 Qt is a cross-platform application and user interface framework. It
 consists of a number of software libraries and development tools.
 
-%package bin
-Summary: bin components for the qtbase package.
-Group: Binaries
-Requires: qtbase-license = %{version}-%{release}
-
-%description bin
-bin components for the qtbase package.
-
-
 %package dev
 Summary: dev components for the qtbase package.
 Group: Development
 Requires: qtbase-lib = %{version}-%{release}
-Requires: qtbase-bin = %{version}-%{release}
 Provides: qtbase-devel = %{version}-%{release}
 Requires: qtbase = %{version}-%{release}
 Requires: qtbase-staticdev
@@ -155,9 +144,6 @@ cd %{_builddir}/qtbase-everywhere-src-5.15.2
 %patch -P 3 -p1
 %patch -P 4 -p1
 %patch -P 5 -p1
-pushd ..
-cp -a qtbase-everywhere-src-5.15.2 buildavx2
-popd
 
 %build
 ## build_prepend content
@@ -172,7 +158,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1711468304
+export SOURCE_DATE_EPOCH=1711723058
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -195,6 +181,7 @@ export GOAMD64=v2
 -datadir /usr/share/qt5 \
 -docdir /usr/share/doc/qt5 \
 -headerdir /usr/include/qt5 \
+-bindir /usr/lib64/qt5/bin \
 -sysconfdir /etc/xdg \
 -no-separate-debug-info \
 -no-use-gold-linker \
@@ -233,67 +220,6 @@ QMAKE_LFLAGS="$CXXFLAGS"
 ## make_prepend end
 make  %{?_smp_mflags}
 
-unset PKG_CONFIG_PATH
-pushd ../buildavx2/
-## build_prepend content
-export MAKEFLAGS=%{?_smp_mflags}
-if ! grep -wq avx2 /proc/cpuinfo; then
-echo >&2 "Building Qt with AVX2 support requires a CPU with AVX2 support."
-exit 1
-fi
-export OPENSSL_LIBS=" -lssl -lcrypto"
-## build_prepend end
-GOAMD64=v3
-CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS -march=x86-64-v3 "
-LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS -march=x86-64-v3 "
-%configure  -v \
--opensource -confirm-license \
--release -optimized-tools \
--archdatadir /usr/lib64/qt5 \
--datadir /usr/share/qt5 \
--docdir /usr/share/doc/qt5 \
--headerdir /usr/include/qt5 \
--sysconfdir /etc/xdg \
--no-separate-debug-info \
--no-use-gold-linker \
--no-strip -no-rpath -no-pch \
--no-compile-examples \
--accessibility \
--cups \
--dbus-linked \
--fontconfig \
--glib \
--libproxy \
--openssl-linked \
--no-mimetype-database \
--no-qml-debug \
--plugin-sql-mysql \
--plugin-sql-psql \
--plugin-sql-sqlite \
--reduce-relocations \
--silent \
--sm \
--system-doubleconversion \
--system-freetype \
--system-harfbuzz \
--system-pcre \
--system-libjpeg \
--system-libpng \
--system-sqlite \
--system-zlib \
--xinput2 \
--xkb \
-QMAKE_CFLAGS="$CFLAGS" \
-QMAKE_CXXFLAGS="$CXXFLAGS" \
-QMAKE_LFLAGS="$CXXFLAGS"
-## make_prepend content
-(cd src && ../bin/qmake -config ltcg -config fat-static-lto)
-## make_prepend end
-make  %{?_smp_mflags}
-popd
 %install
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
@@ -309,7 +235,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1711468304
+export SOURCE_DATE_EPOCH=1711723058
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/openglextensions
@@ -317,11 +243,11 @@ make clean
 ../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
 make
 popd
-pushd ../buildavx2/src/openglextensions
-make clean
-../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
-make
-popd
+#pushd ../buildavx2/src/openglextensions
+#  make clean
+#  ../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
+#  make
+#popd
 ## install_prepend end
 mkdir -p %{buildroot}/usr/share/package-licenses/qtbase
 cp %{_builddir}/qtbase-everywhere-src-%{version}/LICENSE.FDL %{buildroot}/usr/share/package-licenses/qtbase/61907422fefcd2313a9b570c31d203a6dbebd333 || :
@@ -392,10 +318,6 @@ cp %{_builddir}/qtbase-everywhere-src-%{version}/src/testlib/3rdparty/VALGRIND_L
 cp %{_builddir}/qtbase-everywhere-src-%{version}/src/tools/moc/util/licenseheader.txt %{buildroot}/usr/share/package-licenses/qtbase/b4be9db792cd4bb77ab866ab90d06c4b24a6bcbe || :
 cp %{_builddir}/qtbase-everywhere-src-%{version}/tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite-LICENSE.txt %{buildroot}/usr/share/package-licenses/qtbase/d134e46110f1cb9253ba4542a2d8770179429da4 || :
 export GOAMD64=v2
-GOAMD64=v3
-pushd ../buildavx2/
-%make_install_v3
-popd
 GOAMD64=v2
 %make_install
 ## Remove excluded files
@@ -405,8 +327,8 @@ rm -f %{buildroot}*/usr/bin/qmake
 rm -f %{buildroot}*/usr/bin/qtpaths
 ## install_append content
 rm -f %{buildroot}/usr/bin/haswell/*.pl
+#mv %{buildroot}/usr/bin/qmake %{buildroot}/usr/bin/qmake5
 ## install_append end
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -414,25 +336,8 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/metatypes/qt5gui_metatypes.json
 /usr/lib64/metatypes/qt5widgets_metatypes.json
 
-%files bin
-%defattr(-,root,root,-)
-/V3/usr/bin/tracegen
-/usr/bin/tracegen
-
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/bin/moc
-/V3/usr/bin/qlalr
-/V3/usr/bin/qvkgen
-/V3/usr/bin/rcc
-/V3/usr/bin/uic
-/usr/bin/fixqt4headers.pl
-/usr/bin/moc
-/usr/bin/qlalr
-/usr/bin/qvkgen
-/usr/bin/rcc
-/usr/bin/syncqt.pl
-/usr/bin/uic
 /usr/include/qt5/QtAccessibilitySupport/5.15.2/QtAccessibilitySupport/private/qaccessiblebridgeutils_p.h
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupport
 /usr/include/qt5/QtAccessibilitySupport/QtAccessibilitySupportDepends
@@ -5807,12 +5712,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files extras
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt5Core.so.5.15.2
-/V3/usr/lib64/libQt5DBus.so.5.15.2
-/V3/usr/lib64/libQt5Network.so.5.15.2
-/V3/usr/lib64/libQt5Sql.so.5.15.2
-/V3/usr/lib64/libQt5Xml.so.5.15.2
-/V3/usr/lib64/qt5/plugins/sqldrivers/libqsqlite.so
 /usr/lib64/libQt5Core.so.5
 /usr/lib64/libQt5Core.so.5.15
 /usr/lib64/libQt5Core.so.5.15.2
@@ -5832,43 +5731,6 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt5Concurrent.so.5.15.2
-/V3/usr/lib64/libQt5EglFSDeviceIntegration.so.5.15.2
-/V3/usr/lib64/libQt5Gui.so.5.15.2
-/V3/usr/lib64/libQt5OpenGL.so.5.15.2
-/V3/usr/lib64/libQt5PrintSupport.so.5.15.2
-/V3/usr/lib64/libQt5Test.so.5.15.2
-/V3/usr/lib64/libQt5Widgets.so.5.15.2
-/V3/usr/lib64/libQt5XcbQpa.so.5.15.2
-/V3/usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
-/V3/usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
-/V3/usr/lib64/qt5/plugins/bearer/libqnmbearer.so
-/V3/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-emu-integration.so
-/V3/usr/lib64/qt5/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
-/V3/usr/lib64/qt5/plugins/generic/libqevdevkeyboardplugin.so
-/V3/usr/lib64/qt5/plugins/generic/libqevdevmouseplugin.so
-/V3/usr/lib64/qt5/plugins/generic/libqevdevtabletplugin.so
-/V3/usr/lib64/qt5/plugins/generic/libqevdevtouchplugin.so
-/V3/usr/lib64/qt5/plugins/generic/libqlibinputplugin.so
-/V3/usr/lib64/qt5/plugins/generic/libqtuiotouchplugin.so
-/V3/usr/lib64/qt5/plugins/imageformats/libqgif.so
-/V3/usr/lib64/qt5/plugins/imageformats/libqico.so
-/V3/usr/lib64/qt5/plugins/imageformats/libqjpeg.so
-/V3/usr/lib64/qt5/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so
-/V3/usr/lib64/qt5/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so
-/V3/usr/lib64/qt5/plugins/platforms/libqeglfs.so
-/V3/usr/lib64/qt5/plugins/platforms/libqlinuxfb.so
-/V3/usr/lib64/qt5/plugins/platforms/libqminimal.so
-/V3/usr/lib64/qt5/plugins/platforms/libqminimalegl.so
-/V3/usr/lib64/qt5/plugins/platforms/libqoffscreen.so
-/V3/usr/lib64/qt5/plugins/platforms/libqvnc.so
-/V3/usr/lib64/qt5/plugins/platforms/libqxcb.so
-/V3/usr/lib64/qt5/plugins/platformthemes/libqxdgdesktopportal.so
-/V3/usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so
-/V3/usr/lib64/qt5/plugins/sqldrivers/libqsqlmysql.so
-/V3/usr/lib64/qt5/plugins/sqldrivers/libqsqlpsql.so
-/V3/usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-egl-integration.so
-/V3/usr/lib64/qt5/plugins/xcbglintegrations/libqxcb-glx-integration.so
 /usr/lib64/libQt5Concurrent.so.5
 /usr/lib64/libQt5Concurrent.so.5.15
 /usr/lib64/libQt5Concurrent.so.5.15.2
@@ -5893,6 +5755,17 @@ rm -f %{buildroot}/usr/bin/haswell/*.pl
 /usr/lib64/libQt5XcbQpa.so.5
 /usr/lib64/libQt5XcbQpa.so.5.15
 /usr/lib64/libQt5XcbQpa.so.5.15.2
+/usr/lib64/qt5/bin/fixqt4headers.pl
+/usr/lib64/qt5/bin/moc
+/usr/lib64/qt5/bin/qdbuscpp2xml
+/usr/lib64/qt5/bin/qdbusxml2cpp
+/usr/lib64/qt5/bin/qlalr
+/usr/lib64/qt5/bin/qmake
+/usr/lib64/qt5/bin/qvkgen
+/usr/lib64/qt5/bin/rcc
+/usr/lib64/qt5/bin/syncqt.pl
+/usr/lib64/qt5/bin/tracegen
+/usr/lib64/qt5/bin/uic
 /usr/lib64/qt5/plugins/bearer/libqconnmanbearer.so
 /usr/lib64/qt5/plugins/bearer/libqgenericbearer.so
 /usr/lib64/qt5/plugins/bearer/libqnmbearer.so

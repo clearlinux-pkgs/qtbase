@@ -5,6 +5,7 @@
 -datadir /usr/share/qt5
 -docdir /usr/share/doc/qt5
 -headerdir /usr/include/qt5
+-bindir /usr/lib64/qt5/bin
 -sysconfdir /etc/xdg
 -no-separate-debug-info
 -no-use-gold-linker

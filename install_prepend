@@ -3,8 +3,8 @@ pushd src/openglextensions
   ../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
   make
 popd
-pushd ../buildavx2/src/openglextensions
-  make clean
-  ../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
-  make
-popd
+#pushd ../buildavx2/src/openglextensions
+#  make clean
+#  ../../bin/qmake QMAKE_CXXFLAGS+=-fno-lto      # Can't have LTO (static)
+#  make
+#popd
